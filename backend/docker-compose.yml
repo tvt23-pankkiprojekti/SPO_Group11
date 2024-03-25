@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  database:
+    build:
+      context: ./database
+      dockerfile: 'database.Dockerfile'
+    restart: unless-stopped
+    env_file:
+      - path: ./env/db.env
+    secrets:
+      - db_root_password
+
+  app:
+    image: node:21
+    depends_on: 
+      - database
+    environment:
+      PORT: ${APP_PORT}
+    env_file:
+      - path: ./env/app.env
+    secrets:
+      - app_secret
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./app:/app
+      - ./log:/log
+
+secrets:
+  db_root_password:
+    file: ./secrets/db_root_password.txt
+  app_secret:
+    file: ./secrets/app_secret.txt
