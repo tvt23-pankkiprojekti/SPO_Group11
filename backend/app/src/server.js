@@ -4,8 +4,6 @@ const path = require('path');
 const morgan = require('morgan');
 const rfs = require('rotating-file-stream');
 
-const userRouter = require('./routers/userRouter.js');
-
 const app = express();
 
 const accessLogStream = rfs.createStream('access.log', {
