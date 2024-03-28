@@ -11,6 +11,10 @@ const cardAccountRouter = require("./routers/cardAccountRouter.js");
 
 const app = express();
 
+const userRoutes = require('../routes/userRoutes.js');
+app.use('/user', userRoutes);
+
+
 const accessLogStream = rfs.createStream('access.log', {
     interval: '1d',
     path: '../log',
