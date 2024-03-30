@@ -7,22 +7,13 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Table `User`
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+DROP TABLE IF EXISTS `User` ;
 
--- -----------------------------------------------------
--- Table `mydb`.`User`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`User` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`User` (
+CREATE TABLE IF NOT EXISTS `User` (
   `idUser` INT NOT NULL AUTO_INCREMENT,
   `firstName` VARCHAR(45) NOT NULL,
   `lastName` VARCHAR(45) NOT NULL,
@@ -32,11 +23,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Account`
+-- Table `Account`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Account` ;
+DROP TABLE IF EXISTS `Account` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Account` (
+CREATE TABLE IF NOT EXISTS `Account` (
   `idAccount` INT NOT NULL AUTO_INCREMENT,
   `User_id` INT NOT NULL,
   `type` ENUM('debit', 'credit') NOT NULL,
@@ -47,18 +38,18 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Account` (
   INDEX `fk_Account_User` (`User_id` ASC) VISIBLE,
   CONSTRAINT `fk_Account_User`
     FOREIGN KEY (`User_id`)
-    REFERENCES `mydb`.`User` (`idUser`)
+    REFERENCES `User` (`idUser`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Card`
+-- Table `Card`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Card` ;
+DROP TABLE IF EXISTS `Card` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Card` (
+CREATE TABLE IF NOT EXISTS `Card` (
   `idCard` INT NOT NULL AUTO_INCREMENT,
   `User_id` INT NOT NULL,
   `pinHash` VARCHAR(255) NOT NULL,
@@ -71,18 +62,18 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Card` (
   UNIQUE INDEX `number_UNIQUE` (`number` ASC) VISIBLE,
   CONSTRAINT `fk_Card_User1`
     FOREIGN KEY (`User_id`)
-    REFERENCES `mydb`.`User` (`idUser`)
+    REFERENCES `User` (`idUser`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Transaction`
+-- Table `Transaction`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Transaction` ;
+DROP TABLE IF EXISTS `Transaction` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Transaction` (
+CREATE TABLE IF NOT EXISTS `Transaction` (
   `idTransaction` INT NOT NULL AUTO_INCREMENT,
   `Card_id` INT NULL DEFAULT NULL,
   `Account_id` INT NOT NULL,
@@ -95,23 +86,23 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transaction` (
   INDEX `fk_Transaction_Account_idx` (`Account_id` ASC) VISIBLE,
   CONSTRAINT `fk_Transaction_Card`
     FOREIGN KEY (`Card_id`)
-    REFERENCES `mydb`.`Card` (`idCard`)
+    REFERENCES `Card` (`idCard`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_Transaction_Account`
     FOREIGN KEY (`Account_id`)
-    REFERENCES `mydb`.`Account` (`idAccount`)
+    REFERENCES `Account` (`idAccount`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Friend`
+-- Table `Friend`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Friend` ;
+DROP TABLE IF EXISTS `Friend` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Friend` (
+CREATE TABLE IF NOT EXISTS `Friend` (
   `idFriend` INT NOT NULL AUTO_INCREMENT,
   `User_id` INT NOT NULL,
   `Account_id` INT NOT NULL,
@@ -120,23 +111,23 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Friend` (
   INDEX `fk_Friend_User` (`User_id` ASC) VISIBLE,
   CONSTRAINT `fk_Friend_User`
     FOREIGN KEY (`User_id`)
-    REFERENCES `mydb`.`User` (`idUser`)
+    REFERENCES `User` (`idUser`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Friend_Account`
     FOREIGN KEY (`Account_id`)
-    REFERENCES `mydb`.`Account` (`idAccount`)
+    REFERENCES `Account` (`idAccount`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Card_Account`
+-- Table `Card_Account`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Card_Account` ;
+DROP TABLE IF EXISTS `Card_Account` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Card_Account` (
+CREATE TABLE IF NOT EXISTS `Card_Account` (
   `idCard_Account` INT NOT NULL AUTO_INCREMENT,
   `Card_id` INT NOT NULL,
   `Account_id` INT NOT NULL,
@@ -145,23 +136,23 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Card_Account` (
   INDEX `fk_Card_Account_Account1_idx` (`Account_id` ASC) VISIBLE,
   CONSTRAINT `fk_Card_Account_Card1`
     FOREIGN KEY (`Card_id`)
-    REFERENCES `mydb`.`Card` (`idCard`)
+    REFERENCES `Card` (`idCard`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Card_Account_Account1`
     FOREIGN KEY (`Account_id`)
-    REFERENCES `mydb`.`Account` (`idAccount`)
+    REFERENCES `Account` (`idAccount`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Administrator`
+-- Table `Administrator`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Administrator` ;
+DROP TABLE IF EXISTS `Administrator` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Administrator` (
+CREATE TABLE IF NOT EXISTS `Administrator` (
   `idAdministrator` INT NOT NULL AUTO_INCREMENT,
   `login` VARCHAR(255) NOT NULL,
   `passwordHash` VARCHAR(255) NOT NULL,
