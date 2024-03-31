@@ -21,8 +21,9 @@ app.use(express.json());
 
 app.use(async (err, req, res, next) => {
     console.error(err);
-    res.status(500);
-    res.json({'error': 500});
+    res.status(500)
+    res.json({name: "InternalServerError"});
+    res.end();
 });
 
 const server = http.createServer(app);
