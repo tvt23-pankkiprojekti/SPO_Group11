@@ -19,6 +19,16 @@ app.use(morgan(
 
 app.use(express.json());
 
+app.use('/api', async (err, req, res, next) => {
+    if (err.name != 'DatabaseError') {
+        return next(err);
+    }
+
+    res.status(400);
+    res.json(err);
+    res.end();
+});
+
 app.use(async (err, req, res, next) => {
     console.error(err);
     res.status(500)
