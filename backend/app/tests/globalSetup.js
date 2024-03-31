@@ -30,4 +30,4 @@ module.exports = async () => {
     await connection.end();
 
     server.listen(config.PORT);
-}
+};
