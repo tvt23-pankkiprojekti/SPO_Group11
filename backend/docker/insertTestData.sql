@@ -1,14 +1,14 @@
-INSERT INTO `mydb`.`Administrator` (`login`, `passwordHash`) VALUES 
+INSERT INTO `Administrator` (`login`, `passwordHash`) VALUES
 ('admin1', 'hash1'),
 ('admin2', 'hash2'),
 ('admin3', 'hash3');
 
-INSERT INTO `mydb`.`User` (`firstName`, `lastName`) 
-VALUES 
-('John', 'Doe'), 
-('Alice', 'Smith'), 
-('Michael', 'Johnson'), 
-('Emily', 'Brown'), 
+INSERT INTO `User` (`firstName`, `lastName`)
+VALUES
+('John', 'Doe'),
+('Alice', 'Smith'),
+('Michael', 'Johnson'),
+('Emily', 'Brown'),
 ('Daniel', 'Williams'),
 ('Sarah', 'Taylor'),
 ('Christopher', 'Anderson'),
@@ -16,8 +16,8 @@ VALUES
 ('David', 'Garcia'),
 ('Olivia', 'Miller');
 
-INSERT INTO `mydb`.`Account` (`User_id`, `type`, `balance`, `limit`)
-VALUES 
+INSERT INTO `Account` (`User_id`, `type`, `balance`, `limit`)
+VALUES
 (1, 'debit', 100.00, 0.00),
 (2, 'debit', 1500.00, 0.00),
 (3, 'debit', 2000.00, 0.00),
@@ -29,12 +29,12 @@ VALUES
 (9, 'debit', 20.90, 0.00),
 (10, 'debit', 1900.00, 0.00);
 
-INSERT INTO `mydb`.`Friend` (`User_id`, `Account_id`)
+INSERT INTO `Friend` (`User_id`, `Account_id`)
 VALUES
 (1, 2),
 (7, 10);
 
-INSERT INTO `mydb`.`Card` (`User_id`, `pinHash`, `number`) VALUES 
+INSERT INTO `Card` (`User_id`, `pinHash`, `number`) VALUES
 (1, 'hash1', '1234567890123456'),
 (2, 'hash2', '2345678901234567'),
 (3, 'hash3', '3456789012345678'),
@@ -46,7 +46,7 @@ INSERT INTO `mydb`.`Card` (`User_id`, `pinHash`, `number`) VALUES
 (9, 'hash9', '9012345678901234'),
 (10, 'hash10', '0123456789012345');
 
-INSERT INTO `mydb`.`Card_Account` (`Card_id`, `Account_id`) VALUES 
+INSERT INTO `Card_Account` (`Card_id`, `Account_id`) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
@@ -58,7 +58,7 @@ INSERT INTO `mydb`.`Card_Account` (`Card_id`, `Account_id`) VALUES
 (9, 9),
 (10, 10);
 
-INSERT INTO `mydb`.`Transaction` (`Card_id`, `Account_id`, `dateTime`, `balanceChange`, `transactionType`) VALUES 
+INSERT INTO `Transaction` (`Card_id`, `Account_id`, `dateTime`, `balanceChange`, `transactionType`) VALUES
 (1, 1, NOW(), -50.00, 'withdraw'),
 (2, 2, NOW(), 100.00, 'deposit'),
 (3, 3, NOW(), -20.00, 'withdraw'),
