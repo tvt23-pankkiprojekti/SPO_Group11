@@ -7,6 +7,7 @@ const rfs = require('rotating-file-stream');
 const administratorRouter = require('./routers/administratorRouter.js');
 const friendRouter = require('./routers/friendRouter.js');
 const cardRouter = require("./routers/cardRouter.js");
+const cardAccountRouter = require("./routers/cardAccountRouter.js");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use('/api/administrator', administratorRouter);
 app.use('/api/friend', friendRouter);
 app.use("/api/card", cardRouter);
+app.use("/api/card_account", cardAccountRouter);
 
 app.use('/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
