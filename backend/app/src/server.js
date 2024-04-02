@@ -4,6 +4,9 @@ const path = require('path');
 const morgan = require('morgan');
 const rfs = require('rotating-file-stream');
 
+const administratorRouter = require('./routers/administratorRouter.js');
+const friendRouter = require('./routers/friendRouter.js');
+
 const app = express();
 
 const accessLogStream = rfs.createStream('access.log', {
@@ -18,6 +21,9 @@ app.use(morgan(
 ));
 
 app.use(express.json());
+
+app.use('/api/administrator', administratorRouter);
+app.use('/api/friend', friendRouter);
 
 app.use('/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
