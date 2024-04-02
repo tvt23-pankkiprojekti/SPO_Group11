@@ -9,12 +9,12 @@ const user={
         const dbResult = await pool.query('SELECT * FROM User where idUser=?',[id]);
         return dbResult;
     },
-    addUser : async(id, fname, lname)=>{
-        const dbResult = await pool.query('INSERT INTO User VALUES(?,?)',[fname],[lname]);
+    addUser : async(newUser)=>{
+        const dbResult = await pool.query('INSERT INTO User (firstName, lastName) VALUES(?,?)',[newUser.firstName, newUser.lastName]);
         return dbResult;
     },
-    updateUser : async(id, fname, lname)=>{
-        const dbResult = await pool.query('UPDATE User SET firstName=?, lastName=? WHERE idUser=?',[fname], [lname], [id]);
+    updateUser : async(id, updateUser)=>{
+        const dbResult = await pool.query('UPDATE User SET ? WHERE idUser=?', [updateUser, id]);
         return dbResult;
     },
     deleteUser : async(id)=>{

@@ -12,8 +12,6 @@ const cardAccountRouter = require("./routers/cardAccountRouter.js");
 const app = express();
 
 const userRoutes = require('../routes/userRoutes.js');
-app.use('/user', userRoutes);
-
 
 const accessLogStream = rfs.createStream('access.log', {
     interval: '1d',
@@ -33,13 +31,16 @@ app.use('/api/friend', friendRouter);
 app.use("/api/card", cardRouter);
 app.use("/api/card_account", cardAccountRouter);
 
+//////////////HUOM!!!!
+app.use('/api/user', userRoutes);
+
 app.use('/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
         return next(err);
     }
 
     res.status(400);
-    res.json(err);
+    res.json(err);  
     res.end();
 });
 
@@ -49,6 +50,7 @@ app.use(async (err, req, res, next) => {
     res.json({name: "InternalServerError"});
     res.end();
 });
+
 
 const server = http.createServer(app);
 
