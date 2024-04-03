@@ -26,7 +26,7 @@ test("create a card_account entry without a body", async () => {
         }
     });
 
-    expect(result.status).toEqual(500);
+    expect(result.status).toEqual(400);
 });
 
 test("get all card_account entries", async () => {
@@ -69,7 +69,7 @@ test("update a card_account entry without a body", async () => {
         }
     });
 
-    expect(result.status).toEqual(500);
+    expect(result.status).toEqual(400);
 });
 
 test("update a card_account entry that does not exist", async () => {

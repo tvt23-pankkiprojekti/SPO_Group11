@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const CardAccount = require("../models/cardAccountModel.js");
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
     try {
         const { Card_id, Account_id } = req.body || {};
 
@@ -11,12 +11,12 @@ router.post("/", async (req, res) => {
         res.send(dbResult.insertId);
     }
     catch (e) {
-        res.status(500);
-        res.json(e);
+        e.name = "DatabaseError";
+        next(e);
     }
 });
 
-router.get("/:id?", async (req, res) => {    
+router.get("/:id?", async (req, res, next) => {
     try {
         const idCard_Account = req.params.id;
         let dbResult;
@@ -35,12 +35,12 @@ router.get("/:id?", async (req, res) => {
         res.json(dbResult[0]);
     }
     catch (e) {
-        res.status(500);
-        res.json(e);
+        e.name = "DatabaseError";
+        next(e);
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res, next) => {
     try {
         const idCard_Account = req.params.id;
         const data = req.body;
@@ -55,12 +55,12 @@ router.put("/:id", async (req, res) => {
         res.sendStatus(200);
     }
     catch (e) {
-        res.status(500);
-        res.json(e);
+        e.name = "DatabaseError";
+        next(e);
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res, next) => {
     try {
         const idCard_Account = req.params.id;
 
@@ -74,8 +74,8 @@ router.delete("/:id", async (req, res) => {
         res.sendStatus(200);
     }
     catch (e) {
-        res.status(500);
-        res.json(e);
+        e.name = "DatabaseError";
+        next(e);
     }
 });
 
