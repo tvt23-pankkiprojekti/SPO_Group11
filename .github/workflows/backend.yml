@@ -1,0 +1,36 @@
+name: Run backend tests
+
+on: [push, pull_request]
+
+env:
+  DB_HOST: 127.0.0.1
+  DB_NAME: mydb
+  DB_USER: root
+  DB_PASSWORD: root
+  PORT: 8008
+
+jobs:
+  build_and_run:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 21.x]
+        
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+      
+    - name: Setup MySQL
+      run: |
+        sudo /etc/init.d/mysql start
+        mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;" -u$DB_USER -p$DB_PASSWORD
+
+    - name: Setup npm and run tests
+      working-directory: backend/app
+      run: |
+        npm ci
+        npm run build --if-present
+        npm test
