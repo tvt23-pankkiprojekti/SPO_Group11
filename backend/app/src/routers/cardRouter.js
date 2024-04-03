@@ -1,9 +1,13 @@
 const router = require("express").Router();
+const bcrypt = require("bcrypt");
 const Card = require("../models/cardModel.js");
 
 router.post("/", async (req, res, next) => {
     try {
-        const { User_id, pinHash, number, frozen, failedPinAttempts } = req.body || {};
+        const { User_id, number, frozen, failedPinAttempts } = req.body || {};
+        const pinHash = req.body.pinHash
+            ? await bcrypt.hash(req.body.pinHash, 10) 
+            : undefined;
 
         const dbResult = (await Card.insert(User_id, pinHash, number, frozen, failedPinAttempts))[0];
 
@@ -43,7 +47,10 @@ router.get("/:id?", async (req, res, next) => {
 router.put("/:id", async (req, res, next) => {
     try {
         const idCard = req.params.id;
-        const data = req.body;
+        let data = req.body;
+        data.pinHash = data.pinHash
+            ? await bcrypt.hash(data.pinHash, 10) 
+            : undefined;
 
         const dbResult = (await Card.update(idCard, data))[0];
 
