@@ -36,7 +36,7 @@ test('update user', async()=>{
 });
 
 test('delete user', async()=>{
-    const res = await fetch(`http://localhost:${config.PORT}/api/user/10`, {
+    const res = await fetch(`http://localhost:${config.PORT}/api/user/9`, {
         method: 'DELETE',
         headers: {"Content-Type": "application/json"},
     });

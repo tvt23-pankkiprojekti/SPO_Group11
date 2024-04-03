@@ -1,6 +1,5 @@
 const express=require('express');
 const router=express.Router();
-// congigissa on portin tiedot, hosti, käyttäjä, jne.
 const config = require('../src/config.js');
 const user = require('../models/userModels.js');
 

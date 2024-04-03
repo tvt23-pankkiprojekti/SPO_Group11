@@ -12,6 +12,7 @@ const cardAccountRouter = require("./routers/cardAccountRouter.js");
 const app = express();
 
 const userRoutes = require('../routes/userRoutes.js');
+const transactionRoutes = require('../routes/transactionRoute.js');
 
 const accessLogStream = rfs.createStream('access.log', {
     interval: '1d',
@@ -33,6 +34,8 @@ app.use("/api/card_account", cardAccountRouter);
 
 //////////////HUOM!!!!
 app.use('/api/user', userRoutes);
+app.use('/api/transaction', transactionRoutes);
+
 
 app.use('/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
