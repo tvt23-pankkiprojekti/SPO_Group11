@@ -1,13 +1,13 @@
-const config = require('../src/config.js');
+const config = require('../../src/config.js');
 
-test('get all transactions', async () => {
+test('get all transactions', async()=>{
     const res = await fetch(`http://localhost:${config.PORT}/api/transaction/all`);
 
     console.log(await res.json());
 });
 
 
-test('get one transaction', async ()=>{
+test('get one transaction', async()=>{
     const res = await fetch(`http://localhost:${config.PORT}/api/transaction/10`);
 
     console.log(await res.json());

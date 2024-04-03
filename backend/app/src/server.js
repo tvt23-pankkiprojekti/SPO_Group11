@@ -8,11 +8,10 @@ const administratorRouter = require('./routers/administratorRouter.js');
 const friendRouter = require('./routers/friendRouter.js');
 const cardRouter = require("./routers/cardRouter.js");
 const cardAccountRouter = require("./routers/cardAccountRouter.js");
+const userRoutes = require('./routers/userRoutes.js');
+const transactionRoutes = require('./routers/transactionRoute.js');
 
 const app = express();
-
-const userRoutes = require('../routes/userRoutes.js');
-const transactionRoutes = require('../routes/transactionRoute.js');
 
 const accessLogStream = rfs.createStream('access.log', {
     interval: '1d',
@@ -31,8 +30,6 @@ app.use('/api/administrator', administratorRouter);
 app.use('/api/friend', friendRouter);
 app.use("/api/card", cardRouter);
 app.use("/api/card_account", cardAccountRouter);
-
-//////////////HUOM!!!!
 app.use('/api/user', userRoutes);
 app.use('/api/transaction', transactionRoutes);
 

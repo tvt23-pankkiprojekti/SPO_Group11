@@ -1,4 +1,4 @@
-const {pool} = require('../src/database.js');
+const {pool} = require('../database.js');
 
 const user={
     getAllUsers : async()=>{

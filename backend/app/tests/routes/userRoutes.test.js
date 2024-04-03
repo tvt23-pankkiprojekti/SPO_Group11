@@ -1,8 +1,6 @@
-const config = require('../src/config.js');
+const config = require('../../src/config.js');
 
-//test.only(...) jos haluaa testata vain yhtä
-
-test('get all users', async () => {
+test('get all users', async ()=>{
     const res = await fetch(`http://localhost:${config.PORT}/api/user/all`);
 
     console.log(await res.json());

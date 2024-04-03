@@ -1,6 +1,6 @@
 const express=require('express');
 const router=express.Router();
-const config = require('../src/config.js');
+const config = require('../config.js');
 const transaction = require('../models/transactionModel.js');
 
 router.get('/all', async(req,res)=>{
