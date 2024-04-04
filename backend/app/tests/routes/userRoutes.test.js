@@ -1,9 +1,8 @@
 const config = require('../../src/config.js');
 
-test.only('get all users', async ()=>{
+test('get all users', async ()=>{
     const res = await fetch(`http://localhost:${config.PORT}/api/user`);
-
-    //console.log(await res.json());
+    
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual([
         { idUser: 1, firstName: 'John', lastName: 'Doe' },
@@ -17,13 +16,11 @@ test.only('get all users', async ()=>{
         { idUser: 9, firstName: 'David', lastName: 'Garcia' },
         { idUser: 10, firstName: 'Olivia', lastName: 'Miller' }
     ]);
-    //expect(await res.json()).toContain(expect.arrayContaining(expect.objectContaining('David')));
 });
 
 test('get one user', async ()=>{
     const res = await fetch(`http://localhost:${config.PORT}/api/user/10`);
-
-    //console.log(await res.json());
+ 
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual({
         idUser: 10, 
@@ -39,7 +36,6 @@ test('add user', async()=>{
         body: JSON.stringify({firstName: 'Mikko', lastName: 'Mallikas'})
     });
 
-    //console.log(await res.json());
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual({
         fieldCount: 0,
@@ -59,7 +55,6 @@ test('update user', async()=>{
         body: JSON.stringify({firstName: 'Jokke', lastName: 'Kariseva'})
     });
 
-    //console.log(await res.json());
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual({
         fieldCount: 0,
@@ -78,7 +73,6 @@ test('delete user', async()=>{
         headers: {"Content-Type": "application/json"},
     });
 
-    //console.log(await res.json());
     expect(res.status).toEqual(400);
 });
 

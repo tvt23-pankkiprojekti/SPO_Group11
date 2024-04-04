@@ -1,9 +1,7 @@
 const config = require('../../src/config.js');
 
-test.only('get all transactions', async()=>{
+test('get all transactions', async()=>{
     const res = await fetch(`http://localhost:${config.PORT}/api/transaction`);
-
-    //console.log(await res.json());
 
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual([
@@ -92,8 +90,7 @@ test.only('get all transactions', async()=>{
 
 test('get one transaction', async()=>{
     const res = await fetch(`http://localhost:${config.PORT}/api/transaction/10`);
-
-    //console.log(await res.json());
+    
 
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual({
@@ -114,7 +111,6 @@ test('add transaction', async()=>{
         body: JSON.stringify({Card_id: '1', Account_id: '2', dateTime: '2024-04-03 15:00:00', balanceChange: '10.99', transactionType: 'deposit'})
     });
 
-    //console.log(await res.json());
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual({
         fieldCount: 0,
@@ -133,8 +129,7 @@ test('update transaction', async()=>{
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({Card_id: '1', Account_id: '2', dateTime: '2024-04-04 15:00:00', balanceChange: '-0.99', transactionType: 'withdraw'})
     });
-
-    //console.log(await res.json());
+    
     expect(res.status).toEqual(200);
     
     expect(await res.json()).toEqual({
@@ -153,8 +148,7 @@ test('delete transaction', async()=>{
         method: 'DELETE',
         headers: {"Content-Type": "application/json"},
     });
-
-    //console.log(await res.json());
+    
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual({
         fieldCount: 0,
