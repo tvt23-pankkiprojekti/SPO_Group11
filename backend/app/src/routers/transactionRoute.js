@@ -3,28 +3,66 @@ const router=express.Router();
 const config = require('../config.js');
 const transaction = require('../models/transactionModel.js');
 
-router.get('/all', async(req,res)=>{
-    const data = await transaction.getAllTransactions();
+router.get('/:transactionnumber?', async(req, res, next)=>{
+    const urlParamValue = req.params.transactionnumber;
+    let data;
+    
+    try{
+        if(!urlParamValue){
+            data = await transaction.getAllTransactions();
+        }
+        else{
+            data = (await transaction.getOneTransaction(urlParamValue))[0];
+        }
+    }
+    catch(err){
+        err.name = 'DatabaseError';
+        return next(err);
+    }
+
     res.json(data[0]);
 });
 
-router.get('/:transactionnumber', async(req,res)=>{
-    const data = await transaction.getOneTransaction(req.params.transactionnumber);
+router.post('/', async(req, res, next)=>{
+    let data;
+    
+    try{
+        data = await transaction.addTransaction(req.body);
+    }
+    catch(err){
+        err.name = 'DatabaseError';
+        return next(err);
+    }
+    
     res.json(data[0]);
 });
 
-router.post('/', async(req,res)=>{
-    const data = await transaction.addTransaction(req.body)
+router.put('/:transactionnumber', async(req, res, next)=>{
+    const urlParamValue = req.params.transactionnumber;
+    let data;
+
+    try{
+        data = await transaction.updateTransaction(urlParamValue, req.body);
+    }
+    catch(err){
+        err.name = 'DatabaseError';
+        return next(err);
+    }
+    
     res.json(data[0]);
 });
 
-router.put('/:transactionnumber', async(req,res)=>{
-    const data = await transaction.updateTransaction(req.params.transactionnumber, req.body);
-    res.json(data[0]);
-});
-
-router.delete('/:transactionnumber', async(req,res)=>{
-    const data = await transaction.deleteTransaction(req.params.transactionnumber);
+router.delete('/:transactionnumber', async(req, res, next)=>{
+    const urlParamValue = req.params.transactionnumber;
+    let data;
+    try{
+        data = await transaction.deleteTransaction(urlParamValue);
+    }
+    catch(err){
+        err.name = 'DatabaseError';
+        return next(err);
+    }
+    
     res.json(data[0]);
 });
 

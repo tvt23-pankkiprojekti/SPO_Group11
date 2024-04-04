@@ -1,11 +1,10 @@
 const config = require('../../src/config.js');
 
 test('get all users', async ()=>{
-    const res = await fetch(`http://localhost:${config.PORT}/api/user/all`);
+    const res = await fetch(`http://localhost:${config.PORT}/api/user`);
 
     console.log(await res.json());
 });
-
 
 test('get one user', async ()=>{
     const res = await fetch(`http://localhost:${config.PORT}/api/user/10`);
