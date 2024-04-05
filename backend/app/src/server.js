@@ -8,6 +8,8 @@ const administratorRouter = require('./routers/administratorRouter.js');
 const friendRouter = require('./routers/friendRouter.js');
 const cardRouter = require("./routers/cardRouter.js");
 const cardAccountRouter = require("./routers/cardAccountRouter.js");
+const userRoutes = require('./routers/userRoutes.js');
+const transactionRoutes = require('./routers/transactionRoute.js');
 
 const app = express();
 
@@ -28,6 +30,9 @@ app.use('/api/administrator', administratorRouter);
 app.use('/api/friend', friendRouter);
 app.use("/api/card", cardRouter);
 app.use("/api/card_account", cardAccountRouter);
+app.use('/api/user', userRoutes);
+app.use('/api/transaction', transactionRoutes);
+
 
 app.use('/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
@@ -35,7 +40,7 @@ app.use('/api', async (err, req, res, next) => {
     }
 
     res.status(400);
-    res.json(err);
+    res.json(err);  
     res.end();
 });
 
@@ -45,6 +50,7 @@ app.use(async (err, req, res, next) => {
     res.json({name: "InternalServerError"});
     res.end();
 });
+
 
 const server = http.createServer(app);
 
