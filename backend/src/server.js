@@ -15,7 +15,7 @@ const app = express();
 
 const accessLogStream = rfs.createStream('access.log', {
     interval: '1d',
-    path: '../log',
+    path: 'log',
     teeToStdout: true
 });
 
