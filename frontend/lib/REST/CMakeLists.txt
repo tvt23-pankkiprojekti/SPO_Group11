@@ -17,3 +17,4 @@ add_library(REST SHARED
 )
 
 target_link_libraries(REST PRIVATE Qt6::Core Qt6::Network)
+target_compile_definitions(REST PRIVATE REST_SHARED_LIBRARY)
