@@ -6,7 +6,7 @@ const config = require('../src/config.js');
 const {dbConfig} = require('../src/database.js');
 
 module.exports = async () => {
-    const sqlPath = path.join(__dirname, '..', '..', 'docker');
+    const sqlPath = path.join(__dirname, '..', 'sql');
 
     const createTablesSql = fs.readFileSync(
         path.join(sqlPath, 'init.sql'),
