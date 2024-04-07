@@ -1,5 +1,23 @@
 # Bank-simul Qt application
 
+<!--TOC-->
+
+- [General overview](#general-overview)
+- [Main executable](#main-executable)
+  - [Login](#login)
+  - [Main menu](#main-menu)
+  - [Withdraw](#withdraw)
+  - [Show balance](#show-balance)
+  - [Show transactions](#show-transactions)
+- [Appendices](#appendices)
+  - [Login diagram](#login-diagram)
+  - [Main menu diagram](#main-menu-diagram)
+  - [Withdraw diagram](#withdraw-diagram)
+  - [Show balance diagram](#show-balance-diagram)
+  - [Show transactions diagram](#show-transactions-diagram)
+
+<!--TOC-->
+
 ## General overview
 
 The user facing application of the Bank-simul project is implemented as a Qt application.
