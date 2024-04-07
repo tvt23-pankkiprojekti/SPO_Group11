@@ -3,3 +3,16 @@
 **/log/*
 **/secrets/*
 
+*.exe
+*.a
+*.dll
+.qt
+*_autogen
+CMakeFiles
+CMakeCache.txt
+*.cmake
+*.ninja*
+compile_commands.json
+*.user
+build
+.cache
