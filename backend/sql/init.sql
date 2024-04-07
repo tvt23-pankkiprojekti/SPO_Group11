@@ -172,21 +172,67 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 
 DROP procedure IF EXISTS `getCardAccounts`;
-
+DELIMITER //
 CREATE PROCEDURE `getCardAccounts` (cardId INT)
 BEGIN
 	SELECT `accountNumber`, `type` FROM Account WHERE `idAccount` IN ( SELECT `Account_id` FROM Card_Account WHERE `Card_id` = cardId );
-END;
+END //
+DELIMITER ;
 
 
 
 DROP TRIGGER IF EXISTS `Account_BEFORE_INSERT` ;
+DELIMITER //
 CREATE DEFINER = CURRENT_USER TRIGGER `Account_BEFORE_INSERT` BEFORE INSERT ON `Account` FOR EACH ROW
 BEGIN
 SET NEW.`accountNumber` = UUID();
-END;
+END	//
+DELIMITER ;
 
+-- -----------------------------------------------------
+-- procedure updateAccountBalance
+-- -----------------------------------------------------
 
+DROP PROCEDURE IF EXISTS withdraw;
+
+DELIMITER //
+CREATE PROCEDURE withdraw (IN accNum VARCHAR(255), IN amount DECIMAL(10,2))
+BEGIN
+  DECLARE updatedBalance DECIMAL(10,2);
+  DECLARE accountType ENUM('debit','credit');
+  DECLARE accId INT;
+  
+  SET updatedBalance = (SELECT balance FROM account WHERE accountNumber = accNum) - amount;
+  SELECT type INTO accountType FROM account WHERE accountNumber = accNum;
+  SELECT idAccount INTO accId FROM Account WHERE accountNumber = accNum;
+  
+  -- DEBIT
+  IF (accountType='debit') THEN
+    IF (updatedBalance < 0) THEN
+      SELECT 'LOW_DEBIT_MONEY' AS message;
+    ELSE   
+      -- updating balance on account
+      UPDATE account SET balance = updatedBalance WHERE accountNumber = accNum;
+      -- creating new transaction
+      INSERT INTO transaction (`Card_id`, `Account_id`, `dateTime`, `balanceChange`, `transactionType`) 
+      VALUES (NULL, accId, NOW(), -(amount), 'withdraw');
+    END IF;
+    
+  ELSE
+  
+  -- CREDIT
+    IF (updatedBalance < (SELECT `limit` FROM account WHERE accountNumber = accNum)) THEN
+      SELECT 'LOW_CREDIT_MONEY' AS message;
+    ELSE
+      -- updating balance on account
+      UPDATE account SET balance = updatedBalance WHERE accountNumber = accNum;   
+      -- creating new transaction
+      INSERT INTO transaction (`Card_id`, `Account_id`, `dateTime`, `balanceChange`, `transactionType`) 
+      VALUES (NULL, accId, NOW(), -(amount), 'withdraw');
+    END IF;
+  END IF;
+END //
+DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
