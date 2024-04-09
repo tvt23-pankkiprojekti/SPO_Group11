@@ -1,9 +1,27 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+
+    , login(new Login)
+    , menu(new Menu)
+    , balance(new Balance)
+    , transactions(new Transactions)
+    , withdraw(new Withdraw)
 {
+    ui->setupUi(this);
     m_rest = new REST();
+
+    for (auto widget: std::initializer_list<QWidget*>{
+        login,
+        menu,
+        balance,
+        transactions,
+        withdraw
+    })
+        ui->stackedWidget->addWidget(widget);
 
     // TODO: Implement these
 
