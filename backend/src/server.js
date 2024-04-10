@@ -37,7 +37,7 @@ app.use("/api/account", accountRouter);
 app.use('/api/user', userRouter);
 app.use('/api/transaction', transactionRouter);
 
-app.use("api/login", loginRouter);
+app.use("/api/login", loginRouter);
 
 app.use('/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
