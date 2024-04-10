@@ -3,6 +3,7 @@
 #include <QMainWindow>
 
 #include <REST/rest.h>
+#include <CardReader/cardreader.h>
 
 #include "login.h"
 #include "menu.h"
@@ -27,6 +28,7 @@ public:
 private:
     Ui::MainWindow *ui;
     REST *m_rest;
+    CardReader& m_reader;
 
     Login* login;
     Menu* menu;

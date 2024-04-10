@@ -4,6 +4,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_reader(CardReader::getInstance())
 
     , login(new Login)
     , menu(new Menu)

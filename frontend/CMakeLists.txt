@@ -14,10 +14,11 @@ set(CMAKE_AUTOUIC ON)
 # This sets the directory where the DLLs are placed
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-find_package(Qt6 COMPONENTS REQUIRED Core Widgets Network)
+find_package(Qt6 COMPONENTS REQUIRED Core Widgets Network SerialPort)
 
 include_directories(lib)
 add_subdirectory(lib/REST)
+add_subdirectory(lib/CardReader)
 
 add_executable(pankki
     src/main.cpp
@@ -30,4 +31,4 @@ add_executable(pankki
 )
 
 target_include_directories(pankki PRIVATE inc)
-target_link_libraries(pankki PRIVATE REST Qt6::Core Qt6::Widgets Qt6::Network)
+target_link_libraries(pankki PRIVATE REST CardReader Qt6::Core Qt6::Widgets Qt6::Network Qt6::SerialPort)
