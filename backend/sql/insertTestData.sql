@@ -58,14 +58,14 @@ INSERT INTO `Card_Account` (`Card_id`, `Account_id`) VALUES
 (9, 9),
 (10, 10);
 
-INSERT INTO `Transaction` (`Card_id`, `Account_id`, `dateTime`, `balanceChange`, `transactionType`) VALUES
-(1, 1, NOW(), -50.00, 'withdraw'),
-(2, 2, NOW(), 100.00, 'deposit'),
-(3, 3, NOW(), -20.00, 'withdraw'),
-(4, 4, NOW(), 200.00, 'deposit'),
-(5, 5, NOW(), -10.00, 'withdraw'),
-(6, 6, NOW(), 50.00, 'deposit'),
-(7, 7, NOW(), -30.00, 'withdraw'),
-(8, 8, NOW(), 300.00, 'deposit'),
-(9, 9, NOW(), -40.00, 'withdraw'),
-(10, 10, NOW(), 400.00, 'deposit');
+INSERT INTO `Transaction` (`Account_id`, `dateTime`, `balanceChange`, `transactionType`) VALUES
+(1, NOW(), -50.00, 'withdraw'),
+(2, NOW(), 100.00, 'deposit'),
+(3, NOW(), -20.00, 'withdraw'),
+(4, NOW(), 200.00, 'deposit'),
+(5, NOW(), -10.00, 'withdraw'),
+(6, NOW(), 50.00, 'deposit'),
+(7, NOW(), -30.00, 'withdraw'),
+(8, NOW(), 300.00, 'deposit'),
+(9, NOW(), -40.00, 'withdraw'),
+(10, NOW(), 400.00, 'deposit');
