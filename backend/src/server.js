@@ -4,13 +4,15 @@ const path = require('path');
 const morgan = require('morgan');
 const rfs = require('rotating-file-stream');
 
-const administratorRouter = require('./routers/administratorRouter.js');
-const friendRouter = require('./routers/friendRouter.js');
-const cardRouter = require("./routers/cardRouter.js");
-const cardAccountRouter = require("./routers/cardAccountRouter.js");
-const userRoutes = require('./routers/userRoutes.js');
-const transactionRoutes = require('./routers/transactionRoute.js');
 const accountRouter = require("./routers/accountRouter.js");
+const administratorRouter = require('./routers/crud/administratorRouter.js');
+const friendRouter = require('./routers/crud/friendRouter.js');
+const cardRouter = require("./routers/crud/cardRouter.js");
+const cardAccountRouter = require("./routers/crud/cardAccountRouter.js");
+const userRouter = require('./routers/crud/userRouter.js');
+const transactionRouter = require('./routers/crud/transactionRouter.js');
+
+const loginRouter = require('./routers/loginRouter.js');
 
 const app = express();
 
@@ -31,9 +33,11 @@ app.use('/api/administrator', administratorRouter);
 app.use('/api/friend', friendRouter);
 app.use("/api/card", cardRouter);
 app.use("/api/card_account", cardAccountRouter);
-app.use('/api/user', userRoutes);
-app.use('/api/transaction', transactionRoutes);
 app.use("/api/account", accountRouter);
+app.use('/api/user', userRouter);
+app.use('/api/transaction', transactionRouter);
+
+app.use("api/login", loginRouter);
 
 app.use('/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
@@ -51,7 +55,6 @@ app.use(async (err, req, res, next) => {
     res.json({name: "InternalServerError"});
     res.end();
 });
-
 
 const server = http.createServer(app);
 

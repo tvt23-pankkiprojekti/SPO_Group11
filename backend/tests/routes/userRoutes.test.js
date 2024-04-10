@@ -58,12 +58,12 @@ test('update user', async()=>{
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual({
         fieldCount: 0,
-        affectedRows: 0,
+        affectedRows: 1,
         insertId: 0,
-        info: 'Rows matched: 0  Changed: 0  Warnings: 0',
+        info: 'Rows matched: 1  Changed: 1  Warnings: 0',
         serverStatus: 2,
         warningStatus: 0,
-        changedRows: 0
+        changedRows: 1
     });
 });
 
@@ -75,4 +75,3 @@ test('delete user', async()=>{
 
     expect(res.status).toEqual(400);
 });
-

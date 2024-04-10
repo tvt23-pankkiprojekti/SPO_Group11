@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
-const Administrator = require('../models/administratorModel.js');
+const Administrator = require('../../models/administratorModel.js');
 
 router.get('/:id?', async (req, res, next) => {
     const requestedId = req.params.id;
