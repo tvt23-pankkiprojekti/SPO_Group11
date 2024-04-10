@@ -40,6 +40,7 @@ public:
     enum class Code : unsigned char {
         // for all
         OK,
+        OK_ASK_FOR_TYPE,
         REQUEST_ERROR,
         SERVER_ERROR,
         UNKNOWN_ERROR,

@@ -2,6 +2,7 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../config.js");
+const { pool } = require("../database.js");
 const Card = require("../models/cardModel.js");
 const CardAccount = require("../models/cardAccountModel.js");
 
@@ -106,6 +107,72 @@ router.get("/verify/:number", async (req, res, next) => {
         const token = jwt.sign({ accountIds }, config.SECRET, { expiresIn: 30 }); // 30 seconds
         res.json({ code: 0, token, ask_type: true });
     }
+});
+
+router.get("/type/:number", async (req, res, next) => {
+    const body = req.body || {};
+    
+    // Type validation is done on the frontend,
+    // so we should NEVER fail here
+    if (body.type !== "debit" && body.type !== "credit") {
+        res.status(400);
+        res.json({ code: 5 });
+        return;
+    }
+    if (!body.token) {
+        res.status(400);
+        res.json({ code: 6 });
+        return;
+    }
+
+    // Verify token
+    let decoded;
+    try {
+        decoded = jwt.verify(body.token, config.SECRET);
+    }
+    catch (e) {
+        res.status(403);
+        res.json({ code: 6 });
+        return;
+    }
+    
+    console.log("DECODED:", decoded);
+    
+    if (!decoded.accountIds) {
+        res.status(403);
+        res.json({ code: 6 });
+        return;
+    }
+    
+    // Try getting account id of requested type
+    let idAccount;
+
+    try {
+        const dbResult = (await pool.query(`
+            SELECT idAccount FROM Account
+            WHERE idAccount IN (?) AND type = ?`,
+            [decoded.accountIds, body.type]
+        ))[0];
+        
+        console.log("DB RESULT:", dbResult);
+
+        if (dbResult.length === 0) {
+            res.status(404);
+            res.json({ code: 4 });
+            return;
+        }
+
+        idAccount = dbResult[0].idAccount;
+    }
+    catch (e) {
+        e.name = "DatabaseError";
+        e.code = 500;
+        next(e);
+        return;
+    }
+
+    const token = jwt.sign({ idAccount }, config.SECRET, { expiresIn: 600 }); // 10 minutes
+    res.json({ code: 0, token });
 });
 
 module.exports = router;
