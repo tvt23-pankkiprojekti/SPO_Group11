@@ -12,3 +12,4 @@ exec_in_dir() {
 
 exec_in_dir .
 exec_in_dir lib/REST
+exec_indir lib/CardReader

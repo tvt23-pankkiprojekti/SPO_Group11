@@ -27,7 +27,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    REST *m_rest;
     CardReader& m_reader;
 
     Login* login;

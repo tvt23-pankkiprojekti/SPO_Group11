@@ -22,4 +22,3 @@ include_directories(src)
 target_link_libraries(CardReader PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt6::SerialPort)
 
 target_compile_definitions(CardReader PRIVATE CARDREADER_SHARED_LIBRARY)
-
