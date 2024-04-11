@@ -65,13 +65,7 @@ router.post("/with_card/:number", async (req, res, next) => {
     }
 
     // Check if pin matches
-    console.log("PIN HASH:", pinHash);
-    console.log("GIVEN PIN:", body.pin);
-
     const hashResult = bcrypt.compareSync(body.pin, pinHash);
-
-    console.log("PIN MATCH:", hashResult);
-
     if (!hashResult) {
         res.status(401);
         res.json({ code: Response.INCORRECT_PIN });
@@ -80,7 +74,6 @@ router.post("/with_card/:number", async (req, res, next) => {
 
     // Get account id
     let accountIds;
-
     try {
         const dbResult = (await CardAccount.selectByCardId(idCard))[0];
 
@@ -98,8 +91,6 @@ router.post("/with_card/:number", async (req, res, next) => {
         next(e);
         return;
     }
-
-    console.log("ACCOUNT IDS:", accountIds);
 
     // If only one account is linked, type selection can be skipped,
     // and we can return the token immediately
@@ -141,9 +132,7 @@ router.post("/with_type/:number", async (req, res, next) => {
         res.json({ code: Response.INVALID_TOKEN });
         return;
     }
-    
-    console.log("DECODED:", decoded);
-    
+
     if (!decoded.accountIds) {
         res.status(403);
         res.json({ code: Response.INVALID_TOKEN });
@@ -152,7 +141,6 @@ router.post("/with_type/:number", async (req, res, next) => {
     
     // Try getting account id of requested type
     let idAccount;
-
     try {
         const dbResult = (await pool.query(`
             SELECT idAccount FROM Account
@@ -160,7 +148,6 @@ router.post("/with_type/:number", async (req, res, next) => {
             [decoded.accountIds, body.type]
         ))[0];
         
-        console.log("DB RESULT:", dbResult);
 
         if (dbResult.length === 0) {
             res.status(404);
