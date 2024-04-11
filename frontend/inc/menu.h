@@ -15,6 +15,11 @@ public:
     explicit Menu(QWidget *parent = nullptr);
     ~Menu();
 
+    void setUserName(QString);
+
+signals:
+    void loggedOut();
+
 private:
     Ui::Menu *ui;
 };

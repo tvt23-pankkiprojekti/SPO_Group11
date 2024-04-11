@@ -2,6 +2,7 @@
 #define LOGIN_H
 
 #include <QWidget>
+#include <CardReader/cardreader.h>
 
 namespace Ui {
 class Login;
@@ -15,8 +16,12 @@ public:
     explicit Login(QWidget *parent = nullptr);
     ~Login();
 
+signals:
+    void loggedIn(QString);
+
 private:
     Ui::Login *ui;
+    CardReader& m_reader;
 };
 
 #endif // LOGIN_H
