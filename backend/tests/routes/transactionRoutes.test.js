@@ -1,7 +1,7 @@
-const config = require('../../src/config.js');
+const { API } = require('../../src/config.js');
 
 test('get all transactions', async()=>{
-    const res = await fetch(`http://localhost:${config.PORT}/api/transaction`);
+    const res = await fetch(`${API.url()}/api/transaction`);
 
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual([
@@ -79,7 +79,7 @@ test('get all transactions', async()=>{
 });
 
 test('get one transaction', async()=>{
-    const res = await fetch(`http://localhost:${config.PORT}/api/transaction/10`);
+    const res = await fetch(`${API.url()}/api/transaction/10`);
     
 
     expect(res.status).toEqual(200);
@@ -94,7 +94,7 @@ test('get one transaction', async()=>{
 
 
 test('add transaction', async()=>{
-    const res = await fetch(`http://localhost:${config.PORT}/api/transaction`, {
+    const res = await fetch(`${API.url()}/api/transaction`, {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({Account_id: '2', dateTime: '2024-04-03 15:00:00', balanceChange: '10.99', transactionType: 'deposit'})
@@ -113,7 +113,7 @@ test('add transaction', async()=>{
 });
 
 test('update transaction', async()=>{
-    const res = await fetch(`http://localhost:${config.PORT}/api/transaction/10`, {
+    const res = await fetch(`${API.url()}/api/transaction/10`, {
         method: 'PUT',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({Account_id: '2', dateTime: '2024-04-04 15:00:00', balanceChange: '-0.99', transactionType: 'withdraw'})
@@ -133,7 +133,7 @@ test('update transaction', async()=>{
 });
 
 test('delete transaction', async()=>{
-    const res = await fetch(`http://localhost:${config.PORT}/api/transaction/10`, {
+    const res = await fetch(`${API.url()}/api/transaction/10`, {
         method: 'DELETE',
         headers: {"Content-Type": "application/json"},
     });

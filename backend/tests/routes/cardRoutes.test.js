@@ -1,7 +1,7 @@
-const config = require("../../src/config.js");
+const { API } = require("../../src/config.js");
 
 test("create a card entry", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card`, {
+    const result = await fetch(`${API.url()}/api/card`, {
         method: "POST",
         body: JSON.stringify({
             User_id: 1,
@@ -21,7 +21,7 @@ test("create a card entry", async () => {
 });
 
 test("create a card entry without a body", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card`, {
+    const result = await fetch(`${API.url()}/api/card`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -33,22 +33,22 @@ test("create a card entry without a body", async () => {
 });
 
 test("get all card entries", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card`);
+    const result = await fetch(`${API.url()}/api/card`);
     expect(result.status).toEqual(200);
 });
 
 test("get a card entry", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card/1`);
+    const result = await fetch(`${API.url()}/api/card/1`);
     expect(result.status).toEqual(200);
 });
 
 test("get a card entry that does not exist", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card/0`);
+    const result = await fetch(`${API.url()}/api/card/0`);
     expect(result.status).toEqual(404);
 });
 
 test("update a card entry", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card/11`, {
+    const result = await fetch(`${API.url()}/api/card/11`, {
         method: "PUT",
         body: JSON.stringify({
             User_id: 2,
@@ -67,7 +67,7 @@ test("update a card entry", async () => {
 });
 
 test("update a card entry without a body", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card/11`, {
+    const result = await fetch(`${API.url()}/api/card/11`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -79,7 +79,7 @@ test("update a card entry without a body", async () => {
 });
 
 test("update a card entry that does not exist", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card/0`, {
+    const result = await fetch(`${API.url()}/api/card/0`, {
         method: "PUT",
         body: JSON.stringify({
             User_id: 2,
@@ -99,7 +99,7 @@ test("update a card entry that does not exist", async () => {
 
 
 test("delete a card entry", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card/11`, {
+    const result = await fetch(`${API.url()}/api/card/11`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -111,7 +111,7 @@ test("delete a card entry", async () => {
 });
 
 test("delete a card entry that does not exist", async () => {
-    const result = await fetch(`http://localhost:${config.PORT}/api/card/0`, {
+    const result = await fetch(`${API.url()}/api/card/0`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

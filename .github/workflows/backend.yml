@@ -6,8 +6,12 @@ env:
   DB_HOST: 127.0.0.1
   DB_NAME: mydb
   DB_USER: root
-  DB_PASSWORD: root
-  PORT: 8008
+  DB_PASS: root
+  DB_PORT: 3306
+  API_PROT: http
+  API_HOST: 127.0.0.1
+  API_PORT: 8008
+  SECRET: secret
 
 jobs:
   build_and_run:
@@ -26,7 +30,7 @@ jobs:
     - name: Setup MySQL
       run: |
         sudo /etc/init.d/mysql start
-        mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;" -u$DB_USER -p$DB_PASSWORD
+        mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;" -u$DB_USER -p$DB_PASS
 
     - name: Setup npm and run tests
       working-directory: backend
