@@ -5,25 +5,31 @@ const config = require("../config.js");
 const { pool } = require("../database.js");
 const Card = require("../models/cardModel.js");
 const CardAccount = require("../models/cardAccountModel.js");
+const Response = require("../responses.js");
 
-// Status codes:
-// 0    OK, just a 200 OK status might be sufficient here?
-// 1    Card not found
-// 2    Incorrect pin or no pin, should these be separate?
-// 3    Card frozen
-// 4    No account linked
-// 5    No type provided
-// 6    Invalid token
-// 500  Server error
+// Login example:
+// 1) Make request to /api/login/with_card/<card number>, (e.g. 1000200030004000)
+//    with a "pin" in the body
 
-router.get("/verify/:number", async (req, res, next) => {
+// 2) Receive a token in response, if only one account is linked
+//    the token can be used with other requests. (valid for 10 minutes)
+
+// 3) If multiple accounts are linked, partial token is returned, (valid for 1 minute)
+//    and an additional request needs to be made to /api/login/with_type/<card number>,
+//    with a "type" ("debit" or "credit") and "token" in the body, to get a "full" token
+
+// Checking if a token is partial or full:
+// * Full tokens contain only one account
+// * Partial tokens contain two accounts
+
+router.get("/with_card/:number", async (req, res, next) => {
     const body = req.body || {};
     
     // Pin validation is done on the frontend,
     // so we should NEVER fail here
     if (!body.pin) {
         res.status(400);
-        res.json({ code: 2 });
+        res.json({ code: Response.MISSING_PARAMETERS });
         return;
     }
 
@@ -36,7 +42,7 @@ router.get("/verify/:number", async (req, res, next) => {
 
         if (dbResult.length === 0) {
             res.status(404);
-            res.json({ code: 1 });
+            res.json({ code: Response.CARD_NOT_FOUND });
             return;
         }
 
@@ -46,7 +52,7 @@ router.get("/verify/:number", async (req, res, next) => {
     }
     catch (e) {
         e.name = "DatabaseError";
-        e.code = 500;
+        e.code = Response.SERVER_ERROR;
         next(e);
         return;
     }
@@ -54,7 +60,7 @@ router.get("/verify/:number", async (req, res, next) => {
     // Check if card is frozen
     if (frozen) {
         res.status(403);
-        res.json({ code: 3 });
+        res.json({ code: Response.CARD_FROZEN });
         return;
     }
 
@@ -68,7 +74,7 @@ router.get("/verify/:number", async (req, res, next) => {
 
     if (!hashResult) {
         res.status(401);
-        res.json({ code: 2 });
+        res.json({ code: Response.INCORRECT_PIN });
         return;
     }
 
@@ -80,7 +86,7 @@ router.get("/verify/:number", async (req, res, next) => {
 
         if (dbResult.length === 0) {
             res.status(404);
-            res.json({ code: 4 });
+            res.json({ code: Response.NO_ACCOUNT_LINKED });
             return;
         }
 
@@ -88,7 +94,7 @@ router.get("/verify/:number", async (req, res, next) => {
     }
     catch (e) {
         e.name = "DatabaseError";
-        e.code = 500;
+        e.code = Response.SERVER_ERROR;
         next(e);
         return;
     }
@@ -99,29 +105,29 @@ router.get("/verify/:number", async (req, res, next) => {
     // and we can return the token immediately
     if (accountIds.length === 1) {
         const token = jwt.sign({ accountIds }, config.SECRET, { expiresIn: 600 }); // 10 minutes
-        res.json({ code: 0, token, ask_type: false });
+        res.json({ code: Response.OK, token, partial_login: false });
     }
 
     // If multiple accounts are linked
     else {
-        const token = jwt.sign({ accountIds }, config.SECRET, { expiresIn: 30 }); // 30 seconds
-        res.json({ code: 0, token, ask_type: true });
+        const token = jwt.sign({ accountIds }, config.SECRET, { expiresIn: 60 }); // 1 minute
+        res.json({ code: Response.OK, token, partial_login: true });
     }
 });
 
-router.get("/type/:number", async (req, res, next) => {
+router.get("/with_type/:number", async (req, res, next) => {
     const body = req.body || {};
     
     // Type validation is done on the frontend,
     // so we should NEVER fail here
     if (body.type !== "debit" && body.type !== "credit") {
         res.status(400);
-        res.json({ code: 5 });
+        res.json({ code: Response.MISSING_PARAMETERS });
         return;
     }
     if (!body.token) {
         res.status(400);
-        res.json({ code: 6 });
+        res.json({ code: Response.MISSING_PARAMETERS });
         return;
     }
 
@@ -132,7 +138,7 @@ router.get("/type/:number", async (req, res, next) => {
     }
     catch (e) {
         res.status(403);
-        res.json({ code: 6 });
+        res.json({ code: Response.INVALID_TOKEN });
         return;
     }
     
@@ -140,7 +146,7 @@ router.get("/type/:number", async (req, res, next) => {
     
     if (!decoded.accountIds) {
         res.status(403);
-        res.json({ code: 6 });
+        res.json({ code: Response.INVALID_TOKEN });
         return;
     }
     
@@ -158,7 +164,7 @@ router.get("/type/:number", async (req, res, next) => {
 
         if (dbResult.length === 0) {
             res.status(404);
-            res.json({ code: 4 });
+            res.json({ code: Response.NO_ACCOUNT_LINKED });
             return;
         }
 
@@ -166,13 +172,13 @@ router.get("/type/:number", async (req, res, next) => {
     }
     catch (e) {
         e.name = "DatabaseError";
-        e.code = 500;
+        e.code = Response.SERVER_ERROR;
         next(e);
         return;
     }
 
     const token = jwt.sign({ idAccount }, config.SECRET, { expiresIn: 600 }); // 10 minutes
-    res.json({ code: 0, token });
+    res.json({ code: Response.OK, token });
 });
 
 module.exports = router;
