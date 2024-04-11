@@ -46,24 +46,20 @@ public:
         NO_ACCOUNT_LINKED,
         MISSING_PARAMETERS,
         INVALID_TOKEN,
+        ASK_FOR_TYPE,
         SERVER_ERROR = 500
     };
 
     Response() = delete;
-    Response(int code)
-        : m_code(code), m_data({})
-    {
-    }
-
-    Response(const QJsonDocument& data)
-        : m_code(Code::OK), m_data(data)
+    Response(int code, const std::optional<QJsonDocument>& data = {})
+        : m_code(code), m_data(data)
     {
     }
 
     // m_code == Code::OK: m_data has data
     // m_code != Code::OK: m_data is empty
     int code() const { return m_code; }
-    bool has_data() const { return m_data.has_value() && m_code == Code::OK; }
+    bool has_data() const { return m_data.has_value(); }
     QJsonDocument data() const { return m_data.value(); }
 
     void set_code(int code) { m_code = code; }
@@ -91,8 +87,21 @@ public:
      */
     static void end();
 
+    /**
+     * Makes a login request with a card number and a pin
+     *
+     * If successful, "returns" a token, or a partial token to
+     * be used in `make_type_request`
+     */
     void make_login_request(const QString& card_number, const QString& pin);
+
+    /**
+     * Makes a card type request if card has debit and credit
+     *
+     * If successful, "returns" the full token
+     */
     void make_type_request(const QString& partial_token, const QString& type);
+
     void make_balance_request();
     void make_withdraw_request();
     void make_transactions_request();

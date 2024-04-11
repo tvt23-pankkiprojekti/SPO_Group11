@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { DB } = require("../config.js");
+const { API } = require("../config.js");
 const { pool } = require("../database.js");
 const Card = require("../models/cardModel.js");
 const CardAccount = require("../models/cardAccountModel.js");
@@ -95,14 +95,14 @@ router.post("/with_card/:number", async (req, res, next) => {
     // If only one account is linked, type selection can be skipped,
     // and we can return the token immediately
     if (accountIds.length === 1) {
-        const token = jwt.sign({ accountIds }, DB.SECRET, { expiresIn: 600 }); // 10 minutes
-        res.json({ code: Response.OK, token, partial_token: false });
+        const token = jwt.sign({ accountIds }, API.SECRET, { expiresIn: 600 }); // 10 minutes
+        res.json({ code: Response.OK, token });
     }
 
     // If multiple accounts are linked
     else {
-        const token = jwt.sign({ accountIds }, DB.SECRET, { expiresIn: 60 }); // 1 minute
-        res.json({ code: Response.OK, token, partial_token: true });
+        const token = jwt.sign({ accountIds }, API.SECRET, { expiresIn: 60 }); // 1 minute
+        res.json({ code: Response.ASK_FOR_TYPE, token });
     }
 });
 
@@ -125,7 +125,7 @@ router.post("/with_type/:number", async (req, res, next) => {
     // Verify token
     let decoded;
     try {
-        decoded = jwt.verify(body.token, DB.SECRET);
+        decoded = jwt.verify(body.token, API.SECRET);
     }
     catch (e) {
         res.status(403);
@@ -164,7 +164,7 @@ router.post("/with_type/:number", async (req, res, next) => {
         return;
     }
 
-    const token = jwt.sign({ idAccount }, DB.SECRET, { expiresIn: 600 }); // 10 minutes
+    const token = jwt.sign({ idAccount }, API.SECRET, { expiresIn: 600 }); // 10 minutes
     res.json({ code: Response.OK, token });
 });
 
