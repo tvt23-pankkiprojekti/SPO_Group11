@@ -37,34 +37,20 @@
 class REST_API [[nodiscard]] Response final
 {
 public:
-    enum class Code : unsigned char {
-        // for all
-        OK,
-        OK_ASK_FOR_TYPE,
-        REQUEST_ERROR,
-        SERVER_ERROR,
-        UNKNOWN_ERROR,
-
-        // for login
+    // This should be identical to responses.js
+    enum Code {
+        OK = 0,
         CARD_NOT_FOUND,
         INCORRECT_PIN,
         CARD_FROZEN,
-        NO_ACCOUNT,
-
-        // for balance, withdraw, transactions
-        // INVALID_SESSION, // invalid signed_account_number
-
-        // for balance
-
-        // for withdraw
-        // INSUFFICIENT_FUNDS,
-
-        // for transactions
-        // NO_TRANSACTIONS // Not really an error, can be deduced from the data being empty
+        NO_ACCOUNT_LINKED,
+        MISSING_PARAMETERS,
+        INVALID_TOKEN,
+        SERVER_ERROR = 500
     };
 
     Response() = delete;
-    Response(Code code)
+    Response(int code)
         : m_code(code), m_data({})
     {
     }
@@ -76,15 +62,15 @@ public:
 
     // m_code == Code::OK: m_data has data
     // m_code != Code::OK: m_data is empty
-    Code code() const { return m_code; }
+    int code() const { return m_code; }
     bool has_data() const { return m_data.has_value() && m_code == Code::OK; }
     QJsonDocument data() const { return m_data.value(); }
 
-    void set_code(Code code) { m_code = code; }
+    void set_code(int code) { m_code = code; }
     void set_data(const QJsonDocument& data) { m_data = data; }
 
 private:
-    Code m_code;
+    int m_code;
     std::optional<QJsonDocument> m_data;
 };
 
@@ -106,6 +92,7 @@ public:
     static void end();
 
     void make_login_request(const QString& card_number, const QString& pin);
+    void make_type_request(const QString& partial_token, const QString& type);
     void make_balance_request();
     void make_withdraw_request();
     void make_transactions_request();
