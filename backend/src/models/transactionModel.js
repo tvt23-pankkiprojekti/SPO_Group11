@@ -10,7 +10,7 @@ const transaction={
         return dbResult;
     },
     addTransaction : async(newTransaction)=>{
-        const dbResult = await pool.query('INSERT INTO Transaction (Card_id, Account_id, dateTime, balanceChange, transactionType) VALUES(?,?,?,?,?)',[newTransaction.Card_id, newTransaction.Account_id, newTransaction.dateTime, newTransaction.balanceChange, newTransaction.transactionType]);
+        const dbResult = await pool.query('INSERT INTO Transaction (Account_id, dateTime, balanceChange, transactionType) VALUES(?,?,?,?)',[newTransaction.Account_id, newTransaction.dateTime, newTransaction.balanceChange, newTransaction.transactionType]);
         return dbResult;
     },
     updateTransaction : async(id, updateTransaction)=>{
