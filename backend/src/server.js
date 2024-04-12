@@ -10,6 +10,7 @@ const cardRouter = require("./routers/cardRouter.js");
 const cardAccountRouter = require("./routers/cardAccountRouter.js");
 const userRoutes = require('./routers/userRoutes.js');
 const transactionRoutes = require('./routers/transactionRoute.js');
+const preWithdrawRoute = require('./routers/preWithdrawRouter.js');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/api/card", cardRouter);
 app.use("/api/card_account", cardAccountRouter);
 app.use('/api/user', userRoutes);
 app.use('/api/transaction', transactionRoutes);
+app.use('/api/preWithdraw', preWithdrawRoute);
 
 
 app.use('/api', async (err, req, res, next) => {
