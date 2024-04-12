@@ -99,7 +99,15 @@ test("update a card entry that does not exist", async () => {
 
 
 test("delete a card entry", async () => {
-    const result = await fetch(`${API.url()}/api/card/11`, {
+    await fetch(`${API.url()}/api/card_account/5`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+    });
+
+    const result = await fetch(`${API.url()}/api/card/5`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

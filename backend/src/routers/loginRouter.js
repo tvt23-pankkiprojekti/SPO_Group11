@@ -5,6 +5,7 @@ const { API } = require("../config.js");
 const { pool } = require("../database.js");
 const Card = require("../models/cardModel.js");
 const CardAccount = require("../models/cardAccountModel.js");
+const Account = require("../models/accountModel.js");
 const Response = require("../responses.js");
 
 // Login example:
@@ -142,12 +143,7 @@ router.post("/with_type/:number", async (req, res, next) => {
     // Try getting account id of requested type
     let idAccount;
     try {
-        const dbResult = (await pool.query(`
-            SELECT idAccount FROM Account
-            WHERE idAccount IN (?) AND type = ?`,
-            [decoded.accountIds, body.type]
-        ))[0];
-        
+        const dbResult = (await Account.selectIdByIdsAndType(decoded.accountIds, body.type))[0];
 
         if (dbResult.length === 0) {
             res.status(404);

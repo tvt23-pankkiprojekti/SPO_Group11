@@ -15,6 +15,14 @@ const Account = {
         return await pool.query('SELECT * FROM Account WHERE idAccount = ?', [id]);
     },
 
+    selectIdByIdsAndType: async (ids, type) => {
+        return await pool.query(`
+            SELECT idAccount FROM Account
+            WHERE idAccount IN (?) AND type = ?`,
+            [ids, type]
+        );
+    },
+
     update: async (id, account) => {
         return await pool.query('UPDATE Account SET ? WHERE idAccount = ?', [account, id]);
     },

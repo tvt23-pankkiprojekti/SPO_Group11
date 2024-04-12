@@ -1,10 +1,9 @@
 const express = require('express');
 const http = require('http');
-// const path = require('path');
 const morgan = require('morgan');
 const rfs = require('rotating-file-stream');
 
-const accountRouter = require("./routers/accountRouter.js");
+const accountRouter = require("./routers/crud/accountRouter.js");
 const administratorRouter = require('./routers/crud/administratorRouter.js');
 const friendRouter = require('./routers/crud/friendRouter.js');
 const cardRouter = require("./routers/crud/cardRouter.js");
