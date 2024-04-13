@@ -51,7 +51,9 @@ MainWindow::MainWindow(QWidget *parent)
     // });
 
     // connect(REST::the(), &REST::login_request_finished, this, [this](Response response) {
-    // 
+    //     if (response.has_data()) {
+    //         qDebug() << response.data().toJson() << "\n";
+    //     }
     // });
 
     // connect(REST::the(), &REST::balance_request_finished, this, [this](Response response) {

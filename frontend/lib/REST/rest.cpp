@@ -6,8 +6,6 @@
 
 static REST *__rest = nullptr;
 
-static const QString LOGIN_REQUEST_URL = "http://localhost:8008/api/login/with_card/";
-
 REST *REST::the()
 {
     if (!__rest) {
@@ -33,7 +31,7 @@ void REST::make_login_request(const QString& card_number, const QString& pin)
     QJsonObject body;
     body["pin"] = pin;
 
-    const QString url = LOGIN_REQUEST_URL + card_number;
+    const QString url = "http://localhost:8008/api/login/" + card_number;
     const auto request = QNetworkRequest(url);
     m_rest_manager->post(request, QJsonDocument(body), nullptr, [&](QRestReply& reply) {
         auto json_optional = reply.readJson();
@@ -42,29 +40,16 @@ void REST::make_login_request(const QString& card_number, const QString& pin)
             return;
         }
 
-        auto json = json_optional.value();
-        auto code = json["code"].toInt();
-        auto token = json["token"].toString();
-        auto partial_token = json["partial_token"].toBool();
+        auto data = json_optional.value();
+        auto code = data["code"].toInt();
 
         if (code == Response::Code::OK) {
-            auto data = json.object();
-            data.remove("code");
-            emit login_request_finished({ code, QJsonDocument(data) });
-            return;
-        }
-        else if (code == Response::Code::ASK_FOR_TYPE) {
-            emit login_request_finished({ code, QJsonDocument({{ "token", token }})});
+            emit login_request_finished({ code, data });
             return;
         }
 
         emit login_request_finished({ code });
     });
-}
-
-void REST::make_type_request(const QString& partial_token, const QString& type)
-{
-
 }
 
 void REST::make_balance_request()

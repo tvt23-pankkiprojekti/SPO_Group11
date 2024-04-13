@@ -13,9 +13,9 @@ VALUES ("admin", "$2a$12$AmmT1LTY861Xp072GaIwKuAaDhAne503qOGHK.l1S3nXJJpdArwwC")
 INSERT INTO `User` (`firstName`, `lastName`)
 VALUES ("John", "Doe");
 
-INSERT INTO `Account` (`User_id`, `type`, `balance`, `limit`)
-VALUE (1, "debit", 1000, 0),
-      (1, "credit", 0, -1000);
+INSERT INTO `Account` (`User_id`, `type`, `balance`, `limit`, `accountNumber`)
+VALUE (1, "debit", 1000, 0, "b36f7b42-8aca-448d-af61-4710dc93fa9f"),
+      (1, "credit", 0, -1000, "784f1226-a789-454c-8e35-caee09cc1397");
 
 INSERT INTO `Card` (`User_id`, `pinHash`, `number`, `frozen`)
 VALUES (1, "$2a$12$7Hsh1oZ41u3Qq9aCk2BcjOisx9Twed6WQJ67OJqE14MOwRByyZ5/i", "1000200030004000", 0), -- 1111, (debit)

@@ -46,7 +46,6 @@ public:
         NO_ACCOUNT_LINKED,
         MISSING_PARAMETERS,
         INVALID_TOKEN,
-        ASK_FOR_TYPE,
         SERVER_ERROR = 500
     };
 
@@ -94,13 +93,6 @@ public:
      * be used in `make_type_request`
      */
     void make_login_request(const QString& card_number, const QString& pin);
-
-    /**
-     * Makes a card type request if card has debit and credit
-     *
-     * If successful, "returns" the full token
-     */
-    void make_type_request(const QString& partial_token, const QString& type);
 
     void make_balance_request();
     void make_withdraw_request();
