@@ -6,7 +6,7 @@ test('insert account', async ()=>{
         method: 'POST',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            user_id: 1,
+            User_id: 1,
             type: 'debit',
             balance: 1000.00,
             limit: 0.00,

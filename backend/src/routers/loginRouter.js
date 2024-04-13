@@ -1,31 +1,14 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { API } = require("../config.js");
 const { pool } = require("../database.js");
+const { API } = require("../config.js");
 const Card = require("../models/cardModel.js");
-const CardAccount = require("../models/cardAccountModel.js");
-const Account = require("../models/accountModel.js");
 const Response = require("../responses.js");
 
-// Login example:
-// 1) Make request to /api/login/with_card/<card number>, (e.g. 1000200030004000)
-//    with a "pin" in the body
-
-// 2) Receive a token in response, if only one account is linked
-//    the token can be used with other requests. (valid for 10 minutes)
-
-// 3) If multiple accounts are linked, partial token is returned, (valid for 1 minute)
-//    and an additional request needs to be made to /api/login/with_type/<card number>,
-//    with a "type" ("debit" or "credit") and "token" in the body, to get a "full" token
-
-// Checking if a token is partial or full:
-// * Full tokens contain only one account
-// * Partial tokens contain two accounts
-
-router.post("/with_card/:number", async (req, res, next) => {
+router.post("/:number", async (req, res, next) => {
     const body = req.body || {};
-    
+
     // Pin validation is done on the frontend,
     // so we should NEVER fail here
     if (!body.pin) {
@@ -35,7 +18,7 @@ router.post("/with_card/:number", async (req, res, next) => {
     }
 
     // Try querying the database for card data,
-    // if the query is empty, the card does not exist
+    // if the query is empty, or if the card does not exist
     let idCard, pinHash, frozen;
     try {
         const number = req.params.number;
@@ -73,18 +56,24 @@ router.post("/with_card/:number", async (req, res, next) => {
         return;
     }
 
-    // Get account id
-    let accountIds;
+    // Get account ID(s) and send them back
     try {
-        const dbResult = (await CardAccount.selectByCardId(idCard))[0];
+        const dbResult = (await pool.query("CALL getCardAccounts(?)", [idCard]))[0][0];
 
         if (dbResult.length === 0) {
             res.status(404);
             res.json({ code: Response.NO_ACCOUNT_LINKED });
             return;
         }
+    
+        const debit = dbResult.find(a => a.type === "debit");
+        const credit = dbResult.find(a => a.type === "credit");
+        const json = {
+            ...(debit) && { "debit": jwt.sign({ accountNumber: debit }, API.SECRET, { expiresIn: 600 }) },
+            ...(credit) && { "credit": jwt.sign({ accountNumber: credit }, API.SECRET, { expiresIn: 600 }) }
+        };
 
-        accountIds = dbResult.map(row => row.Account_id);
+        res.json(json);
     }
     catch (e) {
         e.name = "DatabaseError";
@@ -92,76 +81,6 @@ router.post("/with_card/:number", async (req, res, next) => {
         next(e);
         return;
     }
-
-    // If only one account is linked, type selection can be skipped,
-    // and we can return the token immediately
-    if (accountIds.length === 1) {
-        const token = jwt.sign({ accountIds }, API.SECRET, { expiresIn: 600 }); // 10 minutes
-        res.json({ code: Response.OK, token });
-    }
-
-    // If multiple accounts are linked
-    else {
-        const token = jwt.sign({ accountIds }, API.SECRET, { expiresIn: 60 }); // 1 minute
-        res.json({ code: Response.ASK_FOR_TYPE, token });
-    }
-});
-
-router.post("/with_type/:number", async (req, res, next) => {
-    const body = req.body || {};
-    
-    // Type validation is done on the frontend,
-    // so we should NEVER fail here
-    if (body.type !== "debit" && body.type !== "credit") {
-        res.status(400);
-        res.json({ code: Response.MISSING_PARAMETERS });
-        return;
-    }
-    if (!body.token) {
-        res.status(400);
-        res.json({ code: Response.MISSING_PARAMETERS });
-        return;
-    }
-
-    // Verify token
-    let decoded;
-    try {
-        decoded = jwt.verify(body.token, API.SECRET);
-    }
-    catch (e) {
-        res.status(403);
-        res.json({ code: Response.INVALID_TOKEN });
-        return;
-    }
-
-    if (!decoded.accountIds) {
-        res.status(403);
-        res.json({ code: Response.INVALID_TOKEN });
-        return;
-    }
-    
-    // Try getting account id of requested type
-    let idAccount;
-    try {
-        const dbResult = (await Account.selectIdByIdsAndType(decoded.accountIds, body.type))[0];
-
-        if (dbResult.length === 0) {
-            res.status(404);
-            res.json({ code: Response.NO_ACCOUNT_LINKED });
-            return;
-        }
-
-        idAccount = dbResult[0].idAccount;
-    }
-    catch (e) {
-        e.name = "DatabaseError";
-        e.code = Response.SERVER_ERROR;
-        next(e);
-        return;
-    }
-
-    const token = jwt.sign({ idAccount }, API.SECRET, { expiresIn: 600 }); // 10 minutes
-    res.json({ code: Response.OK, token });
 });
 
 module.exports = router;

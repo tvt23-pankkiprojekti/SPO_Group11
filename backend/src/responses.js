@@ -16,7 +16,6 @@ const Response = {
     NO_ACCOUNT_LINKED: 4,
     MISSING_PARAMETERS: 5,
     INVALID_TOKEN: 6,
-    ASK_FOR_TYPE: 7,
     SERVER_ERROR: 500
 };
 
