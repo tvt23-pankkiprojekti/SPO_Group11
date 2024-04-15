@@ -1,8 +1,8 @@
-const config = require('../../src/config.js');
+const { API } = require('../../src/config.js');
 
 test('create friend', async () => {
     const result = await fetch(
-        `http://localhost:${config.PORT}/api/friend`,
+        `${API.url()}/api/friend`,
         {
             method: 'POST',
             body: JSON.stringify({User_id: 1, Account_id: 10}),
@@ -27,7 +27,7 @@ test('create friend', async () => {
 
 test('update friend', async () => {
     const result = await fetch(
-        `http://localhost:${config.PORT}/api/friend/3`,
+        `${API.url()}/api/friend/3`,
         {
             method: 'PUT',
             body: JSON.stringify({Account_id: 2}),
@@ -52,7 +52,7 @@ test('update friend', async () => {
 
 test('get all friends', async () => {
     const result = await fetch(
-        `http://localhost:${config.PORT}/api/friend`,
+        `${API.url()}/api/friend`,
         {
             headers: {
                 "Content-Type": "application/json",
@@ -71,7 +71,7 @@ test('get all friends', async () => {
 
 test('delete friend', async () => {
     const result = await fetch(
-        `http://localhost:${config.PORT}/api/friend/1`,
+        `${API.url()}/api/friend/1`,
         {
             method: 'DELETE',
             headers: {

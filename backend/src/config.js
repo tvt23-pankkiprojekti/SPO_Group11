@@ -1,10 +1,32 @@
 require('dotenv').config()
 
+// Example .env for running locally:
+// DB_HOST=localhost
+// DB_NAME=mydb
+// DB_USER=root
+// DB_PASS=root
+// DB_PORT=3306
+
+// API_PROT=http
+// API_HOST=localhost
+// API_PORT=8008
+// SECRET=secret
+
 module.exports = {
-    PORT: process.env.PORT,
-    DB_HOST: process.env.DB_HOST,
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    DB_NAME: process.env.DB_NAME,
-    SECRET: process.env.SECRET
-}
+    DB: {
+        HOST: process.env.DB_HOST,
+        USER: process.env.DB_USER,
+        PASS: process.env.DB_PASS,
+        NAME: process.env.DB_NAME,
+        PORT: process.env.DB_PORT
+    },
+    API: {
+        PROT: process.env.API_PROT,
+        HOST: process.env.API_HOST,
+        PORT: process.env.API_PORT,
+        SECRET: process.env.SECRET,
+        url: () => {
+            return `${process.env.API_PROT}://${process.env.API_HOST}:${process.env.API_PORT}`;
+        }
+    }
+};

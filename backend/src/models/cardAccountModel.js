@@ -20,6 +20,13 @@ const CardAccount = {
             [idCard_Account]
         );
     },
+    selectByCardId: async (Card_id) => {
+        return await pool.query(`
+            SELECT * FROM Card_Account
+            WHERE Card_id = ?`,
+            [Card_id]
+        );
+    },
     update: async (idCard_Account, data) => {
         return await pool.query(`
             UPDATE Card_Account

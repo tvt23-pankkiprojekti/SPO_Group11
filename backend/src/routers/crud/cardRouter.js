@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const Card = require("../models/cardModel.js");
+const Card = require("../../models/cardModel.js");
 
 router.post("/", async (req, res, next) => {
     try {

@@ -3,7 +3,7 @@ const {pool} = require('../database.js');
 const Account = {
     
     insert: async(account) => {
-        return await pool.query('INSERT INTO Account (User_id, type, balance, `limit`, accountNumber) VALUES (?, ?, ?, ?, ?)',[account.user_id, account.type, account.balance, account.limit, account.accountNumber])
+        return await pool.query('INSERT INTO Account (User_id, type, balance, `limit`, accountNumber) VALUES (?, ?, ?, ?, ?)',[account.User_id, account.type, account.balance, account.limit, account.accountNumber])
     },
 
     getAll: async() => {
@@ -21,6 +21,7 @@ const Account = {
 
     delete: async (id) => {
         return await pool.query('DELETE FROM Account WHERE idAccount = ?', [id]);
-    }
+    },
 };
+
 module.exports = Account;

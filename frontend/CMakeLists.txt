@@ -22,13 +22,13 @@ add_subdirectory(lib/CardReader)
 
 add_executable(pankki
     src/main.cpp
-    inc/mainwindow.h src/mainwindow.cpp forms/mainwindow.ui
-    inc/login.h src/login.cpp forms/login.ui
-    inc/withdraw.h src/withdraw.cpp forms/withdraw.ui
-    inc/balance.h src/balance.cpp forms/balance.ui
-    inc/transactions.h src/transactions.cpp forms/transactions.ui
-    inc/menu.h src/menu.cpp forms/menu.ui
+    include/mainwindow.h     src/mainwindow.cpp      forms/mainwindow.ui
+    include/login.h          src/login.cpp           forms/login.ui
+    include/withdraw.h       src/withdraw.cpp        forms/withdraw.ui
+    include/balance.h        src/balance.cpp         forms/balance.ui
+    include/transactions.h   src/transactions.cpp    forms/transactions.ui
+    include/menu.h           src/menu.cpp            forms/menu.ui
 )
 
-target_include_directories(pankki PRIVATE inc)
+target_include_directories(pankki PRIVATE include)
 target_link_libraries(pankki PRIVATE REST CardReader Qt6::Core Qt6::Widgets Qt6::Network Qt6::SerialPort)

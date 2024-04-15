@@ -1,9 +1,9 @@
 const bcrypt = require('bcrypt');
-const config = require('../../src/config.js');
+const { API } = require('../../src/config.js');
 
 test('create administrator', async () => {
     const result = await fetch(
-        `http://localhost:${config.PORT}/api/administrator`,
+        `${API.url()}/api/administrator`,
         {
             method: 'POST',
             body: JSON.stringify({
@@ -31,7 +31,7 @@ test('create administrator', async () => {
 
 test('update administrator', async () => {
     const result = await fetch(
-        `http://localhost:${config.PORT}/api/administrator/4`,
+        `${API.url()}/api/administrator/4`,
         {
             method: 'PUT',
             body: JSON.stringify({password: 'changedpassword'}),
@@ -56,7 +56,7 @@ test('update administrator', async () => {
 
 test('get all administrators', async () => {
     const result = await fetch(
-        `http://localhost:${config.PORT}/api/administrator`,
+        `${API.url()}/api/administrator`,
         {
             headers: {
                 "Content-Type": "application/json",
@@ -83,7 +83,7 @@ test('get all administrators', async () => {
 
 test('delete administrator', async () => {
     const result = await fetch(
-        `http://localhost:${config.PORT}/api/administrator/1`,
+        `${API.url()}/api/administrator/1`,
         {
             method: 'DELETE',
             headers: {

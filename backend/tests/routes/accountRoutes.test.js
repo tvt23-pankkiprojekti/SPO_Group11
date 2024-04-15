@@ -1,12 +1,12 @@
-const config = require('../../src/config.js');
+const { API } = require('../../src/config.js');
 
 test('insert account', async ()=>{
-    const result = await fetch(`http://localhost:${config.PORT}/api/account`,
+    const result = await fetch(`${API.url()}/api/account`,
     {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            user_id: 1,
+            User_id: 1,
             type: 'debit',
             balance: 1000.00,
             limit: 0.00,
@@ -18,7 +18,7 @@ test('insert account', async ()=>{
 });
 
 test('get one account', async ()=>{
-    const result = await fetch(`http://localhost:${config.PORT}/api/account/1`);
+    const result = await fetch(`${API.url()}/api/account/1`);
 
     expect(result.status).toEqual(200);
     expect(await result.json()).toEqual({
@@ -32,13 +32,13 @@ test('get one account', async ()=>{
 });
 
 test('get all accounts', async ()=>{
-    const result = await fetch(`http://localhost:${config.PORT}/api/account`);
+    const result = await fetch(`${API.url()}/api/account`);
 
     expect(result.status).toEqual(200);
 });
 
 test('update account', async()=>{
-    const result = await fetch(`http://localhost:${config.PORT}/api/account/1`,
+    const result = await fetch(`${API.url()}/api/account/1`,
     {
     method: 'PUT',
     headers: {"Content-Type": "application/json"},
@@ -48,7 +48,7 @@ test('update account', async()=>{
 });
 
 test('delete account', async () =>{
-    const result = await fetch(`http://localhost:${config.PORT}/api/account/1`,
+    const result = await fetch(`${API.url()}/api/account/1`,
     {
         method: 'DELETE',
     });

@@ -1,6 +1,5 @@
 const router = require('express').Router();
-const Account = require("../models/accountModel.js");
-
+const Account = require("../../models/accountModel.js");
 
 router.post('/', async (req, res, next) => {
 
@@ -11,7 +10,7 @@ router.post('/', async (req, res, next) => {
         dbResult = await Account.insert(account);
     }
     catch (error) {
-         error.name = 'DatabaseError';
+        error.name = 'DatabaseError';
         return next(error);
     }
 
@@ -38,9 +37,6 @@ router.get ('/:id?', async (req, res, next) =>{
 });
 
 router.put('/:id', async (req, res, next) => {
-
-    const id = req.params.id;
-    const account = req.body;
 
     let dbResult;
     
