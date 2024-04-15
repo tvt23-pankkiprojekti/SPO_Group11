@@ -46,6 +46,7 @@ public:
         NO_ACCOUNT_LINKED,
         MISSING_PARAMETERS,
         INVALID_TOKEN,
+        INSUFFICIENT_FUNDS,
         SERVER_ERROR = 500
     };
 
