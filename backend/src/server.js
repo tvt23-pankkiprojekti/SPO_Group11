@@ -14,6 +14,7 @@ const transactionRouter = require('./routers/crud/transactionRouter.js');
 const userAuth = require('./middleware/userAuth.js');
 const loginRouter = require('./routers/loginRouter.js');
 const getTransactionsRouter = require('./routers/getTransactionsRouter.js');
+const withdrawRouter = require('./routers/withdrawRouter.js');
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use('/admin/api/transaction', transactionRouter);
 app.use(/\/api\/(?!login).+/, userAuth);
 app.use("/api/login", loginRouter);
 app.use('/api/transactions', getTransactionsRouter);
+app.use('/api/withdraw', withdrawRouter);
 
 app.use('/admin/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
