@@ -11,6 +11,7 @@ const cardAccountRouter = require("./routers/crud/cardAccountRouter.js");
 const userRouter = require('./routers/crud/userRouter.js');
 const transactionRouter = require('./routers/crud/transactionRouter.js');
 
+const userAuth = require('./middleware/userAuth.js');
 const loginRouter = require('./routers/loginRouter.js');
 
 const app = express();
@@ -36,6 +37,8 @@ app.use("/admin/api/account", accountRouter);
 app.use('/admin/api/user', userRouter);
 app.use('/admin/api/transaction', transactionRouter);
 
+// Apply to any api route that is not login
+app.use(/\/api\/(?!login).+/, userAuth);
 app.use("/api/login", loginRouter);
 
 app.use('/admin/api', async (err, req, res, next) => {
