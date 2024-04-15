@@ -28,23 +28,23 @@ app.use(morgan(
 
 app.use(express.json());
 
-app.use('/api/administrator', administratorRouter);
-app.use('/api/friend', friendRouter);
-app.use("/api/card", cardRouter);
-app.use("/api/card_account", cardAccountRouter);
-app.use("/api/account", accountRouter);
-app.use('/api/user', userRouter);
-app.use('/api/transaction', transactionRouter);
+app.use('/admin/api/administrator', administratorRouter);
+app.use('/admin/api/friend', friendRouter);
+app.use("/admin/api/card", cardRouter);
+app.use("/admin/api/card_account", cardAccountRouter);
+app.use("/admin/api/account", accountRouter);
+app.use('/admin/api/user', userRouter);
+app.use('/admin/api/transaction', transactionRouter);
 
 app.use("/api/login", loginRouter);
 
-app.use('/api', async (err, req, res, next) => {
+app.use('/admin/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
         return next(err);
     }
 
     res.status(400);
-    res.json(err);  
+    res.json(err);
     res.end();
 });
 

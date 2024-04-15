@@ -1,7 +1,7 @@
 const { API } = require('../../src/config.js');
 
 test('get all users', async ()=>{
-    const res = await fetch(`${API.url()}/api/user`);
+    const res = await fetch(`${API.url()}/admin/api/user`);
     
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual([
@@ -19,7 +19,7 @@ test('get all users', async ()=>{
 });
 
 test('get one user', async ()=>{
-    const res = await fetch(`${API.url()}/api/user/10`);
+    const res = await fetch(`${API.url()}/admin/api/user/10`);
  
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual({
@@ -30,7 +30,7 @@ test('get one user', async ()=>{
 });
 
 test('add user', async()=>{
-    const res = await fetch(`${API.url()}/api/user`, {
+    const res = await fetch(`${API.url()}/admin/api/user`, {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({firstName: 'Mikko', lastName: 'Mallikas'})
@@ -49,7 +49,7 @@ test('add user', async()=>{
 });
 
 test('update user', async()=>{
-    const res = await fetch(`${API.url()}/api/user/10`, {
+    const res = await fetch(`${API.url()}/admin/api/user/10`, {
         method: 'PUT',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({firstName: 'Jokke', lastName: 'Kariseva'})
@@ -68,7 +68,7 @@ test('update user', async()=>{
 });
 
 test('delete user', async()=>{
-    const res = await fetch(`${API.url()}/api/user/9`, {
+    const res = await fetch(`${API.url()}/admin/api/user/9`, {
         method: 'DELETE',
         headers: {"Content-Type": "application/json"},
     });
