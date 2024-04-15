@@ -8,7 +8,7 @@ async function userAuth(req, res, next) {
     // no token -> bad request
     if (!token) {
         res.status(400);
-        return res.json({code: Response.INVALID_TOKEN});
+        return res.json({code: Response.MISSING_PARAMETERS});
     }
 
     let accountNumber;
