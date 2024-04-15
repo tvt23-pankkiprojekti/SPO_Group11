@@ -241,11 +241,17 @@ BEGIN
 END;
 
 
+DROP TRIGGER IF EXISTS `Account_BEFORE_INSERT`;
 
-DROP TRIGGER IF EXISTS `Account_BEFORE_INSERT` ;
-CREATE DEFINER = CURRENT_USER TRIGGER `Account_BEFORE_INSERT` BEFORE INSERT ON `Account` FOR EACH ROW
+CREATE TRIGGER `Account_BEFORE_INSERT` BEFORE INSERT ON `Account` FOR EACH ROW
 BEGIN
-SET NEW.`accountNumber` = UUID();
+    DECLARE n INT;
+    SELECT MAX(`accountNumber`) INTO n FROM `Account`;
+    IF n IS NULL THEN
+        SET NEW.`accountNumber` = 1;
+    ELSE
+        SET NEW.`accountNumber` = n + 1;
+    END IF;
 END;
 
 
