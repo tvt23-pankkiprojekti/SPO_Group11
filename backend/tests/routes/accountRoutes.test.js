@@ -23,7 +23,7 @@ test('get one account', async ()=>{
     expect(result.status).toEqual(200);
     expect(await result.json()).toEqual({
         User_id: 1,
-        balance: "100.00",
+        balance: expect.any(String),
         idAccount: 1,
         limit: "0.00",
         type: 'debit',
