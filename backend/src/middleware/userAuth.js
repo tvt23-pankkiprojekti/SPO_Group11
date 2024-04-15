@@ -21,6 +21,7 @@ async function userAuth(req, res, next) {
         return res.json({code: Response.INVALID_TOKEN});
     }
 
+    req.body ||= {};
     req.body.accountNumber = accountNumber;
     next();
 }
