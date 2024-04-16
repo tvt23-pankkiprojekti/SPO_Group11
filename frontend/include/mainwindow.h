@@ -29,6 +29,8 @@ private:
     Ui::MainWindow *ui;
     CardReader& m_reader;
 
+    QString m_token;
+
     Login* login;
     Menu* menu;
     Transactions* transactions;

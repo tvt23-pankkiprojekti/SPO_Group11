@@ -33,6 +33,7 @@ void REST::make_login_request(const QString& card_number, const QString& pin)
 
     const QString url = "http://localhost:8008/api/login/" + card_number;
     const auto request = QNetworkRequest(url);
+    
     m_rest_manager->post(request, QJsonDocument(body), nullptr, [&](QRestReply& reply) {
         auto json_optional = reply.readJson();
         if (!json_optional.has_value()) {
@@ -52,17 +53,60 @@ void REST::make_login_request(const QString& card_number, const QString& pin)
     });
 }
 
-void REST::make_balance_request()
+void REST::make_balance_request(const QString& token)
 {
 
 }
 
-void REST::make_withdraw_request()
+void REST::make_withdraw_request(const QString& token, double amount)
 {
+    QJsonObject body;
+    body["amount"] = amount;
+    
+    const QString url = "http://localhost:8008/api/withdraw";
+    auto request = QNetworkRequest(url);
+    request.setRawHeader("authorization", token.toUtf8());
 
+    m_rest_manager->post(request, QJsonDocument(body), nullptr, [&](QRestReply& reply) {
+        auto json_optional = reply.readJson();
+        if (!json_optional.has_value()) {
+            emit withdraw_request_finished(Response(Response::Code::SERVER_ERROR));
+            return;
+        }
+
+        auto data = json_optional.value();
+        auto code = data["code"].toInt();
+
+        if (code == Response::Code::OK) {
+            emit withdraw_request_finished({ code, data });
+            return;
+        }
+
+        emit withdraw_request_finished({ code });
+    });
 }
 
-void REST::make_transactions_request()
+void REST::make_transactions_request(const QString& token)
 {
+    const QString url = "http://localhost:8008/api/transactions";
+    auto request = QNetworkRequest(url);
+    request.setRawHeader("authorization", token.toUtf8());
 
+    m_rest_manager->get(request, nullptr, [&](QRestReply& reply) {
+        auto json_optional = reply.readJson();
+        if (!json_optional.has_value()) {
+            emit transactions_request_finished(Response(Response::Code::SERVER_ERROR));
+            return;
+        }
+
+        auto data = json_optional.value();
+        auto code = data["code"].toInt();
+
+        if (code == Response::Code::OK) {
+            emit transactions_request_finished({ code, data });
+            return;
+        }
+
+        emit transactions_request_finished({ code });
+    });
 }

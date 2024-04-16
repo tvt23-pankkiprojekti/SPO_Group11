@@ -3,6 +3,8 @@
 #include "ui_mainwindow.h"
 #include <qcoreapplication.h>
 #include <qlogging.h>
+#include <QJsonObject>
+#include <QJsonArray>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -28,15 +30,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     // TODO: Implement these
 
-    // connect(..., ..., this, [this]() {
-    //     REST::make_login_request(...);
-    // });
-
     // REST::the()->make_login_request("1000200030004000", "1111");
     // REST::the()->make_login_request("1000200030004001", "2222");
     // REST::the()->make_login_request("1000200030004002", "3333");
     // REST::the()->make_login_request("1000200030004003", "4444");
     // REST::the()->make_login_request("1000200030004004", "5555");
+    
+    // connect(..., ..., this, [this]() {
+    //     REST::make_login_request(...);
+    // });
 
     // connect(..., ..., this, [this]() {
     //     REST::make_balance_request(...);
@@ -52,7 +54,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // connect(REST::the(), &REST::login_request_finished, this, [this](Response response) {
     //     if (response.has_data()) {
-    //         qDebug() << response.data().toJson() << "\n";
+    //         auto data = response.data().object();
+
+    //         m_token = data["debit"].toString();
+    //         qDebug() << "token: " << m_token;
+
+    //         REST::the()->make_withdraw_request(m_token, 100);
+    //         // REST::the()->make_transactions_request(m_token);
     //     }
     // });
 
@@ -60,12 +68,27 @@ MainWindow::MainWindow(QWidget *parent)
     //
     // });
 
-    // connect(REST::the(), &REST::login_request_finished, this, [this](Response response) {
-    //
+    // connect(REST::the(), &REST::withdraw_request_finished, this, [this](Response response) {
+    //     if (response.has_data()) {
+    //         auto data = response.data().object();
+
+    //         qDebug() << "amount: " << data["amount"].toDouble();
+        
+    //         REST::the()->make_transactions_request(m_token);
+    //     }
     // });
 
-    // connect(REST::the(), &REST::login_request_finished, this, [this](Response response) {
-    //
+    // connect(REST::the(), &REST::transactions_request_finished, this, [](Response response) {
+    //     if (response.has_data()) {
+    //         auto data = response.data().array();
+
+    //         qDebug() << "transactions: ";
+    //         for (auto transaction : data) {
+    //             auto datetime = transaction.toObject()["dateTime"].toString();
+    //             auto change = transaction.toObject()["balanceChange"].toString().toDouble();
+    //             qDebug() << "\tdateTime:" << datetime << ", balanceChange:" << change;
+    //         }
+    //     }
     // });
 }
 
