@@ -1,7 +1,6 @@
 const express=require('express');
 const router=express.Router();
-const config = require('../config.js');
-const transaction = require('../models/transactionModel.js');
+const Transaction = require('../../models/transactionModel.js');
 
 router.get('/:transactionnumber?', async(req, res, next)=>{
     const urlParamValue = req.params.transactionnumber;
@@ -9,10 +8,10 @@ router.get('/:transactionnumber?', async(req, res, next)=>{
     
     try{
         if(!urlParamValue){
-            data = await transaction.getAllTransactions();
+            data = await Transaction.getAllTransactions();
         }
         else{
-            data = (await transaction.getOneTransaction(urlParamValue))[0];
+            data = (await Transaction.getOneTransaction(urlParamValue))[0];
         }
     }
     catch(err){
@@ -27,7 +26,7 @@ router.post('/', async(req, res, next)=>{
     let data;
     
     try{
-        data = await transaction.addTransaction(req.body);
+        data = await Transaction.addTransaction(req.body);
     }
     catch(err){
         err.name = 'DatabaseError';
@@ -42,7 +41,7 @@ router.put('/:transactionnumber', async(req, res, next)=>{
     let data;
 
     try{
-        data = await transaction.updateTransaction(urlParamValue, req.body);
+        data = await Transaction.updateTransaction(urlParamValue, req.body);
     }
     catch(err){
         err.name = 'DatabaseError';
@@ -56,7 +55,7 @@ router.delete('/:transactionnumber', async(req, res, next)=>{
     const urlParamValue = req.params.transactionnumber;
     let data;
     try{
-        data = await transaction.deleteTransaction(urlParamValue);
+        data = await Transaction.deleteTransaction(urlParamValue);
     }
     catch(err){
         err.name = 'DatabaseError';
@@ -65,6 +64,5 @@ router.delete('/:transactionnumber', async(req, res, next)=>{
     
     res.json(data[0]);
 });
-
 
 module.exports = router;

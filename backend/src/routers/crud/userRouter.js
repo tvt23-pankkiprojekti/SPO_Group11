@@ -1,7 +1,6 @@
 const express=require('express');
 const router=express.Router();
-const config = require('../config.js');
-const user = require('../models/userModels.js');
+const User = require('../../models/userModel.js');
 
 router.get('/:usernumber?', async(req, res, next)=>{
     const urlParamValue = req.params.usernumber; 
@@ -9,10 +8,10 @@ router.get('/:usernumber?', async(req, res, next)=>{
 
     try{
         if (!urlParamValue){
-            data = await user.getAllUsers();
+            data = await User.getAllUsers();
         }
         else{
-            data = (await user.getOneUser(urlParamValue))[0];
+            data = (await User.getOneUser(urlParamValue))[0];
         }
     }
     catch(err){
@@ -27,7 +26,7 @@ router.post('/', async(req, res, next)=>{
     let data;
 
     try{
-        data = await user.addUser(req.body);
+        data = await User.addUser(req.body);
     }
     catch(err){
         err.name = 'DatabaseError';
@@ -38,11 +37,13 @@ router.post('/', async(req, res, next)=>{
 });
 
 router.put('/:usernumber', async(req, res, next)=>{
-    const urlParamValue = req.params.transactionnumber;
+    const urlParamValue = req.params.usernumber;
     let data;
+
+    console.log(urlParamValue);
     
     try{
-        data = await user.updateUser(urlParamValue, req.body);
+        data = await User.updateUser(urlParamValue, req.body);
     }
     catch(err){
         err.name = 'DatabaseError';
@@ -53,11 +54,10 @@ router.put('/:usernumber', async(req, res, next)=>{
 });
 
 router.delete('/:usernumber', async(req, res, next)=>{
-    const urlParamValue = req.params.transactionnumber;
     let data;
 
     try{
-        data = await user.deleteUser(req.params.usernumber);
+        data = await User.deleteUser(req.params.usernumber);
     }
     catch(err){
         err.name = 'DatabaseError';

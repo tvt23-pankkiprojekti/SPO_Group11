@@ -1,17 +1,18 @@
 const express = require('express');
 const http = require('http');
-const path = require('path');
 const morgan = require('morgan');
 const rfs = require('rotating-file-stream');
 
-const administratorRouter = require('./routers/administratorRouter.js');
-const friendRouter = require('./routers/friendRouter.js');
-const cardRouter = require("./routers/cardRouter.js");
-const cardAccountRouter = require("./routers/cardAccountRouter.js");
-const userRoutes = require('./routers/userRoutes.js');
-const transactionRoutes = require('./routers/transactionRoute.js');
-const preWithdrawRoute = require('./routers/preWithdrawRouter.js');
-//const preWithdrawRoute2 = require('./routers/preWithdrawRouter2.js');
+const accountRouter = require("./routers/crud/accountRouter.js");
+const administratorRouter = require('./routers/crud/administratorRouter.js');
+const friendRouter = require('./routers/crud/friendRouter.js');
+const cardRouter = require("./routers/crud/cardRouter.js");
+const cardAccountRouter = require("./routers/crud/cardAccountRouter.js");
+const userRouter = require('./routers/crud/userRouter.js');
+const transactionRouter = require('./routers/crud/transactionRouter.js');
+
+const userAuth = require('./middleware/userAuth.js');
+const loginRouter = require('./routers/loginRouter.js');
 
 const app = express();
 
@@ -28,23 +29,25 @@ app.use(morgan(
 
 app.use(express.json());
 
-app.use('/api/administrator', administratorRouter);
-app.use('/api/friend', friendRouter);
-app.use("/api/card", cardRouter);
-app.use("/api/card_account", cardAccountRouter);
-app.use('/api/user', userRoutes);
-app.use('/api/transaction', transactionRoutes);
-app.use('/api/preWithdraw', preWithdrawRoute);
-//app.use('/api/preWithdraw2', preWithdrawRoute2);
+app.use('/admin/api/administrator', administratorRouter);
+app.use('/admin/api/friend', friendRouter);
+app.use("/admin/api/card", cardRouter);
+app.use("/admin/api/card_account", cardAccountRouter);
+app.use("/admin/api/account", accountRouter);
+app.use('/admin/api/user', userRouter);
+app.use('/admin/api/transaction', transactionRouter);
 
+// Apply to any api route that is not login
+app.use(/\/api\/(?!login).+/, userAuth);
+app.use("/api/login", loginRouter);
 
-app.use('/api', async (err, req, res, next) => {
+app.use('/admin/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {
         return next(err);
     }
 
     res.status(400);
-    res.json(err);  
+    res.json(err);
     res.end();
 });
 
@@ -54,7 +57,6 @@ app.use(async (err, req, res, next) => {
     res.json({name: "InternalServerError"});
     res.end();
 });
-
 
 const server = http.createServer(app);
 

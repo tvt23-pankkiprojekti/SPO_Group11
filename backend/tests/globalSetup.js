@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql2/promise');
 const server = require('../src/server.js');
-const config = require('../src/config.js');
-const {dbConfig} = require('../src/database.js');
+const { API } = require('../src/config.js');
+const { dbConfig } = require('../src/database.js');
 
 module.exports = async () => {
     const sqlPath = path.join(__dirname, '..', 'sql');
@@ -29,5 +29,5 @@ module.exports = async () => {
     await connection.query(insertTestDataSql);
     await connection.end();
 
-    server.listen(config.PORT);
+    server.listen(API.PORT);
 };

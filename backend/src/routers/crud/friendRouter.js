@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Friend = require('../models/friendModel.js');
+const Friend = require('../../models/friendModel.js');
 
 router.get('/:id?', async (req, res, next) => {
     const requestedId = req.params.id;

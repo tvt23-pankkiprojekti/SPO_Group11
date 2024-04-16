@@ -1,11 +1,12 @@
 const mysql = require('mysql2/promise');
-const config = require('./config.js');
+const { DB } = require('./config.js');
 
 const dbConfig = {
-    host: config.DB_HOST,
-    database: config.DB_NAME,
-    user: config.DB_USER,
-    password: config.DB_PASSWORD
+    host: DB.HOST,
+    database: DB.NAME,
+    user: DB.USER,
+    password: DB.PASS,
+    port: DB.PORT
 };
 
 const pool = mysql.createPool(dbConfig);
