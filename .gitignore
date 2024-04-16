@@ -16,6 +16,3 @@ compile_commands.json
 *.user
 build
 .cache
-backend/src/routers/preWithdrawRouter-old.js
-backend/tests/routes/preWithdrawRoute-old.test.js
-
