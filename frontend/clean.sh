@@ -4,12 +4,15 @@
 
 exec_in_dir() {
     cd $1 && echo "cleaning $1"
+    
     rm -f *.exe *.a *.dll CMakeCache.txt cmake_install.cmake \
         build.ninja .ninja_deps .ninja_log compile_commands.json *.user
 
     rm -rf CMakeFiles .qt *_autogen build .cache
+    
+    cd - > /dev/null
 }
 
 exec_in_dir .
 exec_in_dir lib/REST
-exec_indir lib/CardReader
+exec_in_dir lib/CardReader
