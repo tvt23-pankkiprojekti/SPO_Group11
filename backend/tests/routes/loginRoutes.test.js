@@ -3,7 +3,7 @@ const { API } = require("../../src/config");
 let debitCardId;
 
 test("login: debit", async () => {
-    const card = await fetch(`${API.url()}/api/card`, {
+    const card = await fetch(`${API.url()}/admin/api/card`, {
         method: "POST",
         body: JSON.stringify({
             User_id: 1,
@@ -19,7 +19,7 @@ test("login: debit", async () => {
     });
     debitCardId = await card.text();
 
-    await fetch(`${API.url()}/api/card_account`, {
+    await fetch(`${API.url()}/admin/api/card_account`, {
         method: "POST",
         body: JSON.stringify({
             Account_id: 1,
@@ -47,7 +47,7 @@ test("login: debit", async () => {
 });
 
 test("login: credit", async () => {
-    const card = await fetch(`${API.url()}/api/card`, {
+    const card = await fetch(`${API.url()}/admin/api/card`, {
         method: "POST",
         body: JSON.stringify({
             User_id: 1,
@@ -63,7 +63,7 @@ test("login: credit", async () => {
     });
     const id = await card.text();
 
-    await fetch(`${API.url()}/api/card_account`, {
+    await fetch(`${API.url()}/admin/api/card_account`, {
         method: "POST",
         body: JSON.stringify({
             Account_id: 4,
@@ -91,7 +91,7 @@ test("login: credit", async () => {
 });
 
 test("login: debit/credit", async () => {
-    await fetch(`${API.url()}/api/card_account`, {
+    await fetch(`${API.url()}/admin/api/card_account`, {
         method: "POST",
         body: JSON.stringify({
             Account_id: 4,
@@ -146,7 +146,7 @@ test("incorrect pin", async () => {
 });
 
 test("card frozen", async () => {
-    await fetch(`${API.url()}/api/card`, {
+    await fetch(`${API.url()}/admin/api/card`, {
         method: "POST",
         body: JSON.stringify({
             User_id: 1,
@@ -174,7 +174,7 @@ test("card frozen", async () => {
 });
 
 test("no account linked", async () => {
-    await fetch(`${API.url()}/api/card`, {
+    await fetch(`${API.url()}/admin/api/card`, {
         method: "POST",
         body: JSON.stringify({
             User_id: 1,
