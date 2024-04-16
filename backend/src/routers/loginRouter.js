@@ -69,8 +69,8 @@ router.post("/:number", async (req, res, next) => {
         const debit = dbResult.find(a => a.type === "debit");
         const credit = dbResult.find(a => a.type === "credit");
         const json = {
-            ...(debit) && { "debit": jwt.sign({ accountNumber: debit }, API.SECRET, { expiresIn: 600 }) },
-            ...(credit) && { "credit": jwt.sign({ accountNumber: credit }, API.SECRET, { expiresIn: 600 }) }
+            ...(debit) && { "debit": jwt.sign({ accountNumber: debit.accountNumber }, API.SECRET, { expiresIn: 600 }) },
+            ...(credit) && { "credit": jwt.sign({ accountNumber: credit.accountNumber }, API.SECRET, { expiresIn: 600 }) }
         };
 
         res.json(json);

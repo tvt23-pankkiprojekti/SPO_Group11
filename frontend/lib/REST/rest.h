@@ -87,17 +87,10 @@ public:
      */
     static void end();
 
-    /**
-     * Makes a login request with a card number and a pin
-     *
-     * If successful, "returns" a token, or a partial token to
-     * be used in `make_type_request`
-     */
     void make_login_request(const QString& card_number, const QString& pin);
-
-    void make_balance_request();
-    void make_withdraw_request();
-    void make_transactions_request();
+    void make_balance_request(const QString& token);
+    void make_withdraw_request(const QString& token, double amount);
+    void make_transactions_request(const QString& token);
 
 signals:
     void login_request_finished(Response);
