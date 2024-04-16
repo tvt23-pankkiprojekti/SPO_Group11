@@ -1,12 +1,14 @@
 const router = require('express').Router();
 const config = require('../config.js');
 const Withdraw = require('../models/preWithdrawModel.js');
+const authorization = require('../middleware/userAuth.js')
 // rest api not finished yet, but use response.js for Response handling
 // const Response = require("../responses.js");
 
 
 
 router.post('/example', async(req, res, next)=>{
+    authorization.userAuth();
     const accNum = req.body.accountNumber;
     let data;
     //console.log(accNum, "!!!!!!!!!!!!!!!!");
@@ -19,7 +21,7 @@ router.post('/example', async(req, res, next)=>{
 
     //console.log(data[0][0][0]);
     //console.log('HEIHEIEHI!');
-    console.log(data[0]);
+    //console.log(data[0]);
     res.json(data[0][0][0]);
     
     

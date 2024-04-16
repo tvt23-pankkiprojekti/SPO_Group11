@@ -10,6 +10,7 @@ const cardRouter = require("./routers/crud/cardRouter.js");
 const cardAccountRouter = require("./routers/crud/cardAccountRouter.js");
 const userRouter = require('./routers/crud/userRouter.js');
 const transactionRouter = require('./routers/crud/transactionRouter.js');
+const preWithdraw = require('./routers/preWithdrawRouter.js');
 
 const userAuth = require('./middleware/userAuth.js');
 const loginRouter = require('./routers/loginRouter.js');
@@ -36,6 +37,7 @@ app.use("/admin/api/card_account", cardAccountRouter);
 app.use("/admin/api/account", accountRouter);
 app.use('/admin/api/user', userRouter);
 app.use('/admin/api/transaction', transactionRouter);
+app.use('/admin/api/prewithdraw', preWithdraw);
 
 // Apply to any api route that is not login
 app.use(/\/api\/(?!login).+/, userAuth);

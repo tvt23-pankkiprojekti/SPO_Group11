@@ -1,13 +1,15 @@
-const config = require('../../src/config.js');
+const { API } = require("../../src/config");
 
-
+const token = 'testi'
 
 test('pre-withdraw2 all correct', async () => {
     const result = await fetch(
-        `http://localhost:${config.PORT}/api/preWithdraw/example`,
+        //`http://localhost:${config.PORT}/api/preWithdraw/example`,
+        `${API.url()}/admin/api/prewithdraw/example`,
         {
             method: 'POST',
             headers: {
+                "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
