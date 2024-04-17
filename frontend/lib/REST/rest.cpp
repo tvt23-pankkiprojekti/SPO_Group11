@@ -55,13 +55,13 @@ void REST::make_login_request(const QString& card_number, const QString& pin)
 
 void REST::make_balance_request(const QString& token)
 {
-    // const QString url = "http://localhost:8008/api/balance";
-    // auto request = QNetworkRequest(url);
-    // request.setRawHeader("authorization", token.toUtf8());
+    const QString url = "http://localhost:8008/api/balance";
+    auto request = QNetworkRequest(url);
+    request.setRawHeader("authorization", token.toUtf8());
 
-    // m_rest_manager->get(request, nullptr, [&](QRestReply& reply) {
-    //     HANDLE_REPLY(reply, balance_request_finished);
-    // });
+    m_rest_manager->get(request, nullptr, [&](QRestReply& reply) {
+        HANDLE_REPLY(reply, balance_request_finished);
+    });
 }
 
 void REST::make_prewithdraw_request(const QString& token)
