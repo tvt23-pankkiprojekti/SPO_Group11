@@ -6,6 +6,10 @@ Menu::Menu(QWidget *parent)
     , ui(new Ui::Menu)
 {
     ui->setupUi(this);
+
+    QObject::connect(ui->logoutButton, &QPushButton::clicked, this, [this]{
+        emit loggedOut();
+    });
 }
 
 Menu::~Menu()

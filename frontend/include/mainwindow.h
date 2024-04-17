@@ -27,7 +27,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    CardReader& m_reader;
+    REST *m_rest;
 
     QString m_token;
 

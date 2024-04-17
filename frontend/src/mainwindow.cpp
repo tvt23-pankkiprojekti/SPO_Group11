@@ -9,9 +9,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , m_reader(CardReader::getInstance())
+    , m_rest(REST::the())
 
-    , login(new Login)
+    , login(new Login(m_rest))
     , menu(new Menu)
     , balance(new Balance)
     , transactions(new Transactions)
@@ -27,6 +27,24 @@ MainWindow::MainWindow(QWidget *parent)
         withdraw
     })
         ui->stackedWidget->addWidget(widget);
+
+    QObject::connect(
+        login,
+        &Login::loggedIn,
+        this,
+        [this](QString token) {
+            #ifdef QT_DEBUG
+            qDebug() << token;
+            #endif
+
+            m_token = token;
+            ui->stackedWidget->setCurrentWidget(menu);
+        }
+    );
+
+    QObject::connect(menu, &Menu::loggedOut, this, [this] {
+        ui->stackedWidget->setCurrentWidget(login);
+    });
 
     // TODO: Implement these
 
