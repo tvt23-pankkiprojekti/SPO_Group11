@@ -13,7 +13,7 @@
 #   define REST_API Q_DECL_IMPORT
 #endif
 
-class REST_API [[nodiscard]] Response final
+class REST_API Response final
 {
 public:
     // This should be identical to responses.js
