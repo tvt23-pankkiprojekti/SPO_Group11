@@ -8,25 +8,26 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , m_ui(new Ui::MainWindow)
     , m_reader(CardReader::getInstance())
 
-    , login(new Login)
-    , menu(new Menu)
-    , balance(new Balance)
-    , transactions(new Transactions)
-    , withdraw(new Withdraw)
+    , m_login_widget(new Login)
+    , m_menu_widget(new Menu)
+    , m_balance_widget(new Balance)
+    , m_transactions_widget(new Transactions)
+    , m_withdraw_widget(new Withdraw(this))
 {
-    ui->setupUi(this);
+    m_ui->setupUi(this);
 
     for (auto widget: std::initializer_list<QWidget*>{
-        login,
-        menu,
-        balance,
-        transactions,
-        withdraw
-    })
-        ui->stackedWidget->addWidget(widget);
+        m_login_widget,
+        m_menu_widget,
+        m_balance_widget,
+        m_transactions_widget,
+        m_withdraw_widget
+    }) {
+        m_ui->stackedWidget->addWidget(widget);
+    }
 
     // TODO: Implement these
 

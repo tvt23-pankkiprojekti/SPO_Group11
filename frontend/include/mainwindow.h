@@ -26,14 +26,14 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *m_ui;
     CardReader& m_reader;
 
     QString m_token;
 
-    Login* login;
-    Menu* menu;
-    Transactions* transactions;
-    Balance* balance;
-    Withdraw* withdraw;
+    Login* m_login_widget;
+    Menu* m_menu_widget;
+    Transactions* m_transactions_widget;
+    Balance* m_balance_widget;
+    Withdraw* m_withdraw_widget;
 };
