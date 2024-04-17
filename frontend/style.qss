@@ -1,0 +1,94 @@
+QPushButton#button_0,
+QPushButton#button_1,
+QPushButton#button_2,
+QPushButton#button_3,
+QPushButton#button_4,
+QPushButton#button_5,
+QPushButton#button_6,
+QPushButton#button_7 {
+    width: 32px;
+    height: 32px;
+    max-width: 32px;
+    max-height: 32px;
+
+    background-color: #bbb;
+}
+
+QPushButton#button_0:disabled,
+QPushButton#button_1:disabled,
+QPushButton#button_2:disabled,
+QPushButton#button_3:disabled,
+QPushButton#button_4:disabled,
+QPushButton#button_5:disabled,
+QPushButton#button_6:disabled,
+QPushButton#button_7:disabled,
+QPushButton#pad_empty_0:disabled,
+QPushButton#pad_empty_1:disabled,
+QPushButton#pad_empty_2:disabled {
+    background-color: #888;
+}
+
+QPushButton#pad_0,
+QPushButton#pad_1,
+QPushButton#pad_2,
+QPushButton#pad_3,
+QPushButton#pad_4,
+QPushButton#pad_5,
+QPushButton#pad_6,
+QPushButton#pad_7,
+QPushButton#pad_8,
+QPushButton#pad_9 {
+    max-width: 32px;
+    
+    background-color: #bbb;
+}
+
+QPushButton#pad_empty_0,
+QPushButton#pad_empty_1 {
+    max-width: 32px;
+}
+
+QPushButton#pad_cancel {
+    background-color: red;
+}
+QPushButton#pad_clear {
+    background-color: orange;
+}
+QPushButton#pad_ok {
+    background-color: green;
+}
+
+QMainWindow {
+    background-color: #333;
+}
+
+QWidget#upper_container {
+    background-color: #666;
+}
+
+QWidget#lower_container {
+    background-color: #222;
+}
+
+QWidget#label_container {
+    background-color: #06f;
+}
+
+QWidget#keypad_container {
+    background-color: #666;
+}
+
+QLabel#label_0,
+QLabel#label_1,
+QLabel#label_2,
+QLabel#label_3,
+QLabel#label_4,
+QLabel#label_5,
+QLabel#label_6,
+QLabel#label_7 {
+    color: #fff;
+}
+
+* {
+    font-weight: bold;
+}

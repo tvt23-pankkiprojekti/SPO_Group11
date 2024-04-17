@@ -12,11 +12,9 @@
 #include "withdraw.h"
 #include "status.h"
 
-QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
-QT_END_NAMESPACE
 
 class MainWindow final : public QMainWindow
 {
@@ -40,10 +38,10 @@ private:
 
     QString m_token;
 
-    Login* m_login_widget;
-    Menu* m_menu_widget;
-    Transactions* m_transactions_widget;
-    Balance* m_balance_widget;
-    Withdraw* m_withdraw_widget;
-    Status* m_status_widget;
+    Login *m_login_widget;
+    Menu *m_menu_widget;
+    Transactions *m_transactions_widget;
+    Balance *m_balance_widget;
+    Withdraw *m_withdraw_widget;
+    Status *m_status_widget;
 };

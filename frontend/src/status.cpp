@@ -8,13 +8,16 @@ Status::Status(MainWindow *parent)
 {
     m_ui->setupUi(this);
 
+    m_ui->label_6->setText("Go to previous menu");
+    m_ui->label_7->setText("Go to main menu");
+
     /*
      * Buttons
      */
-    connect(m_ui->button_previous, &QPushButton::clicked, this, [=, this]() {
+    connect(m_ui->button_6, &QPushButton::clicked, this, [=, this]() {
         parent->show_widget(m_previous_widget);
     });
-    connect(m_ui->button_menu, &QPushButton::clicked, this, [=, this]() {
+    connect(m_ui->button_7, &QPushButton::clicked, this, [=, this]() {
         parent->show_menu();
     });
 }
@@ -26,7 +29,7 @@ Status::~Status()
 
 void Status::set_status(const QString& status)
 {
-    m_ui->label_status->setText(status);
+    m_ui->label_0->setText(status);
 }
 
 void Status::set_previous_widget(QWidget *widget)

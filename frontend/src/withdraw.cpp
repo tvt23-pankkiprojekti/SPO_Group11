@@ -6,23 +6,18 @@
 
 #include <REST/rest.h>
 
-#define MAKE_AMOUNT(_num)                                                   \
-    connect(m_ui->amount_##_num, &QPushButton::clicked, this, [this]() {    \
-        set_current_amount(_num);                                           \
-    });
+#define MAKE_KEYPAD(_num)                                               \
+    connect(m_ui->pad_##_num, &QPushButton::clicked, this, [this]() {   \
+        show_custom(_num);                                              \
+    })
 
-#define MAKE_KEYPAD(_num)                                                   \
-    connect(m_ui->pad_##_num, &QPushButton::clicked, this, [this]() {       \
-        set_current_amount(m_current_amount * 10 + _num);                   \
-    });
+static const double amounts[] = { 10.0, 20.0, 40.0, 60.0, 100.0 };
 
 Withdraw::Withdraw(MainWindow *parent)
     : QWidget(parent)
     , m_ui(new Ui::Withdraw)
 {
     m_ui->setupUi(this);
-
-    reset_view();
 
     /*
      * Request handling
@@ -31,16 +26,18 @@ Withdraw::Withdraw(MainWindow *parent)
         if (response.has_data()) {
             auto data = response.data().object();
 
-            auto name = data["firstName"].toString() + " " + data["lastName"].toString();
-            m_ui->label_name->setText(name);
+            auto name = "Name: " + data["firstName"].toString() + " " + data["lastName"].toString();
+            m_ui->label_0->setText(name);
 
-            auto balance = data["balance"].toString() + "€";
-            m_ui->label_balance->setText(balance);
+            auto balance = "Balance: " + data["balance"].toString() + "€";
+            m_ui->label_1->setText(balance);
+
+            show_menu();
         }
     });
 
     connect(REST::the(), &REST::withdraw_request_finished, this, [=, this](Response response) {
-        reset_view();
+        show_menu();
 
         if (response.code() == Response::Code::INSUFFICIENT_FUNDS) {
             parent->show_status(this, "Insufficient funds (Code 7)");
@@ -49,7 +46,7 @@ Withdraw::Withdraw(MainWindow *parent)
             auto data = response.data().object();
             auto amount = QString::number(data["amount"].toDouble());
 
-            parent->show_status(this, "Successfully withdrawed " + amount + "€");
+            parent->show_status(this, "Successfully withdrew " + amount + "€");
         }
         else {
             parent->show_status(this, "Server error (Code 500)");
@@ -61,26 +58,79 @@ Withdraw::Withdraw(MainWindow *parent)
     /*
      * Amount buttons
      */
-    MAKE_AMOUNT(10);
-    MAKE_AMOUNT(20);
-    MAKE_AMOUNT(40);
-    MAKE_AMOUNT(60);
-    MAKE_AMOUNT(100);
-
-    connect(m_ui->amount_custom, &QPushButton::clicked, this, [this]() {
-        if (m_enter_custom_amount) {
-            set_keypad(false);
-            set_amount_buttons(true);
-            m_ui->amount_custom->setText("Custom...");
+    connect(m_ui->button_2, &QPushButton::clicked, this, [this]() {
+        switch (m_mode) {
+            case WithdrawMode::Menu: {
+                show_selected(amounts[0]);
+                break;
+            }
+            default: {
+                break;
+            }
         }
-        else {
-            set_keypad(true);
-            set_amount_buttons(false);
-            m_ui->amount_custom->setText("Back...");
+    });
+    connect(m_ui->button_3, &QPushButton::clicked, this, [this]() {
+        switch (m_mode) {
+            case WithdrawMode::Menu: {
+                show_selected(amounts[1]);
+                break;
+            }
+            default: {
+                break;
+            }
         }
-
-        set_current_amount(0.0);
-        m_enter_custom_amount = !m_enter_custom_amount;
+    });
+    connect(m_ui->button_4, &QPushButton::clicked, this, [this]() {
+        switch (m_mode) {
+            case WithdrawMode::Menu: {
+                show_selected(amounts[2]);
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    });
+    connect(m_ui->button_5, &QPushButton::clicked, this, [this]() {
+        switch (m_mode) {
+            case WithdrawMode::Menu: {
+                show_selected(amounts[3]);
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    });
+    connect(m_ui->button_6, &QPushButton::clicked, this, [this]() {
+        switch (m_mode) {
+            case WithdrawMode::Menu: {
+                show_selected(amounts[4]);
+                break;
+            }
+            case WithdrawMode::Custom: {
+                show_menu();
+                break;
+            }
+            case WithdrawMode::Selected: {
+                show_menu();
+                break;
+            }
+        }
+    });
+    connect(m_ui->button_7, &QPushButton::clicked, this, [=, this]() {
+        switch (m_mode) {
+            case WithdrawMode::Menu: {
+                show_custom(0);
+                break;
+            }
+            case WithdrawMode::Selected: {
+                REST::the()->make_withdraw_request(parent->token(), m_current_amount);
+            }
+            default: {
+                break;
+            }
+        }
     });
 
     /*
@@ -100,14 +150,15 @@ Withdraw::Withdraw(MainWindow *parent)
     /*
      * Keypad buttons
      */
-    connect(m_ui->pad_cancel, &QPushButton::clicked, this, [=, this]() {
-        parent->show_menu();
+    connect(m_ui->pad_cancel, &QPushButton::clicked, this, [this]() {
+        show_menu();
     });
     connect(m_ui->pad_clear, &QPushButton::clicked, this, [this]() {
-        set_current_amount(0.0);
+        m_current_amount = 0.0;
+        show_custom(0);
     });
-    connect(m_ui->pad_ok, &QPushButton::clicked, this, [=, this]() {
-        REST::the()->make_withdraw_request(parent->token(), m_current_amount);
+    connect(m_ui->pad_ok, &QPushButton::clicked, this, [this]() {
+        show_selected(m_current_amount);
     });
 }
 
@@ -116,18 +167,75 @@ Withdraw::~Withdraw()
     delete m_ui;
 }
 
-void Withdraw::reset_view()
-{
-    m_ui->pad_empty_0->setEnabled(false);
-    m_ui->pad_empty_1->setEnabled(false);
-    m_ui->pad_empty_2->setEnabled(false);
-    
-    set_keypad(false);
-    set_amount_buttons(true);
-    set_current_amount(0.0);
+void Withdraw::show_menu()
+{   
+    m_current_amount = 0.0;
 
-    m_enter_custom_amount = false;
-    m_ui->amount_custom->setText("Custom...");
+    set_keypad(false);
+
+    m_ui->label_2->setText(QString::number(amounts[0]) + "€");
+    m_ui->label_3->setText(QString::number(amounts[1]) + "€");
+    m_ui->label_4->setText(QString::number(amounts[2]) + "€");
+    m_ui->label_5->setText(QString::number(amounts[3]) + "€");
+    m_ui->label_6->setText(QString::number(amounts[4]) + "€");
+    m_ui->label_7->setText("Custom...");
+
+    m_ui->button_0->setEnabled(false);
+    m_ui->button_1->setEnabled(false);
+    m_ui->button_2->setEnabled(true);
+    m_ui->button_3->setEnabled(true);
+    m_ui->button_4->setEnabled(true);
+    m_ui->button_5->setEnabled(true);
+    m_ui->button_6->setEnabled(true);
+    m_ui->button_7->setEnabled(true);
+
+    m_mode = WithdrawMode::Menu;
+}
+
+void Withdraw::show_custom(double amount)
+{
+    m_current_amount = m_current_amount * 10 + amount;
+
+    set_keypad(true);
+
+    m_ui->label_2->setText("Custom amount:");
+    m_ui->label_3->setText(QString::number(m_current_amount) + "€");
+    m_ui->label_4->setText("");
+    m_ui->label_5->setText("");
+    m_ui->label_6->setText("");
+    m_ui->label_7->setText("");
+
+    m_ui->button_2->setEnabled(false);
+    m_ui->button_3->setEnabled(false);
+    m_ui->button_4->setEnabled(false);
+    m_ui->button_5->setEnabled(false);
+    m_ui->button_6->setEnabled(false);
+    m_ui->button_7->setEnabled(false);
+
+    m_mode = WithdrawMode::Custom;
+}
+
+void Withdraw::show_selected(double amount)
+{
+    m_current_amount = amount;
+
+    set_keypad(false);
+
+    m_ui->label_2->setText("Withdraw " + QString::number(amount) + "€?");
+    m_ui->label_3->setText("");
+    m_ui->label_4->setText("");
+    m_ui->label_5->setText("");
+    m_ui->label_6->setText("Cancel...");
+    m_ui->label_7->setText("Proceed...");
+
+    m_ui->button_2->setEnabled(false);
+    m_ui->button_3->setEnabled(false);
+    m_ui->button_4->setEnabled(false);
+    m_ui->button_5->setEnabled(false);
+    m_ui->button_6->setEnabled(true);
+    m_ui->button_7->setEnabled(true);
+
+    m_mode = WithdrawMode::Selected;
 }
 
 void Withdraw::set_keypad(bool enabled)
@@ -142,21 +250,8 @@ void Withdraw::set_keypad(bool enabled)
     m_ui->pad_7->setEnabled(enabled);
     m_ui->pad_8->setEnabled(enabled);
     m_ui->pad_9->setEnabled(enabled);
-}
 
-void Withdraw::set_amount_buttons(bool enabled)
-{
-    m_ui->amount_10->setEnabled(enabled);
-    m_ui->amount_20->setEnabled(enabled);
-    m_ui->amount_40->setEnabled(enabled);
-    m_ui->amount_60->setEnabled(enabled);
-    m_ui->amount_100->setEnabled(enabled);
-}
-
-void Withdraw::set_current_amount(double amount)
-{
-    m_ui->label_amount->setText("Amount: " + QString::number(amount) + "€");
-    m_ui->pad_ok->setEnabled(static_cast<bool>(amount));
-    
-    m_current_amount = amount;
+    m_ui->pad_cancel->setEnabled(enabled);
+    m_ui->pad_clear->setEnabled(enabled);
+    m_ui->pad_ok->setEnabled(enabled);
 }

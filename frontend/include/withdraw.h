@@ -1,13 +1,19 @@
-#ifndef WITHDRAW_H
-#define WITHDRAW_H
+#pragma once
 
 #include <QWidget>
 
 class MainWindow;
 
 namespace Ui {
-class Withdraw;
+    class Withdraw;
 }
+
+enum class WithdrawMode
+{
+    Menu,
+    Custom,
+    Selected
+};
 
 class Withdraw : public QWidget
 {
@@ -18,15 +24,15 @@ public:
     ~Withdraw();
 
 private:
-    void reset_view();
+    void show_menu();
+    void show_custom(double);
+    void show_selected(double);
+    
     void set_keypad(bool);
-    void set_amount_buttons(bool);
-    void set_current_amount(double);
 
     Ui::Withdraw *m_ui;
 
+    WithdrawMode m_mode = WithdrawMode::Menu;
     double m_current_amount = 0.0;
     bool m_enter_custom_amount = false;
 };
-
-#endif // WITHDRAW_H

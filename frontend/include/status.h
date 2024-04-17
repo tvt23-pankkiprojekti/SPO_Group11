@@ -1,12 +1,11 @@
-#ifndef STATUS_H
-#define STATUS_H
+#pragma once
 
 #include <QWidget>
 
 class MainWindow;
 
 namespace Ui {
-class Status;
+    class Status;
 }
 
 class Status : public QWidget
@@ -25,5 +24,3 @@ private:
 
     QWidget *m_previous_widget;
 };
-
-#endif // STATUS_H
