@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class MainWindow;
+
 namespace Ui {
 class Withdraw;
 }
@@ -12,11 +14,19 @@ class Withdraw : public QWidget
     Q_OBJECT
 
 public:
-    explicit Withdraw(QWidget *parent = nullptr);
+    explicit Withdraw(MainWindow *parent = nullptr);
     ~Withdraw();
 
 private:
-    Ui::Withdraw *ui;
+    void reset_view();
+    void set_keypad(bool);
+    void set_amount_buttons(bool);
+    void set_current_amount(double);
+
+    Ui::Withdraw *m_ui;
+
+    double m_current_amount = 0.0;
+    bool m_enter_custom_amount = false;
 };
 
 #endif // WITHDRAW_H

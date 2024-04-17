@@ -8,25 +8,30 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , m_ui(new Ui::MainWindow)
     , m_reader(CardReader::getInstance())
 
-    , login(new Login)
-    , menu(new Menu)
-    , balance(new Balance)
-    , transactions(new Transactions)
-    , withdraw(new Withdraw)
+    , m_login_widget(new Login)
+    , m_menu_widget(new Menu)
+    , m_balance_widget(new Balance)
+    , m_transactions_widget(new Transactions)
+    , m_withdraw_widget(new Withdraw(this))
+    , m_status_widget(new Status(this))
 {
-    ui->setupUi(this);
+    m_ui->setupUi(this);
 
     for (auto widget: std::initializer_list<QWidget*>{
-        login,
-        menu,
-        balance,
-        transactions,
-        withdraw
-    })
-        ui->stackedWidget->addWidget(widget);
+        m_login_widget,
+        m_menu_widget,
+        m_balance_widget,
+        m_transactions_widget,
+        m_withdraw_widget,
+        m_status_widget
+    }) {
+        m_ui->stackedWidget->addWidget(widget);
+    }
+
+    // m_ui->stackedWidget->setCurrentWidget(m_withdraw_widget);
 
     // TODO: Implement these
 
@@ -110,4 +115,21 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     REST::end();
+}
+
+void MainWindow::show_status(QWidget * widget, const QString& status)
+{
+    m_ui->stackedWidget->setCurrentWidget(m_status_widget);
+    m_status_widget->set_previous_widget(widget);
+    m_status_widget->set_status(status);
+}
+
+void MainWindow::show_menu()
+{
+    m_ui->stackedWidget->setCurrentWidget(m_menu_widget);
+}
+
+void MainWindow::show_widget(QWidget *widget)
+{
+    m_ui->stackedWidget->setCurrentWidget(widget);
 }

@@ -10,6 +10,7 @@
 #include "transactions.h"
 #include "balance.h"
 #include "withdraw.h"
+#include "status.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,15 +26,24 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void show_status(QWidget *, const QString&);
+
+    void show_menu();
+    void show_widget(QWidget *);
+
+    Ui::MainWindow *ui() { return m_ui; }
+    QString& token() { return m_token; }
+
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *m_ui;
     CardReader& m_reader;
 
     QString m_token;
 
-    Login* login;
-    Menu* menu;
-    Transactions* transactions;
-    Balance* balance;
-    Withdraw* withdraw;
+    Login* m_login_widget;
+    Menu* m_menu_widget;
+    Transactions* m_transactions_widget;
+    Balance* m_balance_widget;
+    Withdraw* m_withdraw_widget;
+    Status* m_status_widget;
 };
