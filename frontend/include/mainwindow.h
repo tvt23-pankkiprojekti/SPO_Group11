@@ -25,6 +25,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    QString& token() { return m_token; }
+
 private:
     Ui::MainWindow *m_ui;
     CardReader& m_reader;
