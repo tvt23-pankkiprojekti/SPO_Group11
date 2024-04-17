@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 // so we need to get one at the start of the test every time
 async function getAccount() {
     const account = await (
-        await fetch(`${API.url()}/admin/api/account/1`)
+        await fetch(`${API.url()}/admin/api/account/10`)
     ).json();
 
     // And let's pretend the server signed it for us
@@ -20,22 +20,21 @@ async function getAccount() {
     return signedAccount;
 }
 
-test('pre-withdraw all correct', async () => {
+test('balanceRoute all ok', async () => {
     const signedAccount = await getAccount();
-    const res = await fetch(`${API.url()}/api/prewithdraw`,{
+    const res = await fetch(`${API.url()}/api/balance`,{
         headers: {
             authorization: signedAccount,
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
     });
-
+    
     expect(res.status).toEqual(200);
 });
 
-
-test('pre-withdraw invalid token', async () => {
-    const res = await fetch(`${API.url()}/api/prewithdraw`,{
+test('balanceRoute invalid token', async () => {
+    const res = await fetch(`${API.url()}/api/balance`,{
         headers: {
             authorization: 'blaablaa',
             "Content-Type": "application/json",
@@ -46,12 +45,13 @@ test('pre-withdraw invalid token', async () => {
     expect(res.status).toEqual(403);
 });
 
-test('pre-withdraw token missing', async () => {
-    const res = await fetch(`${API.url()}/api/prewithdraw`,{
+test('balanceRoute token missing', async () => {
+    const res = await fetch(`${API.url()}/api/balance`,{
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
         } 
     });
+
     expect(res.status).toEqual(400);
 });

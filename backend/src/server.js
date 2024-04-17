@@ -16,6 +16,7 @@ const loginRouter = require('./routers/loginRouter.js');
 const getTransactionsRouter = require('./routers/getTransactionsRouter.js');
 const withdrawRouter = require('./routers/withdrawRouter.js');
 const preWithdraw = require('./routers/preWithdrawRouter.js');
+const balance = require('./routers/balanceRouter.js');
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/api/login", loginRouter);
 app.use('/api/transactions', getTransactionsRouter);
 app.use('/api/withdraw', withdrawRouter);
 app.use('/api/prewithdraw', preWithdraw);
+app.use('/api/balance', balance);
 
 app.use('/admin/api', async (err, req, res, next) => {
     if (err.name != 'DatabaseError') {

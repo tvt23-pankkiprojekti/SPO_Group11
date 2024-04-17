@@ -68,4 +68,8 @@ INSERT INTO `Transaction` (`Account_id`, `dateTime`, `balanceChange`, `transacti
 (7, NOW(), -30.00, 'withdraw'),
 (8, NOW(), 300.00, 'deposit'),
 (9, NOW(), -40.00, 'withdraw'),
-(10, NOW(), 400.00, 'deposit');
+(10, NOW(), 400.00, 'deposit'),
+(10, NOW(), 10.00, 'deposit'), 
+(10, NOW(), -7.50, 'withdraw'), 
+(10, NOW(), 20.00, 'deposit'), 
+(10, NOW(), -3.25, 'withdraw');
