@@ -22,39 +22,36 @@ async function getAccount() {
 
 test('pre-withdraw all correct', async () => {
     const signedAccount = await getAccount();
-    const result = await fetch(
-        `${API.url()}/api/prewithdraw`,
-        {
-            headers: {
-                authorization: signedAccount,
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-            });
-      console.log(await result.json());
+    const res = await fetch(`${API.url()}/api/prewithdraw`,{
+        headers: {
+            authorization: signedAccount,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+    });
+
+    expect(res.status).toEqual(200);
 });
 
+
 test('pre-withdraw invalid token', async () => {
-  const result = await fetch(
-     `${API.url()}/api/prewithdraw`,
-      {
-          headers: {
-              authorization: 'blaablaa',
-              "Content-Type": "application/json",
-              "Accept": "application/json"
-            } 
-          });
-    console.log(await result.json());
+    const res = await fetch(`${API.url()}/api/prewithdraw`,{
+        headers: {
+            authorization: 'blaablaa',
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        } 
+    });
+
+    expect(res.status).toEqual(403);
 });
 
 test('pre-withdraw token missing', async () => {
-    const result = await fetch(
-       `${API.url()}/api/prewithdraw`,
-        {
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-              } 
-            });
-      console.log(await result.json());
-  });
+    const res = await fetch(`${API.url()}/api/prewithdraw`,{
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        } 
+    });
+    expect(res.status).toEqual(400);
+});
