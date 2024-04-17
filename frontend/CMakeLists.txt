@@ -28,6 +28,7 @@ add_executable(pankki
     include/balance.h        src/balance.cpp         forms/balance.ui
     include/transactions.h   src/transactions.cpp    forms/transactions.ui
     include/menu.h           src/menu.cpp            forms/menu.ui
+    include/status.h         src/status.cpp          forms/status.ui
 )
 
 target_include_directories(pankki PRIVATE include)

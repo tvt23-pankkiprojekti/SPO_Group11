@@ -29,8 +29,6 @@ Withdraw::Withdraw(MainWindow *parent)
      */
     connect(REST::the(), &REST::prewithdraw_request_finished, this, [this](Response response) {
         if (response.has_data()) {
-            qDebug() << "Withdraw updated";
-
             auto data = response.data().object();
 
             auto name = data["firstName"].toString() + " " + data["lastName"].toString();
@@ -45,15 +43,16 @@ Withdraw::Withdraw(MainWindow *parent)
         reset_view();
 
         if (response.code() == Response::Code::INSUFFICIENT_FUNDS) {
-            m_ui->label_status->setText("Insufficient funds (Code 7)");
+            parent->show_status(this, "Insufficient funds (Code 7)");
         }
         else if (response.code() == Response::Code::OK) {
             auto data = response.data().object();
             auto amount = QString::number(data["amount"].toDouble());
-            m_ui->label_status->setText("Successfully withdrawed " + amount + "€");
+
+            parent->show_status(this, "Successfully withdrawed " + amount + "€");
         }
         else {
-            m_ui->label_status->setText("Server error (Code 500)");
+            parent->show_status(this, "Server error (Code 500)");
         }
 
         REST::the()->make_prewithdraw_request(parent->token());
@@ -101,8 +100,8 @@ Withdraw::Withdraw(MainWindow *parent)
     /*
      * Keypad buttons
      */
-    connect(m_ui->pad_cancel, &QPushButton::clicked, this, [this]() {
-        // TODO: Go to menu
+    connect(m_ui->pad_cancel, &QPushButton::clicked, this, [=, this]() {
+        parent->show_menu();
     });
     connect(m_ui->pad_clear, &QPushButton::clicked, this, [this]() {
         set_current_amount(0.0);
@@ -126,7 +125,6 @@ void Withdraw::reset_view()
     set_keypad(false);
     set_amount_buttons(true);
     set_current_amount(0.0);
-    m_ui->label_status->setText("Enter amount");
 
     m_enter_custom_amount = false;
     m_ui->amount_custom->setText("Custom...");

@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_balance_widget(new Balance)
     , m_transactions_widget(new Transactions)
     , m_withdraw_widget(new Withdraw(this))
+    , m_status_widget(new Status(this))
 {
     m_ui->setupUi(this);
 
@@ -24,16 +25,17 @@ MainWindow::MainWindow(QWidget *parent)
         m_menu_widget,
         m_balance_widget,
         m_transactions_widget,
-        m_withdraw_widget
+        m_withdraw_widget,
+        m_status_widget
     }) {
         m_ui->stackedWidget->addWidget(widget);
     }
 
-    m_ui->stackedWidget->setCurrentWidget(m_withdraw_widget);
+    // m_ui->stackedWidget->setCurrentWidget(m_withdraw_widget);
 
     // TODO: Implement these
 
-    REST::the()->make_login_request("1000200030004000", "1111");
+    // REST::the()->make_login_request("1000200030004000", "1111");
     // REST::the()->make_login_request("1000200030004001", "2222");
     // REST::the()->make_login_request("1000200030004002", "3333");
     // REST::the()->make_login_request("1000200030004003", "4444");
@@ -59,16 +61,16 @@ MainWindow::MainWindow(QWidget *parent)
     //     REST::make_transactions_request(...);
     // });
 
-    connect(REST::the(), &REST::login_request_finished, this, [this](Response response) {
-        if (response.has_data()) {
-            auto data = response.data().object();
+    // connect(REST::the(), &REST::login_request_finished, this, [this](Response response) {
+    //     if (response.has_data()) {
+    //         auto data = response.data().object();
 
-            m_token = data["debit"].toString();
-            qDebug() << "token: " << m_token;
+    //         m_token = data["debit"].toString();
+    //         qDebug() << "token: " << m_token;
 
-            REST::the()->make_prewithdraw_request(m_token);
-        }
-    });
+    //         REST::the()->make_prewithdraw_request(m_token);
+    //     }
+    // });
 
     // connect(REST::the(), &REST::balance_request_finished, this, [this](Response response) {
     //
@@ -113,4 +115,21 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     REST::end();
+}
+
+void MainWindow::show_status(QWidget * widget, const QString& status)
+{
+    m_ui->stackedWidget->setCurrentWidget(m_status_widget);
+    m_status_widget->set_previous_widget(widget);
+    m_status_widget->set_status(status);
+}
+
+void MainWindow::show_menu()
+{
+    m_ui->stackedWidget->setCurrentWidget(m_menu_widget);
+}
+
+void MainWindow::show_widget(QWidget *widget)
+{
+    m_ui->stackedWidget->setCurrentWidget(widget);
 }
