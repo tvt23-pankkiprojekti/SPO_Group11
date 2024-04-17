@@ -1,24 +1,3 @@
-// libREST.dll
-
-// login (STR card_number, STR pin)
-// OK -> STR signed_account_number
-// ERROR -> 1 ERR_CARD_NOT_FOUND
-//          2 ERR_INCORRECT_PIN
-//          3 ERR_CARD_FROZEN
-
-// balance (STR signed_account_number)
-// OK -> NUM balance
-// ERROR -> 4 ERR_INVALID_ACCOUNT_NUMBER
-
-// withdraw (STR signed_account_number, NUM amount)
-// OK -> NUM balance_change
-// ERROR -> 4 ERR_INVALID_ACCOUNT_NUMBER
-//          5 ERR_NO_MONEY
-
-// transactions (STR signed_account_number)
-// OK -> JSON transactions
-// ERROR -> 4 ERR_INVALID_ACCOUNT_NUMBER
-
 #pragma once
 
 #include <optional>
@@ -89,12 +68,14 @@ public:
 
     void make_login_request(const QString& card_number, const QString& pin);
     void make_balance_request(const QString& token);
+    void make_prewithdraw_request(const QString& token);
     void make_withdraw_request(const QString& token, double amount);
     void make_transactions_request(const QString& token);
 
 signals:
     void login_request_finished(Response);
     void balance_request_finished(Response);
+    void prewithdraw_request_finished(Response);
     void withdraw_request_finished(Response);
     void transactions_request_finished(Response);
 
