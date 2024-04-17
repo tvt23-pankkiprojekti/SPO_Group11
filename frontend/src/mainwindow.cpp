@@ -45,6 +45,10 @@ MainWindow::MainWindow(QWidget *parent)
     // });
 
     // connect(..., ..., this, [this]() {
+    //     REST::make_prewithdraw_request(...);
+    // });
+
+    // connect(..., ..., this, [this]() {
     //     REST::make_withdraw_request(...);
     // });
 
@@ -59,13 +63,24 @@ MainWindow::MainWindow(QWidget *parent)
     //         m_token = data["debit"].toString();
     //         qDebug() << "token: " << m_token;
 
-    //         REST::the()->make_withdraw_request(m_token, 100);
-    //         // REST::the()->make_transactions_request(m_token);
+    //         REST::the()->make_prewithdraw_request(m_token);
     //     }
     // });
 
     // connect(REST::the(), &REST::balance_request_finished, this, [this](Response response) {
     //
+    // });
+
+    // connect(REST::the(), &REST::prewithdraw_request_finished, this, [this](Response response) {
+    //     if (response.has_data()) {
+    //         auto data = response.data().object();
+
+    //         qDebug() << "firstName: " << data["firstName"].toString();
+    //         qDebug() << "lastName: " << data["lastName"].toString();
+    //         qDebug() << "balance: " << data["balance"].toString().toDouble();
+        
+    //         REST::the()->make_withdraw_request(m_token, 100);
+    //     }
     // });
 
     // connect(REST::the(), &REST::withdraw_request_finished, this, [this](Response response) {

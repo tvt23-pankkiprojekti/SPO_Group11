@@ -4,6 +4,20 @@
 #include <QNetworkRequest>
 #include <QRestReply>
 
+#define HANDLE_REPLY(_reply, _signal)                                           \
+    auto json_optional = _reply.readJson();                                     \
+    if (!json_optional.has_value()) {                                           \
+        emit _signal(Response(Response::Code::SERVER_ERROR));                   \
+        return;                                                                 \
+    }                                                                           \
+    auto data = json_optional.value();                                          \
+    auto code = data["code"].toInt();                                           \
+    if (code == Response::Code::OK) {                                           \
+        emit _signal({ code, data });                                           \
+        return;                                                                 \
+    }                                                                           \
+    emit _signal({ code });
+
 static REST *__rest = nullptr;
 
 REST *REST::the()
@@ -35,27 +49,30 @@ void REST::make_login_request(const QString& card_number, const QString& pin)
     const auto request = QNetworkRequest(url);
     
     m_rest_manager->post(request, QJsonDocument(body), nullptr, [&](QRestReply& reply) {
-        auto json_optional = reply.readJson();
-        if (!json_optional.has_value()) {
-            emit login_request_finished(Response(Response::Code::SERVER_ERROR));
-            return;
-        }
-
-        auto data = json_optional.value();
-        auto code = data["code"].toInt();
-
-        if (code == Response::Code::OK) {
-            emit login_request_finished({ code, data });
-            return;
-        }
-
-        emit login_request_finished({ code });
+        HANDLE_REPLY(reply, login_request_finished);
     });
 }
 
 void REST::make_balance_request(const QString& token)
 {
+    const QString url = "http://localhost:8008/api/balance";
+    auto request = QNetworkRequest(url);
+    request.setRawHeader("authorization", token.toUtf8());
 
+    m_rest_manager->get(request, nullptr, [&](QRestReply& reply) {
+        HANDLE_REPLY(reply, balance_request_finished);
+    });
+}
+
+void REST::make_prewithdraw_request(const QString& token)
+{
+    const QString url = "http://localhost:8008/api/prewithdraw";
+    auto request = QNetworkRequest(url);
+    request.setRawHeader("authorization", token.toUtf8());
+
+    m_rest_manager->get(request, nullptr, [&](QRestReply& reply) {
+        HANDLE_REPLY(reply, prewithdraw_request_finished);
+    });
 }
 
 void REST::make_withdraw_request(const QString& token, double amount)
@@ -68,21 +85,7 @@ void REST::make_withdraw_request(const QString& token, double amount)
     request.setRawHeader("authorization", token.toUtf8());
 
     m_rest_manager->post(request, QJsonDocument(body), nullptr, [&](QRestReply& reply) {
-        auto json_optional = reply.readJson();
-        if (!json_optional.has_value()) {
-            emit withdraw_request_finished(Response(Response::Code::SERVER_ERROR));
-            return;
-        }
-
-        auto data = json_optional.value();
-        auto code = data["code"].toInt();
-
-        if (code == Response::Code::OK) {
-            emit withdraw_request_finished({ code, data });
-            return;
-        }
-
-        emit withdraw_request_finished({ code });
+        HANDLE_REPLY(reply, withdraw_request_finished);
     });
 }
 
@@ -93,20 +96,6 @@ void REST::make_transactions_request(const QString& token)
     request.setRawHeader("authorization", token.toUtf8());
 
     m_rest_manager->get(request, nullptr, [&](QRestReply& reply) {
-        auto json_optional = reply.readJson();
-        if (!json_optional.has_value()) {
-            emit transactions_request_finished(Response(Response::Code::SERVER_ERROR));
-            return;
-        }
-
-        auto data = json_optional.value();
-        auto code = data["code"].toInt();
-
-        if (code == Response::Code::OK) {
-            emit transactions_request_finished({ code, data });
-            return;
-        }
-
-        emit transactions_request_finished({ code });
+        HANDLE_REPLY(reply, transactions_request_finished);
     });
 }
