@@ -19,6 +19,7 @@ public:
 
     void set_status(const QString&);
     void set_previous_widget(QWidget *);
+    void set_menu_widget(bool);
 
 private:
     Ui::Status *m_ui;
