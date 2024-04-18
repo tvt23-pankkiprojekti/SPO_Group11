@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
         m_ui->stackedWidget->addWidget(widget);
     }
 
-    // m_ui->stackedWidget->setCurrentWidget(m_withdraw_widget);
+    m_ui->stackedWidget->setCurrentWidget(m_balance_widget);
 
     // TODO: Implement these
 
