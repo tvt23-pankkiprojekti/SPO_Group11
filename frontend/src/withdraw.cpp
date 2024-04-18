@@ -11,7 +11,7 @@
         show_custom(_num);                                              \
     })
 
-static const double amounts[] = { 10.0, 20.0, 40.0, 60.0, 100.0 };
+static const double amounts[] = { 10.0, 20.0, 50.0, 100.0 };
 
 Withdraw::Withdraw(MainWindow *parent)
     : QWidget(parent)
@@ -102,18 +102,17 @@ Withdraw::Withdraw(MainWindow *parent)
             }
         }
     });
-    connect(m_ui->button_6, &QPushButton::clicked, this, [this]() {
+    connect(m_ui->button_6, &QPushButton::clicked, this, [=, this]() {
         switch (m_mode) {
             case WithdrawMode::Menu: {
-                show_selected(amounts[4]);
-                break;
-            }
-            case WithdrawMode::Custom: {
-                show_menu();
+                parent->show_menu();
                 break;
             }
             case WithdrawMode::Selected: {
                 show_menu();
+                break;
+            }
+            default: {
                 break;
             }
         }
@@ -177,7 +176,7 @@ void Withdraw::show_menu()
     m_ui->label_3->setText(QString::number(amounts[1]) + "€");
     m_ui->label_4->setText(QString::number(amounts[2]) + "€");
     m_ui->label_5->setText(QString::number(amounts[3]) + "€");
-    m_ui->label_6->setText(QString::number(amounts[4]) + "€");
+    m_ui->label_6->setText("Main menu...");
     m_ui->label_7->setText("Custom...");
 
     m_ui->button_0->setEnabled(false);
