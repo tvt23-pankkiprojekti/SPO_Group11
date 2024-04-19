@@ -117,11 +117,12 @@ MainWindow::~MainWindow()
     REST::end();
 }
 
-void MainWindow::show_status(QWidget * widget, const QString& status)
+void MainWindow::show_status(QWidget * widget, const QString& status, bool visible)
 {
     m_ui->stackedWidget->setCurrentWidget(m_status_widget);
     m_status_widget->set_previous_widget(widget);
     m_status_widget->set_status(status);
+    m_status_widget->set_menu_widget(visible);
 }
 
 void MainWindow::show_menu()

@@ -33,3 +33,8 @@ void Status::set_previous_widget(QWidget *widget)
 {
     m_previous_widget = widget;
 }
+
+void Status::set_menu_widget(bool visible)
+{
+    m_ui->button_menu->setVisible(visible);
+}
