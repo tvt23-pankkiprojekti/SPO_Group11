@@ -32,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     m_ui->stackedWidget->setCurrentWidget(m_balance_widget);
-
     // TODO: Implement these
 
     // REST::the()->make_login_request("1000200030004000", "1111");
