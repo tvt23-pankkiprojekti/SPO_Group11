@@ -2,7 +2,7 @@
 #include "ui_withdraw.h"
 #include "mainwindow.h"
 
-#include <QJsonObject.h>
+#include <QJsonObject>
 
 #include <REST/rest.h>
 
