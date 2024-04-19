@@ -31,7 +31,17 @@ MainWindow::MainWindow(QWidget *parent)
         m_ui->stackedWidget->addWidget(widget);
     }
 
+    /*
+     * Stuff that needs to be run when the current widget is changed
+     */
+    connect(m_ui->stackedWidget, &QStackedWidget::currentChanged, this, [this]() {
+        if (m_ui->stackedWidget->currentWidget() == m_withdraw_widget) {
+            REST::the()->make_prewithdraw_request(m_token);
+        }
+    });
+
     // m_ui->stackedWidget->setCurrentWidget(m_withdraw_widget);
+    // show_status(m_withdraw_widget, ":D", false);
 
     // TODO: Implement these
 
@@ -67,8 +77,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     //         m_token = data["debit"].toString();
     //         qDebug() << "token: " << m_token;
-
-    //         REST::the()->make_prewithdraw_request(m_token);
     //     }
     // });
 
