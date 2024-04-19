@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_reader(CardReader::getInstance())
 
     , m_login_widget(new Login)
-    , m_menu_widget(new Menu)
+    , m_menu_widget( new Menu(this) )
     , m_balance_widget(new Balance)
     , m_transactions_widget(new Transactions)
     , m_withdraw_widget(new Withdraw(this))
@@ -42,6 +42,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     // m_ui->stackedWidget->setCurrentWidget(m_withdraw_widget);
     // show_status(m_withdraw_widget, ":D", false);
+
+    connect(m_menu_widget, &Menu::withdraw_selected, this, [this]{
+        show_widget(m_withdraw_widget);
+    });
+
+    connect(m_menu_widget, &Menu::showBalance_selected, this, [this]{
+        show_widget(m_balance_widget);
+    });
+
+    connect(m_menu_widget, &Menu::showTransactions_selected, this, [this]{
+        show_widget(m_transactions_widget);
+    });
+
+    connect(m_menu_widget, &Menu::logOut, this, [this]{
+        m_token.clear();
+        show_widget(m_login_widget);
+    });
 
     // TODO: Implement these
 
@@ -136,6 +153,7 @@ void MainWindow::show_status(QWidget * widget, const QString& status, bool visib
 void MainWindow::show_menu()
 {
     m_ui->stackedWidget->setCurrentWidget(m_menu_widget);
+    m_menu_widget->m_user_action_timer.start();
 }
 
 void MainWindow::show_widget(QWidget *widget)
