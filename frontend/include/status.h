@@ -2,6 +2,9 @@
 #define STATUS_H
 
 #include <QWidget>
+#include <QTimer>
+
+using namespace std::chrono_literals;
 
 class MainWindow;
 
@@ -20,6 +23,9 @@ public:
     void set_status(const QString&);
     void set_previous_widget(QWidget *);
     void set_menu_widget(bool);
+
+    QTimer m_user_action_timer;
+    static constexpr auto USER_ACTION_TIMEOUT = 5s;
 
 private:
     Ui::Status *m_ui;

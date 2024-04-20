@@ -99,6 +99,7 @@ void MainWindow::show_status(QWidget * widget, const QString& status, bool visib
     m_status_widget->set_previous_widget(widget);
     m_status_widget->set_status(status);
     m_status_widget->set_menu_widget(visible);
+    m_status_widget->m_user_action_timer.start();
 }
 
 void MainWindow::show_menu()
