@@ -4,8 +4,8 @@
 #include <QWidget>
 #include <QTimer>
 #include <REST/rest.h>
-//#include <QRestAccessManager>
 
+class MainWindow;
 
 namespace Ui {
 class Balance;
@@ -16,14 +16,14 @@ class Balance : public QWidget
     Q_OBJECT
 
 public:
-    explicit Balance(QWidget *parent = nullptr);
+    explicit Balance(MainWindow *parent = nullptr);
     ~Balance();
 
 private slots:
     void on_btnMenu_clicked();
 
 private:
-    Ui::Balance *ui;
+    Ui::Balance *m_ui;
 
     void setBalance(const QString &balance);
 };
