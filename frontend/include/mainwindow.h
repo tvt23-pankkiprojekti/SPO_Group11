@@ -18,6 +18,19 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+// Using a normal enum because this is intended to be compared
+// with the int the QStackedWidget::currentChanged emits.
+namespace StackedWidgetChildren {
+    enum {
+        LOGIN = 0,
+        MENU,
+        BALANCE,
+        TRANSACTIONS,
+        WITHDRAW,
+        STATUS
+    };
+}
+
 class MainWindow final : public QMainWindow
 {
     Q_OBJECT
@@ -36,7 +49,6 @@ public:
 
 private:
     Ui::MainWindow *m_ui;
-    CardReader& m_reader;
 
     QString m_token;
 
