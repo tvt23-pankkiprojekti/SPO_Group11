@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QTimer>
-#include <REST/rest.h>
 
 class MainWindow;
 
@@ -24,7 +23,10 @@ private slots:
 
 private:
     Ui::Balance *m_ui;
+    QTimer *objectTimer;
 
+    void backToMenu();
+    void timerClock();
     void setBalance(const QString &balance);
 };
 

@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 
 #include <REST/rest.h>
-#include <QJsonObject.h>
+#include <QJsonObject>
 #include <QJsonArray>
 
 
@@ -13,11 +13,23 @@ Balance::Balance(MainWindow *parent)
     , m_ui(new Ui::Balance)
 {
     m_ui->setupUi(this);
+
+    //objectTimer = new QTimer();
+    //objectTimer->start(1000);
     m_ui->textTransactions->setReadOnly(true);
+    //this->setMouseTracking(true);
+
+    //connect(objectTimer, &QTimer::timeout, this, &Balance::backToMenu); // Corrected syntax for connect
+
+    // connections
+    connect(m_ui->pushButton, &QPushButton::clicked, this, [=, this]() {
+        parent->show_menu();
+    });
+
     connect(REST::the(),
             &REST::balance_request_finished,
             this,
-            [this](Response response){
+            [this, parent](Response response){
                 if(response.has_data()){
                     auto data = response.data();
                     // show recent transactions
@@ -35,12 +47,13 @@ Balance::Balance(MainWindow *parent)
                     auto balanceString = dataBalance["balance"].toString();
                     setBalance(balanceString);
                 }
+                else {
+                    parent->show_status(this, "Server error (Code 500)");
+                }
             }
     );
 
-    connect(m_ui->pushButtonMenu, &QPushButton::clicked, this, [=, this]() {
-        parent->show_menu();
-    });
+
 }
 
 Balance::~Balance()
@@ -57,7 +70,16 @@ void Balance::on_btnMenu_clicked()
 {
     REST *pre = REST::the();
     pre->make_balance_request("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50TnVtYmVyIjoiOGZjMDM0N2MtZmUyZi0xMWVlLThkZjAtOGMxNjQ1NDAzNDc3IiwiaWF0IjoxNzEzNTIxNDM2fQ.JWH1BcDN5av-w9Mx05ZCtYEE5Rjc2L1Mu1CXo3Uv0Mc");
-    //this->close();
+}
+
+void Balance::backToMenu()
+{
     //parent->show_menu();
 }
+
+void Balance::timerClock()
+{
+    //connect(objectTimer, &QTimer::timeout, this, &Balance::backToMenu);
+}
+
 

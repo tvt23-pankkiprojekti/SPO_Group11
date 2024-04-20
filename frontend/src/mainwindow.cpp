@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     , m_login_widget(new Login)
     , m_menu_widget(new Menu)
-    , m_balance_widget(new Balance)
+    , m_balance_widget(new Balance(this))
     , m_transactions_widget(new Transactions)
     , m_withdraw_widget(new Withdraw(this))
     , m_status_widget(new Status(this))
