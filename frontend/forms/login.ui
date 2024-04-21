@@ -231,7 +231,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QPushButton" name="pushButton_cancelSelectAccunt">
+            <widget class="QPushButton" name="pushButton_cancelSelectAccount">
              <property name="text">
               <string>Cancel</string>
              </property>

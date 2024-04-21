@@ -46,7 +46,7 @@ Login::Login(REST* const restPtr, QWidget *parent)
     );
 
     QObject::connect(
-        ui->pushButton_cancelSelectAccunt,
+        ui->pushButton_cancelSelectAccount,
         &QPushButton::clicked,
         this,
         [this]{
