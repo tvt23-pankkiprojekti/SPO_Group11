@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QTimer>
+#include <QJsonObject>
+#include <QJsonArray>
 
 class MainWindow;
 
@@ -23,11 +25,12 @@ private slots:
 
 private:
     Ui::Balance *m_ui;
-    QTimer *objectTimer;
+    QTimer usersActionTimer;
+    QTimer anotherTimer;
+    QPoint point;
 
-    void backToMenu();
-    void timerClock();
     void setBalance(const QString &balance);
+    void reset();
 };
 
 #endif // BALANCE_H

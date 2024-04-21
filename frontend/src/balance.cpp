@@ -3,10 +3,10 @@
 #include "mainwindow.h"
 
 #include <REST/rest.h>
-#include <QJsonObject>
-#include <QJsonArray>
 
-
+#ifdef QT_DEBUG
+#include <QDebug>
+#endif
 
 Balance::Balance(MainWindow *parent)
     : QWidget(parent)
@@ -14,23 +14,49 @@ Balance::Balance(MainWindow *parent)
 {
     m_ui->setupUi(this);
 
-    //objectTimer = new QTimer();
-    //objectTimer->start(1000);
     m_ui->textTransactions->setReadOnly(true);
-    //this->setMouseTracking(true);
 
-    //connect(objectTimer, &QTimer::timeout, this, &Balance::backToMenu); // Corrected syntax for connect
+    // Timer connections
+    connect(&anotherTimer,
+            &QTimer::timeout,
+            this,
+            [this]{
+                if (point != QCursor::pos()){
+                    #ifdef QT_DEBUG
+                    qDebug("interaction");
+                    #endif
+                    usersActionTimer.start();
+                }
+                point = QCursor::pos();
+            });
 
-    // connections
+    connect(&usersActionTimer,
+                &QTimer::timeout,
+                this,
+                [=, this]{
+                    #ifdef QT_DEBUG
+                    qDebug("Ten seconds passed");
+                    #endif
+                    reset();
+                    parent->show_menu();
+                }
+    );
+
+    // other connections
     connect(m_ui->pushButton, &QPushButton::clicked, this, [=, this]() {
+        reset();
         parent->show_menu();
     });
 
     connect(REST::the(),
             &REST::balance_request_finished,
             this,
-            [this, parent](Response response){
-                if(response.has_data()){
+            [=, this](Response response){
+                // timers need these
+                usersActionTimer.start(10000);
+                anotherTimer.start(1000);
+                point = QCursor::pos();
+                if(response.code() == Response::Code::OK){ //this returns 0, even thought database is turned off. As a result balance and recent transactions don't return.
                     auto data = response.data();
                     // show recent transactions
                     auto dataRecent = data["recenttransactions"];
@@ -48,12 +74,11 @@ Balance::Balance(MainWindow *parent)
                     setBalance(balanceString);
                 }
                 else {
+                    reset();
                     parent->show_status(this, "Server error (Code 500)");
                 }
             }
     );
-
-
 }
 
 Balance::~Balance()
@@ -66,20 +91,14 @@ void Balance::setBalance(const QString &balance)
     m_ui->labelBalance->setText(balance);
 }
 
+void Balance::reset()
+{
+    usersActionTimer.stop();
+    anotherTimer.stop();
+}
+
 void Balance::on_btnMenu_clicked()
 {
     REST *pre = REST::the();
     pre->make_balance_request("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50TnVtYmVyIjoiOGZjMDM0N2MtZmUyZi0xMWVlLThkZjAtOGMxNjQ1NDAzNDc3IiwiaWF0IjoxNzEzNTIxNDM2fQ.JWH1BcDN5av-w9Mx05ZCtYEE5Rjc2L1Mu1CXo3Uv0Mc");
 }
-
-void Balance::backToMenu()
-{
-    //parent->show_menu();
-}
-
-void Balance::timerClock()
-{
-    //connect(objectTimer, &QTimer::timeout, this, &Balance::backToMenu);
-}
-
-
