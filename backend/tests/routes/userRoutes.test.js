@@ -1,7 +1,8 @@
 const { API } = require('../../src/config.js');
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImFkbWluMSIsImlhdCI6MTcxMzczNTI2OX0.wXnXwGhwDDLSC8_KivnImFd0CFs4anm75xzOkLYrigg';
 
 test('get all users', async ()=>{
-    const res = await fetch(`${API.url()}/admin/api/user`);
+    const res = await fetch(`${API.url()}/admin/api/user`, {headers: {"Authorization": adminToken}});
     
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual([
@@ -19,7 +20,7 @@ test('get all users', async ()=>{
 });
 
 test('get one user', async ()=>{
-    const res = await fetch(`${API.url()}/admin/api/user/10`);
+    const res = await fetch(`${API.url()}/admin/api/user/10`, {headers: {"Authorization": adminToken}});
  
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual({
@@ -32,7 +33,7 @@ test('get one user', async ()=>{
 test('add user', async()=>{
     const res = await fetch(`${API.url()}/admin/api/user`, {
         method: 'POST',
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": adminToken},
         body: JSON.stringify({firstName: 'Mikko', lastName: 'Mallikas'})
     });
 
@@ -51,7 +52,7 @@ test('add user', async()=>{
 test('update user', async()=>{
     const res = await fetch(`${API.url()}/admin/api/user/10`, {
         method: 'PUT',
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": adminToken},
         body: JSON.stringify({firstName: 'Jokke', lastName: 'Kariseva'})
     });
 
@@ -70,7 +71,7 @@ test('update user', async()=>{
 test('delete user', async()=>{
     const res = await fetch(`${API.url()}/admin/api/user/9`, {
         method: 'DELETE',
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": adminToken},
     });
 
     expect(res.status).toEqual(400);

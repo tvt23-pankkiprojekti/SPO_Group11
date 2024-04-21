@@ -14,7 +14,9 @@ const cardAccountRouter = require("./routers/crud/cardAccountRouter.js");
 const userRouter = require('./routers/crud/userRouter.js');
 const transactionRouter = require('./routers/crud/transactionRouter.js');
 
+const adminAuth = require('./middleware/adminAuth.js');
 const userAuth = require('./middleware/userAuth.js');
+const adminLoginRouter = require('./routers/adminLoginRouter.js');
 const loginRouter = require('./routers/loginRouter.js');
 const getTransactionsRouter = require('./routers/getTransactionsRouter.js');
 const withdrawRouter = require('./routers/withdrawRouter.js');
@@ -26,6 +28,18 @@ const app = express();
 app.use(express.json());
 app.use(morgan('combined', {stream: accessLogStream}));
 
+// Apply to all admin api routes that are not login
+app.use([
+    '/admin/api/administrator',
+    '/admin/api/friend',
+    '/admin/api/card',
+    '/admin/api/card_account',
+    '/admin/api/account',
+    '/admin/api/user',
+    '/admin/api/transaction',
+], adminAuth);
+
+app.use('/admin/api/login', adminLoginRouter);
 app.use('/admin/api/administrator', administratorRouter);
 app.use('/admin/api/friend', friendRouter);
 app.use("/admin/api/card", cardRouter);
@@ -34,8 +48,14 @@ app.use("/admin/api/account", accountRouter);
 app.use('/admin/api/user', userRouter);
 app.use('/admin/api/transaction', transactionRouter);
 
-// Apply to any api route that is not login
-app.use(/\/api\/(?!login).+/, userAuth);
+// Apply to all api routes that are not login
+app.use([
+    '/api/transactions',
+    '/api/withdraw',
+    '/api/prewithdraw',
+    '/api/balance'
+], userAuth);
+
 app.use("/api/login", loginRouter);
 app.use('/api/transactions', getTransactionsRouter);
 app.use('/api/withdraw', withdrawRouter);

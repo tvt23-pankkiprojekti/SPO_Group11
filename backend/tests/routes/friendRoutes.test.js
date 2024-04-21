@@ -1,4 +1,5 @@
 const { API } = require('../../src/config.js');
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImFkbWluMSIsImlhdCI6MTcxMzczNTI2OX0.wXnXwGhwDDLSC8_KivnImFd0CFs4anm75xzOkLYrigg';
 
 test('create friend', async () => {
     const result = await fetch(
@@ -8,7 +9,8 @@ test('create friend', async () => {
             body: JSON.stringify({User_id: 1, Account_id: 10}),
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Authorization": adminToken
             }
         }
     );
@@ -33,7 +35,8 @@ test('update friend', async () => {
             body: JSON.stringify({Account_id: 2}),
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Authorization": adminToken
             }
         }
     );
@@ -56,7 +59,8 @@ test('get all friends', async () => {
         {
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Authorization": adminToken
             }
         }
     );
@@ -76,7 +80,8 @@ test('delete friend', async () => {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Authorization": adminToken
             }
         }
     );

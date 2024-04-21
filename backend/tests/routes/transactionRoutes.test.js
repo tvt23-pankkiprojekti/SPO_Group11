@@ -1,14 +1,15 @@
 const { API } = require('../../src/config.js');
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImFkbWluMSIsImlhdCI6MTcxMzczNTI2OX0.wXnXwGhwDDLSC8_KivnImFd0CFs4anm75xzOkLYrigg';
 
 test('get all transactions', async()=>{
-    const res = await fetch(`${API.url()}/admin/api/transaction`);
+    const res = await fetch(`${API.url()}/admin/api/transaction`, {headers: {"Authorization": adminToken}});
 
     expect(res.status).toEqual(200);
     expect(await res.json()).toEqual(expect.any(Object));
 });
 
 test('get one transaction', async()=>{
-    const res = await fetch(`${API.url()}/admin/api/transaction/10`);
+    const res = await fetch(`${API.url()}/admin/api/transaction/10`, {headers: {"Authorization": adminToken}});
 
 
     expect(res.status).toEqual(200);
@@ -25,7 +26,7 @@ test('get one transaction', async()=>{
 test('add transaction', async()=>{
     const res = await fetch(`${API.url()}/admin/api/transaction`, {
         method: 'POST',
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": adminToken},
         body: JSON.stringify({Account_id: '2', dateTime: '2024-04-03 15:00:00', balanceChange: '10.99', transactionType: 'deposit'})
     });
 
@@ -44,7 +45,7 @@ test('add transaction', async()=>{
 test('update transaction', async()=>{
     const res = await fetch(`${API.url()}/admin/api/transaction/10`, {
         method: 'PUT',
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": adminToken},
         body: JSON.stringify({Account_id: '2', dateTime: '2024-04-04 15:00:00', balanceChange: '-0.99', transactionType: 'withdraw'})
     });
 
@@ -64,7 +65,7 @@ test('update transaction', async()=>{
 test('delete transaction', async()=>{
     const res = await fetch(`${API.url()}/admin/api/transaction/10`, {
         method: 'DELETE',
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": adminToken},
     });
 
     expect(res.status).toEqual(200);

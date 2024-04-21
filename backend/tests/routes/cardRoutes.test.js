@@ -1,4 +1,5 @@
 const { API } = require("../../src/config.js");
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImFkbWluMSIsImlhdCI6MTcxMzczNTI2OX0.wXnXwGhwDDLSC8_KivnImFd0CFs4anm75xzOkLYrigg';
 
 test("create a card entry", async () => {
     const result = await fetch(`${API.url()}/admin/api/card`, {
@@ -12,7 +13,8 @@ test("create a card entry", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -25,7 +27,8 @@ test("create a card entry without a body", async () => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -33,17 +36,17 @@ test("create a card entry without a body", async () => {
 });
 
 test("get all card entries", async () => {
-    const result = await fetch(`${API.url()}/admin/api/card`);
+    const result = await fetch(`${API.url()}/admin/api/card`, {headers: {"Authorization": adminToken}});
     expect(result.status).toEqual(200);
 });
 
 test("get a card entry", async () => {
-    const result = await fetch(`${API.url()}/admin/api/card/1`);
+    const result = await fetch(`${API.url()}/admin/api/card/1`, {headers: {"Authorization": adminToken}});
     expect(result.status).toEqual(200);
 });
 
 test("get a card entry that does not exist", async () => {
-    const result = await fetch(`${API.url()}/admin/api/card/0`);
+    const result = await fetch(`${API.url()}/admin/api/card/0`, {headers: {"Authorization": adminToken}});
     expect(result.status).toEqual(404);
 });
 
@@ -59,7 +62,8 @@ test("update a card entry", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -71,7 +75,8 @@ test("update a card entry without a body", async () => {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -90,7 +95,8 @@ test("update a card entry that does not exist", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -103,7 +109,8 @@ test("delete a card entry", async () => {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -111,7 +118,8 @@ test("delete a card entry", async () => {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -123,7 +131,8 @@ test("delete a card entry that does not exist", async () => {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 

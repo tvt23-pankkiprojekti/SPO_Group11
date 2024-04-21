@@ -9,6 +9,10 @@ const Administrator = {
         return await pool.query('SELECT * FROM Administrator WHERE idAdministrator = ?', [id]);
     },
 
+    getByLogin: async (login) => {
+        return await pool.query('SELECT * FROM Administrator WHERE login = ?', [login]);
+    },
+
     add: async (administrator) => {
         return await pool.query(
             'INSERT INTO Administrator (login, passwordHash) values (?, ?)', [administrator.login, administrator.passwordHash]
