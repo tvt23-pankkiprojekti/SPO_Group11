@@ -118,6 +118,10 @@ Login::~Login()
 // ownership of this (Login)
 void Login::connectPostConstructorSignals(void) {
     auto login = [this]{
+        #ifdef QT_DEBUG
+        qDebug() << "Login clicked with card number: " << m_cardNumber;
+        #endif
+
         // User is in status screen -> don't let them interact
         if (qobject_cast<QStackedWidget*>(parent())->currentWidget() != this) {
             return;
@@ -129,11 +133,6 @@ void Login::connectPostConstructorSignals(void) {
         // User attempts login so we stop the userActionTimer
         userActionTimer.stop();
         const auto pin = ui->lineEdit_pin->text();
-
-        #ifdef QT_DEBUG
-        qDebug() << "Login clicked with card number: " << m_cardNumber;
-        #endif
-
         enterLoggingIn(pin);
     };
 
@@ -163,6 +162,10 @@ void Login::connectPostConstructorSignals(void) {
 }
 
 void Login::enterInsertCard(void) {
+    #ifdef QT_DEBUG
+    qDebug() << "enterInsert card: " << m_cardNumber << m_tokens;
+    #endif
+
     mainContainer->setCurrentWidget(ui->page_insertCard);
 
     QObject::connect(
@@ -178,10 +181,6 @@ void Login::enterInsertCard(void) {
             enterInputPin();
         }
     );
-
-    #ifdef QT_DEBUG
-    qDebug() << "enterInsert card: " << m_cardNumber << m_tokens;
-    #endif
 }
 
 void Login::enterInputPin(void) {
@@ -199,6 +198,13 @@ void Login::enterLoggingIn(const QString pin) {
         &REST::login_request_finished,
         this,
         [this](Response res){
+            #ifdef QT_DEBUG
+            qDebug() << "Response code: " << res.code();
+            if (res.has_data()) {
+                qDebug() << "Response data:\n" << res.data();
+            }
+            #endif
+
             // Response received -> disconnect this signal
             // until this phase is entered again
             QObject::disconnect(
@@ -208,10 +214,6 @@ void Login::enterLoggingIn(const QString pin) {
                 nullptr
             );
 
-            #ifdef QT_DEBUG
-            qDebug() << "Response code: " << res.code();
-            #endif
-
             if ( !res.has_data() ) {
                 qobject_cast<MainWindow*>(m_mainWindow)->show_status(
                     this, "Login failed", false
@@ -220,10 +222,6 @@ void Login::enterLoggingIn(const QString pin) {
                 enterInputPin();
                 return;
             }
-
-            #ifdef QT_DEBUG
-            qDebug() << "Response data:\n" << res.data();
-            #endif
 
             m_tokens = res.data();
             QString debitToken = m_tokens["debit"].toString();
