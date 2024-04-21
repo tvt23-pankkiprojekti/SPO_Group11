@@ -2,7 +2,7 @@
 #include "ui_withdraw.h"
 #include "mainwindow.h"
 
-#include <QJsonObject.h>
+#include <QJsonObject>
 
 #include <REST/rest.h>
 
@@ -27,8 +27,8 @@ Withdraw::Withdraw(MainWindow *parent)
     /*
      * Request handling
      */
-    connect(REST::the(), &REST::prewithdraw_request_finished, this, [this](Response response) {
-        if (response.has_data()) {
+    connect(REST::the(), &REST::prewithdraw_request_finished, this, [=, this](Response response) {
+        if (response.code() == Response::Code::OK) {
             auto data = response.data().object();
 
             auto name = data["firstName"].toString() + " " + data["lastName"].toString();
@@ -36,7 +36,10 @@ Withdraw::Withdraw(MainWindow *parent)
 
             auto balance = data["balance"].toString() + "€";
             m_ui->label_balance->setText(balance);
+        
+            return;
         }
+        parent->show_status(this, "Server error (Code 500)");
     });
 
     connect(REST::the(), &REST::withdraw_request_finished, this, [=, this](Response response) {
@@ -49,7 +52,7 @@ Withdraw::Withdraw(MainWindow *parent)
             auto data = response.data().object();
             auto amount = QString::number(data["amount"].toDouble());
 
-            parent->show_status(this, "Successfully withdrawed " + amount + "€");
+            parent->show_status(this, "Successfully withdrew " + amount + "€");
         }
         else {
             parent->show_status(this, "Server error (Code 500)");
