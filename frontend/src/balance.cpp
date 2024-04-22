@@ -8,7 +8,7 @@
 #include <QDebug>
 #endif
 
-Balance::Balance(MainWindow *parent)
+Balance::Balance(QWidget *mousePointerLogin, MainWindow *parent)
     : QWidget(parent)
     , m_ui(new Ui::Balance)
 {
@@ -17,27 +17,27 @@ Balance::Balance(MainWindow *parent)
     m_ui->textTransactions->setReadOnly(true);
 
     // Timer connections
-    connect(&anotherTimer,
+    connect(&mouseMovementTimer,
             &QTimer::timeout,
             this,
             [this]{
-                if (point != QCursor::pos()){
+                if (mousePoint != QCursor::pos()){
                     #ifdef QT_DEBUG
                     qDebug("interaction");
                     #endif
-                    usersActionTimer.start();
+                    noUserActionTimer.start();
                 }
-                point = QCursor::pos();
+                mousePoint = QCursor::pos();
             });
 
-    connect(&usersActionTimer,
+    connect(&noUserActionTimer,
                 &QTimer::timeout,
                 this,
                 [=, this]{
                     #ifdef QT_DEBUG
                     qDebug("Ten seconds passed");
                     #endif
-                    reset();
+                    resetTimers();
                     m_ui->textTransactions->clear();
                     parent->show_menu();
                 }
@@ -45,7 +45,7 @@ Balance::Balance(MainWindow *parent)
 
     // other connections
     connect(m_ui->pushButton, &QPushButton::clicked, this, [=, this]() {
-        reset();
+        resetTimers();
         m_ui->textTransactions->clear();
         parent->show_menu();
     });
@@ -55,13 +55,12 @@ Balance::Balance(MainWindow *parent)
             this,
             [=, this](Response response){
                 // timers need these
-                qDebug() << "NEW the() REQUEST";
-                usersActionTimer.start(10000);
-                anotherTimer.start(1000);
-                point = QCursor::pos();
-                if(response.code() == Response::Code::OK){ //this returns 0, even thought database is turned off. As a result balance and recent transactions don't return.
+                noUserActionTimer.start(10000);
+                mouseMovementTimer.start(1000);
+                mousePoint = QCursor::pos();
+                if(response.code() == Response::Code::OK){
                     auto data = response.data();
-                    // show recent transactions
+                    // show recent transactions (max is 5)
                     auto dataRecent = data["recenttransactions"];
                     for(auto i: dataRecent.toArray()){
                         auto x = i.toObject();
@@ -74,16 +73,14 @@ Balance::Balance(MainWindow *parent)
                     // set label to show current balance
                     auto dataBalance = data["balance"].toObject();
                     auto balanceString = dataBalance["balance"].toString();
-                    setBalance(balanceString);
+                    m_ui->labelBalance->setText(balanceString);
                 }
                 else if(response.code() == Response::Code::INVALID_TOKEN){
-                    // token is deleted and we go to login screen
-                    // User needs to be notified. Maybe in the login screen?
-                    reset();
-                    emit logOut();
+                    parent->show_status(mousePointerLogin, "Session expired", false);
+                    resetTimers();
                 }
                 else {
-                    reset();
+                    resetTimers();
                     parent->show_status(this, "Server error (Code 500)");
                 }
             }
@@ -95,13 +92,8 @@ Balance::~Balance()
     delete m_ui;
 }
 
-void Balance::setBalance(const QString &balance)
+void Balance::resetTimers()
 {
-    m_ui->labelBalance->setText(balance);
-}
-
-void Balance::reset()
-{
-    usersActionTimer.stop();
-    anotherTimer.stop();
+    noUserActionTimer.stop();
+    mouseMovementTimer.stop();
 }

@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_reader(CardReader::getInstance())
 
     , m_login_widget(new Login)
-    , m_balance_widget(new Balance(this))
+    , m_balance_widget(new Balance(m_login_widget,this))
     , m_menu_widget( new Menu(this) )
     , m_transactions_widget(new Transactions)
     , m_withdraw_widget(new Withdraw(this))
@@ -36,14 +36,14 @@ MainWindow::MainWindow(QWidget *parent)
      */
     connect(m_ui->stackedWidget, &QStackedWidget::currentChanged, this, [this]() {
         if (m_ui->stackedWidget->currentWidget() == m_withdraw_widget) {
-            REST::the()->make_prewithdraw_request("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50TnVtYmVyIjoiOGZjMDM0N2MtZmUyZi0xMWVlLThkZjAtOGMxNjQ1NDAzNDc3IiwiaWF0IjoxNzEzNTIxNDM2fQ.JWH1BcDN5av-w9Mx05ZCtYEE5Rjc2L1Mu1CXo3Uv0Mc");
+            REST::the()->make_prewithdraw_request(m_token);
         }
         else if (m_ui->stackedWidget->currentWidget() == m_balance_widget) {
-            REST::the()->make_balance_request("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50TnVtYmVyIjoiOGZjMDM0N2MtZmUyZi0xMWVlLThkZjAtOGMxNjQ1NDAzNDc3IiwiaWF0IjoxNzEzNTIxNDM2fQ.JWH1BcDN5av-w9Mx05ZCtYEE5Rjc2L1Mu1CXo3Uv0Mc");
+            REST::the()->make_balance_request(m_token);
         }
     });
 
-    m_ui->stackedWidget->setCurrentWidget(m_menu_widget);
+    //m_ui->stackedWidget->setCurrentWidget(m_menu_widget);
     // show_status(m_withdraw_widget, ":D", false);
 
     connect(m_menu_widget, &Menu::withdraw_selected, this, [this]{
@@ -65,7 +65,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(m_balance_widget, &Balance::logOut, this, [this]{
         m_token.clear();
-        show_widget(m_login_widget);
     });
 
     // TODO: Implement these

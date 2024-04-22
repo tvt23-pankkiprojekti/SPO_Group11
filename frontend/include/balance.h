@@ -17,7 +17,7 @@ class Balance : public QWidget
     Q_OBJECT
 
 public:
-    explicit Balance(MainWindow *parent = nullptr);
+    explicit Balance(QWidget *pointerLogin, MainWindow *parent = nullptr);
     ~Balance();
 
 signals:
@@ -25,12 +25,10 @@ signals:
 
 private:
     Ui::Balance *m_ui;
-    QTimer usersActionTimer;
-    QTimer anotherTimer;
-    QPoint point;
+    QTimer noUserActionTimer, mouseMovementTimer;
+    QPoint mousePoint;
 
-    void setBalance(const QString &balance);
-    void reset();
+    void resetTimers();
 };
 
 #endif // BALANCE_H
