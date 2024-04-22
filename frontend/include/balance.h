@@ -20,8 +20,8 @@ public:
     explicit Balance(MainWindow *parent = nullptr);
     ~Balance();
 
-private slots:
-    void on_btnMenu_clicked();
+signals:
+    void logOut();
 
 private:
     Ui::Balance *m_ui;

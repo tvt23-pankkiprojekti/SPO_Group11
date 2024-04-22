@@ -38,6 +38,7 @@ Balance::Balance(MainWindow *parent)
                     qDebug("Ten seconds passed");
                     #endif
                     reset();
+                    m_ui->textTransactions->clear();
                     parent->show_menu();
                 }
     );
@@ -45,6 +46,7 @@ Balance::Balance(MainWindow *parent)
     // other connections
     connect(m_ui->pushButton, &QPushButton::clicked, this, [=, this]() {
         reset();
+        m_ui->textTransactions->clear();
         parent->show_menu();
     });
 
@@ -53,6 +55,7 @@ Balance::Balance(MainWindow *parent)
             this,
             [=, this](Response response){
                 // timers need these
+                qDebug() << "NEW the() REQUEST";
                 usersActionTimer.start(10000);
                 anotherTimer.start(1000);
                 point = QCursor::pos();
@@ -72,6 +75,12 @@ Balance::Balance(MainWindow *parent)
                     auto dataBalance = data["balance"].toObject();
                     auto balanceString = dataBalance["balance"].toString();
                     setBalance(balanceString);
+                }
+                else if(response.code() == Response::Code::INVALID_TOKEN){
+                    // token is deleted and we go to login screen
+                    // User needs to be notified. Maybe in the login screen?
+                    reset();
+                    emit logOut();
                 }
                 else {
                     reset();
@@ -95,10 +104,4 @@ void Balance::reset()
 {
     usersActionTimer.stop();
     anotherTimer.stop();
-}
-
-void Balance::on_btnMenu_clicked()
-{
-    REST *pre = REST::the();
-    pre->make_balance_request("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50TnVtYmVyIjoiOGZjMDM0N2MtZmUyZi0xMWVlLThkZjAtOGMxNjQ1NDAzNDc3IiwiaWF0IjoxNzEzNTIxNDM2fQ.JWH1BcDN5av-w9Mx05ZCtYEE5Rjc2L1Mu1CXo3Uv0Mc");
 }
