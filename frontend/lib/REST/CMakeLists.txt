@@ -14,6 +14,7 @@ find_package(Qt6 COMPONENTS REQUIRED Core Network)
 
 add_library(REST SHARED
     rest.cpp
+    rest.h
 )
 
 target_link_libraries(REST PRIVATE Qt6::Core Qt6::Network)

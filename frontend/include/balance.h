@@ -2,6 +2,11 @@
 #define BALANCE_H
 
 #include <QWidget>
+#include <QTimer>
+#include <QJsonObject>
+#include <QJsonArray>
+
+class MainWindow;
 
 namespace Ui {
 class Balance;
@@ -12,11 +17,18 @@ class Balance : public QWidget
     Q_OBJECT
 
 public:
-    explicit Balance(QWidget *parent = nullptr);
+    explicit Balance(QWidget *pointerLogin, MainWindow *parent = nullptr);
     ~Balance();
 
+signals:
+    void logOut();
+
 private:
-    Ui::Balance *ui;
+    Ui::Balance *m_ui;
+    QTimer noUserActionTimer, mouseMovementTimer;
+    QPoint mousePoint;
+
+    void resetTimers();
 };
 
 #endif // BALANCE_H

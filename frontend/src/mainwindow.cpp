@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     , m_reader(CardReader::getInstance())
 
     , m_login_widget(new Login)
+    , m_balance_widget(new Balance(m_login_widget,this))
     , m_menu_widget( new Menu(this) )
-    , m_balance_widget(new Balance)
     , m_transactions_widget(new Transactions)
     , m_withdraw_widget(new Withdraw(this))
     , m_status_widget(new Status(this))
@@ -38,9 +38,12 @@ MainWindow::MainWindow(QWidget *parent)
         if (m_ui->stackedWidget->currentWidget() == m_withdraw_widget) {
             REST::the()->make_prewithdraw_request(m_token);
         }
+        else if (m_ui->stackedWidget->currentWidget() == m_balance_widget) {
+            REST::the()->make_balance_request(m_token);
+        }
     });
 
-    // m_ui->stackedWidget->setCurrentWidget(m_withdraw_widget);
+    //m_ui->stackedWidget->setCurrentWidget(m_menu_widget);
     // show_status(m_withdraw_widget, ":D", false);
 
     connect(m_menu_widget, &Menu::withdraw_selected, this, [this]{
@@ -58,6 +61,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_menu_widget, &Menu::logOut, this, [this]{
         m_token.clear();
         show_widget(m_login_widget);
+    });
+
+    connect(m_balance_widget, &Balance::logOut, this, [this]{
+        m_token.clear();
     });
 
     // TODO: Implement these
