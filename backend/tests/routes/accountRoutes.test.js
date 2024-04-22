@@ -1,10 +1,11 @@
 const { API } = require('../../src/config.js');
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImFkbWluMSIsImlhdCI6MTcxMzczNTI2OX0.wXnXwGhwDDLSC8_KivnImFd0CFs4anm75xzOkLYrigg';
 
 test('insert account', async ()=>{
     const result = await fetch(`${API.url()}/admin/api/account`,
     {
         method: 'POST',
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": adminToken},
         body: JSON.stringify({
             User_id: 1,
             type: 'debit',
@@ -18,7 +19,9 @@ test('insert account', async ()=>{
 });
 
 test('get one account', async ()=>{
-    const result = await fetch(`${API.url()}/admin/api/account/1`);
+    const result = await fetch(`${API.url()}/admin/api/account/1`, {headers: {
+        "Authorization": adminToken
+    }});
 
     expect(result.status).toEqual(200);
     expect(await result.json()).toEqual({
@@ -32,7 +35,9 @@ test('get one account', async ()=>{
 });
 
 test('get all accounts', async ()=>{
-    const result = await fetch(`${API.url()}/admin/api/account`);
+    const result = await fetch(`${API.url()}/admin/api/account`, {headers: {
+        "Authorization": adminToken
+    }});
 
     expect(result.status).toEqual(200);
 });
@@ -41,7 +46,7 @@ test('update account', async()=>{
     const result = await fetch(`${API.url()}/admin/api/account/1`,
     {
     method: 'PUT',
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type": "application/json", "Authorization": adminToken},
     body: JSON.stringify({User_id: 2}),
     });
     expect(result.status).toEqual(200);
@@ -51,6 +56,7 @@ test('delete account', async () =>{
     const result = await fetch(`${API.url()}/admin/api/account/1`,
     {
         method: 'DELETE',
+        headers: {"Authorization": adminToken}
     });
     expect(result.status).toEqual(400);
 });

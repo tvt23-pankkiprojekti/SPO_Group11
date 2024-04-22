@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { API } = require('../../src/config.js');
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImFkbWluMSIsImlhdCI6MTcxMzczNTI2OX0.wXnXwGhwDDLSC8_KivnImFd0CFs4anm75xzOkLYrigg';
 
 test('create administrator', async () => {
     const result = await fetch(
@@ -12,7 +13,8 @@ test('create administrator', async () => {
             }),
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Authorization": adminToken
             }
         }
     );
@@ -37,7 +39,8 @@ test('update administrator', async () => {
             body: JSON.stringify({password: 'changedpassword'}),
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Authorization": adminToken
             }
         }
     );
@@ -60,7 +63,8 @@ test('get all administrators', async () => {
         {
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Authorization": adminToken
             }
         }
     );
@@ -88,7 +92,8 @@ test('delete administrator', async () => {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Authorization": adminToken
             }
         }
     );

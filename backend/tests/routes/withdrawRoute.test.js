@@ -1,13 +1,16 @@
 const {API} = require('../../src/config.js');
 const jwt = require('jsonwebtoken');
 const Response = require('../../src/responses.js');
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImFkbWluMSIsImlhdCI6MTcxMzczNTI2OX0.wXnXwGhwDDLSC8_KivnImFd0CFs4anm75xzOkLYrigg';
 
 // An account is needed for a withdrawal but the account
 // numbers are auto-generated and change between tests
 // so we need to get one at the start of the test every time
 async function getAccount() {
     const account = await (
-        await fetch(`${API.url()}/admin/api/account/1`)
+        await fetch(`${API.url()}/admin/api/account/1`, {headers: {
+            "Authorization": adminToken
+        }})
     ).json();
 
     // And let's pretend the server signed it for us

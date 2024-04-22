@@ -1,4 +1,5 @@
 const { API } = require("../../src/config");
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImFkbWluMSIsImlhdCI6MTcxMzczNTI2OX0.wXnXwGhwDDLSC8_KivnImFd0CFs4anm75xzOkLYrigg';
 
 let debitCardId;
 
@@ -14,7 +15,8 @@ test("login: debit", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
     debitCardId = await card.text();
@@ -27,7 +29,8 @@ test("login: debit", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -36,7 +39,8 @@ test("login: debit", async () => {
         body: JSON.stringify({ pin: "hash" }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -58,7 +62,8 @@ test("login: credit", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
     const id = await card.text();
@@ -71,7 +76,8 @@ test("login: credit", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -80,7 +86,8 @@ test("login: credit", async () => {
         body: JSON.stringify({ pin: "hash" }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -99,7 +106,8 @@ test("login: debit/credit", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -108,7 +116,8 @@ test("login: debit/credit", async () => {
         body: JSON.stringify({ pin: "hash" }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -125,7 +134,8 @@ test("card not found", async () => {
         body: JSON.stringify({ pin: "hash" }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -138,7 +148,8 @@ test("incorrect pin", async () => {
         body: JSON.stringify({ pin: "incorrect" }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -157,7 +168,8 @@ test("card frozen", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -166,7 +178,8 @@ test("card frozen", async () => {
         body: JSON.stringify({ pin: "hash" }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -185,7 +198,8 @@ test("no account linked", async () => {
         }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -194,7 +208,8 @@ test("no account linked", async () => {
         body: JSON.stringify({ pin: "hash" }),
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
@@ -206,7 +221,8 @@ test("missing parameters", async () => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": adminToken
         }
     });
 
