@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        
+    </head>
+    <body>
+        <label for="login">Login:</label><br>
+        <input type="text" id="login" name="login"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br>
+        <button id="loginButton">Login</button><br>
+    </body>
+    <script>
+        const login = document.getElementById("login");
+        const password = document.getElementById("password");
+        const loginButton = document.getElementById("loginButton");
+
+        async function loginRequest(event){
+            const res = await fetch("admin/api/login", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    login: login.value,
+                    password: password.value
+                })
+            });
+
+            const {token} = (await res.json());
+            localStorage.setItem("token",token);
+            window.location.href = 'tables.html'; 
+        }
+        loginButton.addEventListener("click", loginRequest)
+        
+    </script>
+</html>

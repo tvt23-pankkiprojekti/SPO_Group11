@@ -25,7 +25,6 @@ const balance = require('./routers/balanceRouter.js');
 
 const app = express();
 
-app.use(express.json());
 app.use(morgan('combined', {stream: accessLogStream}));
 
 // Apply to all admin api routes that are not login
@@ -38,6 +37,9 @@ app.use([
     '/admin/api/user',
     '/admin/api/transaction',
 ], adminAuth);
+
+app.use(express.static('public'));
+app.use(express.json());
 
 app.use('/admin/api/login', adminLoginRouter);
 app.use('/admin/api/administrator', administratorRouter);
