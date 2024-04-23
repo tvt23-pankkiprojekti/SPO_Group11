@@ -1,10 +1,11 @@
-#ifndef TRANSACTIONS_H
-#define TRANSACTIONS_H
+#pragma once
 
 #include <QWidget>
 
+class MainWindow;
+
 namespace Ui {
-class Transactions;
+    class Transactions;
 }
 
 class Transactions : public QWidget
@@ -12,11 +13,16 @@ class Transactions : public QWidget
     Q_OBJECT
 
 public:
-    explicit Transactions(QWidget *parent = nullptr);
+    explicit Transactions(MainWindow *parent = nullptr);
     ~Transactions();
 
 private:
-    Ui::Transactions *ui;
-};
+    void timerEvent(QTimerEvent *event) override;
+    void clear_transactions();
+    void reset_timer();
 
-#endif // TRANSACTIONS_H
+    Ui::Transactions *m_ui;
+    MainWindow *m_main_window;
+    int m_index = 0;
+    int m_timer;
+};

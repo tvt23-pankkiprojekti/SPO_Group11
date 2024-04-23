@@ -35,7 +35,6 @@ VALUES (1, NOW()-0,  -50.00, 'withdraw'),
        (1, NOW()-7,  300.00, 'deposit'),
        (1, NOW()-8,  -40.00, 'withdraw'),
        (1, NOW()-9,  400.00, 'deposit'),
-       (1, NOW()-10, 10.00,  'deposit'), 
-       (1, NOW()-11, -7.50,  'withdraw'), 
-       (1, NOW()-12, 20.00,  'deposit'), 
-       (1, NOW()-13, -3.25,  'withdraw');
+       (1, NOW()-10, 10.00,  'deposit'),
+       (1, NOW()-11, -7.50,  'withdraw'),
+       (1, NOW()-12, 20.00,  'deposit');
