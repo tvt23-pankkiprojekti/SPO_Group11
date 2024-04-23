@@ -1,3 +1,4 @@
+const process = require('process');
 const express = require('express');
 const http = require('http');
 const morgan = require('morgan');
@@ -28,7 +29,10 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 
-app.use(morgan('combined', {stream: accessLogStream}));
+// Do not clutter test output with logging
+if (process.env.NODE_ENV !== 'test') {
+    app.use(morgan('combined', {stream: accessLogStream}));
+}
 
 // Apply to all admin api routes that are not login
 app.use([
@@ -64,7 +68,11 @@ app.use('/api/withdraw', withdrawRouter);
 app.use('/api/prewithdraw', preWithdraw);
 app.use('/api/balance', balance);
 
-app.use(logError);
+// Do not clutter test output with logging
+if (process.env.NODE_ENV !== 'test') {
+    app.use(logError);
+}
+
 app.use('/admin', adminError);
 app.use(userError);
 
