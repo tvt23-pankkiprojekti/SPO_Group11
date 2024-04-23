@@ -1,5 +1,7 @@
 #include "cardreader.h"
 
+#include <QRegularExpression>
+
 #ifdef QT_DEBUG
 #include <QDebug>
 #endif
@@ -23,11 +25,19 @@ CardReader::CardReader(QObject *parent)
         QString result = port.readAll();
 
         #ifdef QT_DEBUG
-        qDebug() << result;
+        qDebug() << "Card read: " << result;
         #endif
 
-        result = result.sliced(3, 10);
-        emit cardRead(result);
+        QRegularExpression cardPattern("06000[0-9A-F]{5}");
+        QRegularExpressionMatch match = cardPattern.match(result);
+
+        if (match.hasMatch()) {
+            emit cardRead( match.captured() );
+        }
+
+        #ifdef QT_DEBUG
+        qDebug() << "Card reader capture: " << match.captured();
+        #endif
     });
 }
 
