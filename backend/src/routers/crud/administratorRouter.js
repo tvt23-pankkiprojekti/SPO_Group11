@@ -10,14 +10,14 @@ router.get('/:id?', async (req, res, next) => {
         if (requestedId)
             [dbResult] = await Administrator.getById(requestedId);
         else
-            [dbResult] = await Administrator.getAll();
+            dbResult = await Administrator.getAll();
     }
     catch (error) {
         error.name = 'DatabaseError';
         return next(error);
     }
 
-    res.json(dbResult);
+    res.json(dbResult[0]);
 });
 
 router.post('/', async (req, res, next) => {
