@@ -23,12 +23,16 @@ test('get all transactions', async () => {
     const signedAccount = await getAccount();
 
     const res = await fetch(`${API.url()}/api/transactions`, {
+        method: "POST",
         headers: {
             'Content-Type': 'application/json',
             authorization: signedAccount
-        }
+        },
+        body: JSON.stringify({
+            index: 0,
+            amount: 5
+        })
     });
 
     expect(res.status).toEqual(200);
 });
-
