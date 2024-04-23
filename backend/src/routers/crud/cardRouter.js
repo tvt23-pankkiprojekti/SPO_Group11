@@ -48,9 +48,9 @@ router.put("/:id", async (req, res, next) => {
     try {
         const idCard = req.params.id;
         let data = req.body;
-        data.pinHash = data.pinHash
-            ? await bcrypt.hash(data.pinHash, 10) 
-            : undefined;
+        if (data.pinHash) {
+            data.pinHash = await bcrypt.hash(data.pinHash, 10);
+        }
 
         const dbResult = (await Card.update(idCard, data))[0];
 
