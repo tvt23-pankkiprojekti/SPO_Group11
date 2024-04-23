@@ -2,14 +2,44 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        
+        <link rel="stylesheet" href="/css/style.css">
     </head>
-    <body>
-        <h1>User</h1>
-        <table id="userTable"></table>
-    </body>
+        <body>
+            <h1>User</h1>
+            <table id="userTable"></table>
+            <h1>Transaction</h1>
+            <table id="transactionTable">
+                <tr>
+                    <th>idTransaction</th>
+                    <th>Account_id</th>
+                    <th>dateTime</th>
+                    <th>balanceChange</th>
+                    <th>transactionType</th>
+                </tr>
+            </table>
+            <h1>Account</h1>
+            <table id="accountTable">
+                <tr>
+                    <th>idAccount</th>
+                    <th>User_id</th>
+                    <th>type</th>
+                    <th>balance</th>
+                    <th>limit</th>
+                    <th>accountNumber</th>
+                </tr>
+            </table>
+            <h1>Card Account</h1>
+            <table id="cardAccountTable">
+                <tr>
+                    <th>idCard_Account</th>
+                    <th>Card_id</th>
+                    <th>Account_id</th>
+                </tr>
+            </table>
+        </body>
     <script>
         const token = localStorage.getItem("token");
         const userTable = document.getElementById("userTable");
