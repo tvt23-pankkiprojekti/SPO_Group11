@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_login_widget(new Login( REST::the(), this ))
     , m_balance_widget(new Balance(m_login_widget,this))
     , m_menu_widget( new Menu(this) )
-    , m_transactions_widget(new Transactions)
+    , m_transactions_widget(new Transactions(this))
     , m_withdraw_widget(new Withdraw(this))
     , m_status_widget(new Status(this))
 {
@@ -37,11 +37,16 @@ MainWindow::MainWindow(QWidget *parent)
      * Stuff that needs to be run when the current widget is changed
      */
     connect(m_ui->stackedWidget, &QStackedWidget::currentChanged, this, [this]() {
-        if (m_ui->stackedWidget->currentWidget() == m_withdraw_widget) {
+        auto current = m_ui->stackedWidget->currentWidget();
+        
+        if (current == m_withdraw_widget) {
             REST::the()->make_prewithdraw_request(m_token);
         }
-        else if (m_ui->stackedWidget->currentWidget() == m_balance_widget) {
+        else if (current == m_balance_widget) {
             REST::the()->make_balance_request(m_token);
+        }
+        else if (current == m_transactions_widget) {
+            REST::the()->make_transactions_request(m_token);
         }
     });
 
@@ -61,9 +66,6 @@ MainWindow::MainWindow(QWidget *parent)
         }
     );
 
-    // m_ui->stackedWidget->setCurrentWidget(m_withdraw_widget);
-    // show_status(m_withdraw_widget, ":D", false);
-
     connect(m_menu_widget, &Menu::withdraw_selected, this, [this]{
         show_widget(m_withdraw_widget);
     });
@@ -79,6 +81,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_menu_widget, &Menu::logOut, this, [this]{
         m_token.clear();
         show_widget(m_login_widget);
+    });
+
+    connect(m_balance_widget, &Balance::logOut, this, [this]{
+        m_token.clear();
     });
 }
 

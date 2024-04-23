@@ -7,11 +7,6 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- -----------------------------------------------------
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- -----------------------------------------------------
 
 -- -----------------------------------------------------
 -- Table `User`
@@ -163,7 +158,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- procedure getCardAccounts
 -- -----------------------------------------------------
-
 DROP procedure IF EXISTS `getCardAccounts`;
 
 CREATE PROCEDURE `getCardAccounts` (cardId INT)
@@ -171,11 +165,9 @@ BEGIN
 	SELECT `accountNumber`, `type` FROM Account WHERE `idAccount` IN ( SELECT `Account_id` FROM Card_Account WHERE `Card_id` = cardId );
 END;
 
-
 -- -----------------------------------------------------
 -- procedure withdraw
 -- -----------------------------------------------------
-
 DROP procedure IF EXISTS `withdraw`;
 
 CREATE PROCEDURE `withdraw` (IN `accNum` VARCHAR(255), IN `amount` DECIMAL(10,2))
@@ -216,11 +208,9 @@ BEGIN
   END IF;
 END;
 
-
 -- -----------------------------------------------------
 -- procedure getGeneralInfo
 -- -----------------------------------------------------
-
 DROP procedure IF EXISTS `getGeneralInfo`;
 
 CREATE PROCEDURE `getGeneralInfo` (IN `AccNum` VARCHAR(255))
@@ -238,20 +228,18 @@ BEGIN
     SELECT val_firstName AS firstName, val_lastName AS lastName, (val_balance - val_limit) AS balance;
 END;
 
-
 -- -----------------------------------------------------
--- procedure getAllAccountTransactions
+-- procedure getTransactions
 -- -----------------------------------------------------
+DROP procedure IF EXISTS `getTransactions`;
 
-DROP procedure IF EXISTS `getAllAccountTransactions`;
-
-CREATE PROCEDURE `getAllAccountTransactions` (IN `AccNum` VARCHAR(255))
+CREATE PROCEDURE `getTransactions` (IN `AccNum` VARCHAR(255), IN `Index` INT, IN `Amount` INT)
 BEGIN
 	SELECT Transaction.dateTime, Transaction.balanceChange FROM `Account`
     INNER JOIN Transaction ON Transaction.Account_id = (SELECT Account.idAccount WHERE `accountNumber` = `AccNum`)
-    ORDER BY Transaction.dateTime DESC;
+    ORDER BY Transaction.dateTime DESC
+    LIMIT `Index`, `Amount`;
 END;
-
 
 
 DROP TRIGGER IF EXISTS `Account_BEFORE_INSERT` ;
@@ -259,8 +247,6 @@ CREATE DEFINER = CURRENT_USER TRIGGER `Account_BEFORE_INSERT` BEFORE INSERT ON `
 BEGIN
 SET NEW.`accountNumber` = UUID();
 END;
-
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

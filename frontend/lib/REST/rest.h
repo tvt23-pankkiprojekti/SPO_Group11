@@ -70,7 +70,7 @@ public:
     void make_balance_request(const QString& token);
     void make_prewithdraw_request(const QString& token);
     void make_withdraw_request(const QString& token, double amount);
-    void make_transactions_request(const QString& token);
+    void make_transactions_request(const QString& token, int index = 0, int amount = 5);
 
 signals:
     void login_request_finished(Response);

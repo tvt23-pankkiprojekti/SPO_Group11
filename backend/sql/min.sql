@@ -1,12 +1,5 @@
 -- insert minimal test data
 
--- creates an admin
-
--- creates an user with 3 cards (debit, credit, and debit/credit),
--- and 2 accounts for the cards
-
--- creates a card without linking an account
-
 INSERT INTO `Administrator` (`login`, `passwordHash`)
 VALUES ("admin", "$2a$12$AmmT1LTY861Xp072GaIwKuAaDhAne503qOGHK.l1S3nXJJpdArwwC"); -- admin
 
@@ -30,3 +23,18 @@ VALUES (1, 1),
        (3, 1),
        (3, 2),
        (5, 1);
+
+INSERT INTO `Transaction` (`Account_id`, `dateTime`, `balanceChange`, `transactionType`)
+VALUES (1, NOW()-0,  -50.00, 'withdraw'),
+       (1, NOW()-1,  100.00, 'deposit'),
+       (1, NOW()-2,  -20.00, 'withdraw'),
+       (1, NOW()-3,  200.00, 'deposit'),
+       (1, NOW()-4,  -10.00, 'withdraw'),
+       (1, NOW()-5,  50.00,  'deposit'),
+       (1, NOW()-6,  -30.00, 'withdraw'),
+       (1, NOW()-7,  300.00, 'deposit'),
+       (1, NOW()-8,  -40.00, 'withdraw'),
+       (1, NOW()-9,  400.00, 'deposit'),
+       (1, NOW()-10, 10.00,  'deposit'),
+       (1, NOW()-11, -7.50,  'withdraw'),
+       (1, NOW()-12, 20.00,  'deposit');

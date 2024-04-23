@@ -89,13 +89,17 @@ void REST::make_withdraw_request(const QString& token, double amount)
     });
 }
 
-void REST::make_transactions_request(const QString& token)
+void REST::make_transactions_request(const QString& token, int index, int amount)
 {
+    QJsonObject body;
+    body["index"] = index;
+    body["amount"] = amount;
+
     const QString url = "http://localhost:8008/api/transactions";
     auto request = QNetworkRequest(url);
     request.setRawHeader("authorization", token.toUtf8());
 
-    m_rest_manager->get(request, nullptr, [&](QRestReply& reply) {
+    m_rest_manager->post(request, QJsonDocument(body), nullptr, [&](QRestReply& reply) {
         HANDLE_REPLY(reply, transactions_request_finished);
     });
 }
