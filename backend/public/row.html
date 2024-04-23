@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <link rel="stylesheet" href="/css/style.css">
+        <style>
+            .main-container {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: 2fr 1fr;
+            }
+            .child-container {
+                display: flex;
+                justify-content: space-between;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='main-container'>
+            <table>
+                <tr id='headerRow'></tr>
+                <tr id='itemRow'></tr>
+                <tr id='editRow'><td></td></tr>
+            </table>
+            <div class='child-container'>
+                <button id='updateButton'>Update</button>
+                <button id='deleteButton'>Delete</button>
+            </div>
+        </div>
+    </body>
+    <script>
+        const token = localStorage.getItem("token");
+
+        const updateButton = document.getElementById('updateButton');
+        const deleteButton = document.getElementById('deleteButton');
+
+        const queryParams = new URLSearchParams(window.location.search);
+        const tableName = queryParams.get('table');
+        const rowName = queryParams.get('row');
+        const endPoint = `/admin/api/${tableName}/${rowName}`;
+        const headers = {'Authorization': token};
+        const arrEditInputs = [];
+
+        async function errorHandler(res, message) {
+                const resJson = await res.json();
+
+                if (resJson.code === 6) {
+                    alert('Session expired');
+                    window.location.href = '/';
+                }
+
+                console.log(resJson);
+                alert(message);
+                return;
+        }
+
+        window.addEventListener('load', async () => {
+            const headerRow = document.getElementById('headerRow');
+            const itemRow = document.getElementById('itemRow');
+            const editRow = document.getElementById('editRow');
+            
+            const res = await fetch(endPoint, {headers});
+
+            if (res.status != 200) {
+                errorHandler(
+                    res,
+                    'Failed to fetch resource. Check browser console'
+                );
+
+                return;
+            }
+            
+            const row = await res.json();
+
+            for (let key of Object.keys(row)) {
+                const header = document.createElement('th');
+                header.append(key);
+                headerRow.append(header);
+            }
+
+            // Add edit input for all keys except the first one which
+            // is the id.
+            for (let key of Object.keys(row).slice(1)) {
+                const td = document.createElement('td');
+                const editInput = document.createElement('input');
+                arrEditInputs.push(editInput);
+                editInput.type = 'text';
+                editInput.id = key;
+                td.append(editInput);
+                editRow.append(td);
+            }
+
+            for (let value of Object.values(row)) {
+                const column = document.createElement('td');
+                column.append(value);
+                itemRow.append(column);
+            }
+        });
+
+        deleteButton.addEventListener('click', async () => {
+            const res = await fetch(endPoint, {
+                headers,
+                method: 'DELETE'
+            });
+
+            if (res.status != 200) {
+                errorHandler(
+                    res,
+                    'Database deletion failed. Check browser console'
+                );
+
+                return;
+            }
+
+            window.location.href = '/tables.html';
+        });
+        
+        updateButton.addEventListener('click', async () => {
+            const updateObj = arrEditInputs.reduce((accum, elem) => ({
+                ...accum, ...(elem.value ? {[elem.id]: elem.value} : {})
+            }), {});
+
+            const res = await fetch(endPoint, {
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                },
+                method: 'PUT',
+                body: JSON.stringify(updateObj)
+            });
+
+            if (res.status != 200) {
+                errorHandler(
+                    res,
+                    'Database update failed. Check browser console'
+                );
+
+                return;
+            }
+            
+            window.location.reload();
+        });
+    </script>
+</html>
