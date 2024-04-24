@@ -60,23 +60,15 @@ Balance::Balance(QWidget *mousePointerLogin, MainWindow *parent)
                 mousePoint = QCursor::pos();
                 if(response.code() == Response::Code::OK){
                     auto data = response.data();
-                    // show recent transactions (max is 5)
-                    auto dataRecent = data["recenttransactions"];
-                    for(auto i: dataRecent.toArray()){
-                        auto x = i.toObject();
-                        auto balance = x["balanceChange"].toString() + "€";
-                        auto date = x["dateTime"].toString();
-                        QDateTime dateTime = QDateTime::fromString(date, Qt::ISODateWithMs);
-                        QString dateString = dateTime.toString("hh:mm dd.MM.yyyy");
-                        m_ui->textTransactions->append((balance + "\t" + dateString));
-                    }
                     // set label to show current balance
                     auto dataBalance = data["balance"].toObject();
                     auto balanceString = dataBalance["balance"].toString();
                     m_ui->labelBalance->setText(balanceString);
+
+                    REST::the()->make_transactions_request(parent->token());
                 }
                 else if(response.code() == Response::Code::INVALID_TOKEN){
-                    parent->show_status(mousePointerLogin, "Session expired", false);
+                    parent->show_status(mousePointerLogin, "Session expired (Code 6)", false, "Log back in");
                     resetTimers();
                 }
                 else {
@@ -85,6 +77,30 @@ Balance::Balance(QWidget *mousePointerLogin, MainWindow *parent)
                 }
             }
     );
+
+    connect(REST::the(), &REST::transactions_request_finished, this, [=, this](Response response) {
+        if (response.code() == Response::Code::OK) {
+            // show recent transactions (max is 5)
+            auto data = response.data().array();
+
+            for(const auto& i : data){
+                auto x = i.toObject();
+                auto balance = x["balanceChange"].toString() + "€";
+                auto date = x["dateTime"].toString();
+                QDateTime dateTime = QDateTime::fromString(date, Qt::ISODateWithMs);
+                QString dateString = dateTime.toString("hh:mm dd.MM.yyyy");
+                m_ui->textTransactions->append((balance + "\t" + dateString));
+            }
+        }
+        else if(response.code() == Response::Code::INVALID_TOKEN){
+            parent->show_status(mousePointerLogin, "Session expired (Code 6)", false, "Log back in");
+            resetTimers();
+        }
+        else {
+            resetTimers();
+            parent->show_status(this, "Server error (Code 500)");
+        }
+    });
 }
 
 Balance::~Balance()
