@@ -83,6 +83,7 @@ Balance::Balance(QWidget *mousePointerLogin, MainWindow *parent)
             // show recent transactions (max is 5)
             auto data = response.data().array();
 
+            m_ui->textTransactions->clear();
             for(const auto& i : data){
                 auto x = i.toObject();
                 auto balance = x["balanceChange"].toString() + "€";
