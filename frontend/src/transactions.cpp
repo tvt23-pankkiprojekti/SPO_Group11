@@ -105,6 +105,7 @@ void Transactions::timerEvent(QTimerEvent *event)
 {
     if (m_timer) killTimer(m_timer);
     m_timer = 0;
+    m_index = 0;
     m_main_window->show_menu();
 }
 
