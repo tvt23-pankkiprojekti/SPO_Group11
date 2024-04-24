@@ -8,23 +8,22 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
         <body>
-            <button id="testButton">test</button><br>
             <h1>User</h1>
             <table id="userTable"></table>
 
             <h1>Transaction</h1>
-            <table id="transactionTable">
+            <table id="transaction">
                 <tr>
                     <th>idTransaction</th>
                     <th>Account_id</th>
                     <th>dateTime</th>
                     <th>balanceChange</th>
                     <th>transactionType</th>
-                    <th><button name = "button" type = "button">Edit</button></th>
+                    <th><a href="new.html?table=transaction"><button name = "addTransaction" type = "button">AddNew</button></a></th>
                 </tr>
             </table>
             <h1>Account</h1>
-            <table id="accountTable">
+            <table id="account">
                 <tr>
                     <th>idAccount</th>
                     <th>User_id</th>
@@ -32,14 +31,16 @@
                     <th>balance</th>
                     <th>limit</th>
                     <th>accountNumber</th>
+                    <th><a href="new.html?table=account"><button name = "addAccount" type = "button">AddNew</button></a></th>
                 </tr>
             </table>
             <h1>Card Account</h1>
-            <table id="cardAccountTable">
+            <table id="card_account">
                 <tr>
                     <th>idCard_Account</th>
                     <th>Card_id</th>
                     <th>Account_id</th>
+                    <th><a href="new.html?table=card_account"><button name = "addCardAccount" type = "button">AddNew</button></a></th>
                 </tr>
             </table>
         </body>
@@ -50,6 +51,62 @@
         
         const testToken = localStorage.getItem("token");
         
+        async function getDataTransaction(){
+            const res = await fetch('admin/api/transaction', {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": testToken
+                }
+            });
+
+            const data = await res.json();
+            console.log(data);
+            
+            const idTransactions = data.map(item => item.idTransaction);
+            const accountIds = data.map(item => item.Account_id);
+            const dateTimes = data.map(item => item.dateTime);
+            const transactiontypes = data.map(item => item.transactionType);
+            const balanceChanges = data.map(item => item.balanceChange);
+            const dataLenght = data.length;
+
+            const informationArray = [idTransactions, accountIds, dateTimes, balanceChanges, transactiontypes];
+            const arrayLenght = informationArray.length;
+
+            await dodii(informationArray, arrayLenght, dataLenght, "transaction");
+            
+        }
+        window.addEventListener("load", getDataTransaction);
+
+
+        async function getDataAccount(){
+            const res = await fetch('admin/api/account', {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": testToken
+                }
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            const idAccounts = data.map(item => item.idAccount);
+            const usedIds = data.map(item => item.User_id);
+            const types = data.map(item => item.type);
+            const balances = data.map(item => item.balance);
+            const limits = data.map(item => item.limit);
+            const accountNumbers = data.map(item => item.accountNumber);
+            const dataLenght = data.length;
+
+            const informationArray = [idAccounts, usedIds, types, balances, limits, accountNumbers];
+            const arrayLenght = informationArray.length;
+
+            await dodii(informationArray, arrayLenght, dataLenght, "account");
+        
+        }
+        window.addEventListener("load", getDataAccount);
+
         async function getDataCardAccount(){
             const res = await fetch('admin/api/card_account', {
                 headers: {
@@ -62,38 +119,52 @@
             const data = await res.json();
             //console logging tests
             console.log(data);
-            console.log(typeof data);
+            //console.log(typeof data);
             
             const cardAccountIds = data.map(item => item.idCard_Account);
             const cardIds = data.map(item => item.Card_id);
             const accountIds = data.map(item => item.Account_id);
-            const lenght = data.length;
+            const dataLenght = data.length;
             //console.log(lenght);
 
-            const testArray = [cardAccountIds, cardIds, accountIds];
-            console.log(testArray);
-            console.log(testArray[0]);
-            const arrayLenght = testArray.length;
-            console.log(arrayLenght);
+            const informationArray = [cardAccountIds, cardIds, accountIds];
+            //console.log(testArray);
+            //console.log(testArray[0]);
+            const arrayLenght = informationArray.length;
+            //console.log(arrayLenght);
 
-            await dodii(testArray, arrayLenght, lenght);
-            //return data;
+            await dodii(informationArray, arrayLenght, dataLenght, "card_account");
         }
-        testButton.addEventListener("click", getDataCardAccount);
+        window.addEventListener("load", getDataCardAccount);
+        
 
-        async function dodii(infoArray, arrayLenght, dataLenght) {
-            const trTable = document.getElementById("cardAccountTable");
+        async function dodii(infoArray, arrayLenght, dataLenght, tableName) {
+            const trTable = document.getElementById(tableName);
 
             for(let i=0; i < dataLenght; i++){
                 // a new table row
                 const tr = document.createElement('tr');
+                
                 for (let j=0; j < arrayLenght; j++){
                     // a new data cell/item/value what ever you want to call it
                     const td = document.createElement('td');
                     td.textContent = infoArray[j][i];
                     tr.appendChild(td);
                 }
-            
+                const buttonTd = document.createElement('td');
+                const button = document.createElement('button');
+
+                const linkki = document.createElement('a');
+
+
+                linkki.href = `/row.html?table=${tableName}&row=${infoArray[0][i]}`;
+                button.append("Edit");
+
+                linkki.appendChild(button);
+
+                buttonTd.appendChild(linkki);
+                tr.appendChild(buttonTd);
+
                 trTable.append(tr);
             }
         }
