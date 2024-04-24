@@ -1,7 +1,6 @@
 #include "menu.h"
 #include "forms/ui_menu.h"
 #include "ui_menu.h"
-#include "mainwindow.h"
 
 Menu::Menu(QWidget *parent)
     : QWidget(parent)
@@ -14,6 +13,7 @@ Menu::Menu(QWidget *parent)
     connect(ui->buttonWithdraw, &QPushButton::clicked, this, &Menu::on_buttonWithdraw_clicked);
     connect(ui->buttonShowBalance, &QPushButton::clicked, this, &Menu::on_buttonShowBalance_clicked);
     connect(ui->buttonShowTransactions, &QPushButton::clicked, this, &Menu::on_buttonShowTransactions_clicked);
+    connect(ui->buttonLogout, &QPushButton::clicked, this, &Menu::on_buttonLogout_clicked);
 }
 
 Menu::~Menu()

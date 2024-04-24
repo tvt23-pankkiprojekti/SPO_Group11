@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(m_menu_widget, &Menu::logOut, this, [this]{
         m_token.clear();
-        show_widget(m_login_widget);
+        show_status(m_login_widget, "Logged out", false, "Log in");
     });
 
     connect(m_balance_widget, &Balance::logOut, this, [this]{
