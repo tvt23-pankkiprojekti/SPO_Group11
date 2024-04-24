@@ -9,14 +9,14 @@
 #define MAKE_AMOUNT(_num)                                                   \
     connect(m_ui->amount_##_num, &QPushButton::clicked, this, [this]() {    \
         set_current_amount(_num);                                           \
-        killTimer(m_timer);                                                 \
+        if (m_timer) killTimer(m_timer);                                    \
         m_timer = startTimer(10000);                                        \
     });
 
 #define MAKE_KEYPAD(_num)                                                   \
     connect(m_ui->pad_##_num, &QPushButton::clicked, this, [this]() {       \
         set_current_amount(m_current_amount * 10 + _num);                   \
-        killTimer(m_timer);                                                 \
+        if (m_timer) killTimer(m_timer);                                    \
         m_timer = startTimer(10000);                                        \
     });
 
@@ -42,8 +42,7 @@ Withdraw::Withdraw(MainWindow *parent)
             auto balance = data["balance"].toString() + "€";
             m_ui->label_balance->setText(balance);
 
-            if (m_timer)
-                killTimer(m_timer);
+            if (m_timer) killTimer(m_timer);
             m_timer = startTimer(10000);
         
             return;
@@ -59,20 +58,29 @@ Withdraw::Withdraw(MainWindow *parent)
     connect(REST::the(), &REST::withdraw_request_finished, this, [=, this](Response response) {
         reset_view();
 
-        if (response.code() == Response::Code::INSUFFICIENT_FUNDS) {
-            parent->show_status(this, "Insufficient funds (Code 7)");
-        }
-        else if (response.code() == Response::Code::OK) {
+        if (response.code() == Response::Code::OK) {
             auto data = response.data().object();
             auto amount = QString::number(data["amount"].toDouble());
 
             parent->show_status(this, "Successfully withdrew " + amount + "€");
         }
-        if (response.code() == Response::Code::INVALID_TOKEN) {
+        else if (response.code() == Response::Code::INSUFFICIENT_FUNDS) {
+            parent->show_status(this, "Insufficient funds (Code 7)");
+            if (m_timer) killTimer(m_timer);
+            m_timer = 0;
+            return;
+        }
+        else if (response.code() == Response::Code::INVALID_TOKEN) {
             parent->show_status(parent->login_widget(), "Session expired (Code 6)", false, "Log back in");
+            if (m_timer) killTimer(m_timer);
+            m_timer = 0;
+            return;
         }
         else {
             parent->show_status(this, "Server error (Code 500)");
+            if (m_timer) killTimer(m_timer);
+            m_timer = 0;
+            return;
         }
 
         REST::the()->make_prewithdraw_request(parent->token());
@@ -129,20 +137,20 @@ Withdraw::Withdraw(MainWindow *parent)
     connect(m_ui->pad_clear, &QPushButton::clicked, this, [this]() {
         set_current_amount(0.0);
         
-        killTimer(m_timer);
+        if (m_timer) killTimer(m_timer);
         m_timer = startTimer(10000);
     });
     connect(m_ui->pad_ok, &QPushButton::clicked, this, [=, this]() {
         REST::the()->make_withdraw_request(parent->token(), m_current_amount);
         
-        killTimer(m_timer);
+        if (m_timer) killTimer(m_timer);
         m_timer = 0;
     });
 }
 
 Withdraw::~Withdraw()
 {
-    killTimer(m_timer);
+    if (m_timer) killTimer(m_timer);
     delete m_ui;
 }
 
@@ -193,7 +201,7 @@ void Withdraw::set_current_amount(double amount)
 
 void Withdraw::timerEvent(QTimerEvent *event)
 {
-    killTimer(m_timer);
+    if (m_timer) killTimer(m_timer);
     m_timer = 0;
     m_main_window->show_menu();
 }
