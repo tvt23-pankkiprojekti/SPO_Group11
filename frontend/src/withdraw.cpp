@@ -48,7 +48,12 @@ Withdraw::Withdraw(MainWindow *parent)
         
             return;
         }
-        parent->show_status(this, "Server error (Code 500)");
+        if (response.code() == Response::Code::INVALID_TOKEN) {
+            parent->show_status(parent->login_widget(), "Session expired (Code 6)", false, "Log back in");
+        }
+        else {
+            parent->show_status(this, "Server error (Code 500)");
+        }
     });
 
     connect(REST::the(), &REST::withdraw_request_finished, this, [=, this](Response response) {
@@ -62,6 +67,9 @@ Withdraw::Withdraw(MainWindow *parent)
             auto amount = QString::number(data["amount"].toDouble());
 
             parent->show_status(this, "Successfully withdrew " + amount + "€");
+        }
+        if (response.code() == Response::Code::INVALID_TOKEN) {
+            parent->show_status(parent->login_widget(), "Session expired (Code 6)", false, "Log back in");
         }
         else {
             parent->show_status(this, "Server error (Code 500)");
