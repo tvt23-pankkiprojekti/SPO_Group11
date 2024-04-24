@@ -56,3 +56,8 @@ void Status::set_menu_widget(bool visible)
 {
     m_ui->button_menu->setVisible(visible);
 }
+
+void Status::set_text(const QString& text)
+{
+    m_ui->button_previous->setText(text);
+}

@@ -23,8 +23,6 @@ Transactions::Transactions(MainWindow *parent)
     m_ui->setupUi(this);
     m_ui->button_left->setEnabled(false);
 
-    m_timer = startTimer(10000);
-
     /*
      * Request handling
      */
@@ -41,6 +39,10 @@ Transactions::Transactions(MainWindow *parent)
             MAKE_LABEL_TEXT(2);
             MAKE_LABEL_TEXT(3);
             MAKE_LABEL_TEXT(4);
+
+            if (m_timer)
+                killTimer(m_timer);
+            m_timer = startTimer(10000);
         }
     });
 
@@ -50,14 +52,16 @@ Transactions::Transactions(MainWindow *parent)
     connect(m_ui->button_ok, &QPushButton::clicked, this, [=, this]() {
         parent->show_menu();
         m_index = 0;
-        reset_timer();
+        killTimer(m_timer);
+        m_timer = 0;
     });
 
     connect(m_ui->button_left, &QPushButton::clicked, this, [=, this]() {
         m_index--;
         REST::the()->make_transactions_request(parent->token(), m_index * 5);
         m_ui->button_right->setEnabled(true);
-        reset_timer();
+        killTimer(m_timer);
+        m_timer = startTimer(10000);
 
         if (m_index == 0) {
             m_ui->button_left->setEnabled(false);
@@ -68,7 +72,8 @@ Transactions::Transactions(MainWindow *parent)
         m_index++;
         REST::the()->make_transactions_request(parent->token(), m_index * 5);
         m_ui->button_left->setEnabled(true);
-        reset_timer();
+        killTimer(m_timer);
+        m_timer = startTimer(10000);
     });
 }
 
@@ -80,6 +85,8 @@ Transactions::~Transactions()
 
 void Transactions::timerEvent(QTimerEvent *event)
 {
+    killTimer(m_timer);
+    m_timer = 0;
     m_main_window->show_menu();
 }
 
@@ -91,10 +98,4 @@ void Transactions::clear_transactions()
     m_ui->label_2->setText(empty);
     m_ui->label_3->setText(empty);
     m_ui->label_4->setText(empty);
-}
-
-void Transactions::reset_timer()
-{
-    killTimer(m_timer);
-    m_timer = startTimer(10000);
 }

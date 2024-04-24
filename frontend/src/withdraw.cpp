@@ -9,13 +9,15 @@
 #define MAKE_AMOUNT(_num)                                                   \
     connect(m_ui->amount_##_num, &QPushButton::clicked, this, [this]() {    \
         set_current_amount(_num);                                           \
-        reset_timer();                                                      \
+        killTimer(m_timer);                                                 \
+        m_timer = startTimer(10000);                                        \
     });
 
 #define MAKE_KEYPAD(_num)                                                   \
     connect(m_ui->pad_##_num, &QPushButton::clicked, this, [this]() {       \
         set_current_amount(m_current_amount * 10 + _num);                   \
-        reset_timer();                                                      \
+        killTimer(m_timer);                                                 \
+        m_timer = startTimer(10000);                                        \
     });
 
 Withdraw::Withdraw(MainWindow *parent)
@@ -26,8 +28,6 @@ Withdraw::Withdraw(MainWindow *parent)
     m_ui->setupUi(this);
 
     reset_view();
-
-    m_timer = startTimer(10000);
 
     /*
      * Request handling
@@ -41,6 +41,10 @@ Withdraw::Withdraw(MainWindow *parent)
 
             auto balance = data["balance"].toString() + "€";
             m_ui->label_balance->setText(balance);
+
+            if (m_timer)
+                killTimer(m_timer);
+            m_timer = startTimer(10000);
         
             return;
         }
@@ -90,7 +94,8 @@ Withdraw::Withdraw(MainWindow *parent)
         set_current_amount(0.0);
         m_enter_custom_amount = !m_enter_custom_amount;
 
-        reset_timer();
+        killTimer(m_timer);
+        m_timer = startTimer(10000);
     });
 
     /*
@@ -115,11 +120,15 @@ Withdraw::Withdraw(MainWindow *parent)
     });
     connect(m_ui->pad_clear, &QPushButton::clicked, this, [this]() {
         set_current_amount(0.0);
-        reset_timer();
+        
+        killTimer(m_timer);
+        m_timer = startTimer(10000);
     });
     connect(m_ui->pad_ok, &QPushButton::clicked, this, [=, this]() {
         REST::the()->make_withdraw_request(parent->token(), m_current_amount);
-        reset_timer();
+        
+        killTimer(m_timer);
+        m_timer = 0;
     });
 }
 
@@ -174,8 +183,9 @@ void Withdraw::set_current_amount(double amount)
     m_current_amount = amount;
 }
 
-void Withdraw::reset_timer()
+void Withdraw::timerEvent(QTimerEvent *event)
 {
     killTimer(m_timer);
-    m_timer = startTimer(10000);
+    m_timer = 0;
+    m_main_window->show_menu();
 }
