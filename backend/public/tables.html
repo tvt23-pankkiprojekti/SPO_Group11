@@ -48,20 +48,18 @@
         const token = localStorage.getItem("token");
         const userTable = document.getElementById("userTable");
         const testButton = document.getElementById("testButton");
-        
-        const testToken = localStorage.getItem("token");
+    
         
         async function getDataTransaction(){
             const res = await fetch('admin/api/transaction', {
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
-                    "Authorization": testToken
+                    "Authorization": token
                 }
             });
 
             const data = await res.json();
-            console.log(data);
             
             const idTransactions = data.map(item => item.idTransaction);
             const accountIds = data.map(item => item.Account_id);
@@ -73,7 +71,7 @@
             const informationArray = [idTransactions, accountIds, dateTimes, balanceChanges, transactiontypes];
             const arrayLenght = informationArray.length;
 
-            await dodii(informationArray, arrayLenght, dataLenght, "transaction");
+            await tableCreator(informationArray, arrayLenght, dataLenght, "transaction");
             
         }
         window.addEventListener("load", getDataTransaction);
@@ -84,12 +82,11 @@
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
-                    "Authorization": testToken
+                    "Authorization": token
                 }
             });
 
             const data = await res.json();
-            console.log(data);
 
             const idAccounts = data.map(item => item.idAccount);
             const usedIds = data.map(item => item.User_id);
@@ -102,7 +99,7 @@
             const informationArray = [idAccounts, usedIds, types, balances, limits, accountNumbers];
             const arrayLenght = informationArray.length;
 
-            await dodii(informationArray, arrayLenght, dataLenght, "account");
+            await tableCreator(informationArray, arrayLenght, dataLenght, "account");
         
         }
         window.addEventListener("load", getDataAccount);
@@ -112,56 +109,44 @@
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
-                    "Authorization": testToken
+                    "Authorization": token
                 }
             });
 
             const data = await res.json();
-            //console logging tests
-            console.log(data);
-            //console.log(typeof data);
             
             const cardAccountIds = data.map(item => item.idCard_Account);
             const cardIds = data.map(item => item.Card_id);
             const accountIds = data.map(item => item.Account_id);
             const dataLenght = data.length;
-            //console.log(lenght);
 
             const informationArray = [cardAccountIds, cardIds, accountIds];
-            //console.log(testArray);
-            //console.log(testArray[0]);
             const arrayLenght = informationArray.length;
-            //console.log(arrayLenght);
 
-            await dodii(informationArray, arrayLenght, dataLenght, "card_account");
+            await tableCreator(informationArray, arrayLenght, dataLenght, "card_account");
         }
         window.addEventListener("load", getDataCardAccount);
         
 
-        async function dodii(infoArray, arrayLenght, dataLenght, tableName) {
+        async function tableCreator(infoArray, arrayLenght, dataLenght, tableName) {
             const trTable = document.getElementById(tableName);
 
             for(let i=0; i < dataLenght; i++){
                 // a new table row
                 const tr = document.createElement('tr');
-                
                 for (let j=0; j < arrayLenght; j++){
                     // a new data cell/item/value what ever you want to call it
                     const td = document.createElement('td');
                     td.textContent = infoArray[j][i];
                     tr.appendChild(td);
                 }
+                // button creation
                 const buttonTd = document.createElement('td');
                 const button = document.createElement('button');
-
                 const linkki = document.createElement('a');
-
-
                 linkki.href = `/row.html?table=${tableName}&row=${infoArray[0][i]}`;
                 button.append("Edit");
-
                 linkki.appendChild(button);
-
                 buttonTd.appendChild(linkki);
                 tr.appendChild(buttonTd);
 
