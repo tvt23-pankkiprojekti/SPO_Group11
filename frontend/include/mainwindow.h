@@ -47,6 +47,8 @@ public:
     Ui::MainWindow *ui() { return m_ui; }
     QString& token() { return m_token; }
 
+    Login *login_widget() { return m_login_widget; }
+
 private:
     Ui::MainWindow *m_ui;
 

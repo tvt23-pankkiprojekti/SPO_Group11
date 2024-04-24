@@ -28,6 +28,9 @@ Transactions::Transactions(MainWindow *parent)
      */
     connect(REST::the(), &REST::transactions_request_finished, this, [=, this](Response response) {
         clear_transactions();
+
+        if (m_timer)
+                killTimer(m_timer);
         
         if (response.code() == Response::Code::OK) {
             auto data = response.data().array();
@@ -40,9 +43,13 @@ Transactions::Transactions(MainWindow *parent)
             MAKE_LABEL_TEXT(3);
             MAKE_LABEL_TEXT(4);
 
-            if (m_timer)
-                killTimer(m_timer);
             m_timer = startTimer(10000);
+        }
+        else if (response.code() == Response::Code::INVALID_TOKEN) {
+            parent->show_status(parent->login_widget(), "Session expired (Code 6)", false, "Log back in");
+        }
+        else {
+            parent->show_status(this, "Server error (Code 500)");
         }
     });
 
