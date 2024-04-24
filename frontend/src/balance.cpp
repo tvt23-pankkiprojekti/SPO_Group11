@@ -63,8 +63,10 @@ Balance::Balance(QWidget *mousePointerLogin, MainWindow *parent)
                     // set label to show current balance
                     auto dataBalance = data["balance"].toObject();
                     auto balanceString = dataBalance["balance"].toString();
-                    m_ui->labelBalance->setText(balanceString);
-
+                    if (balanceString.toDouble() == 0.0)
+                        balanceString = QString::number(-dataBalance["limit"].toString().toDouble());
+                    m_ui->labelBalance->setText(balanceString + "€");
+                    
                     REST::the()->make_transactions_request(parent->token());
                 }
                 else if(response.code() == Response::Code::INVALID_TOKEN){

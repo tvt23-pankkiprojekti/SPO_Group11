@@ -19,7 +19,7 @@ VALUES (1, "$2a$12$7Hsh1oZ41u3Qq9aCk2BcjOisx9Twed6WQJ67OJqE14MOwRByyZ5/i", "0600
 
 INSERT INTO `Card_Account` (`Card_id`, `Account_id`)
 VALUES (1, 1),
-       (2, 2),
+       (1, 2),
        (3, 1),
        (3, 2),
        (5, 1);
@@ -37,4 +37,17 @@ VALUES (1, NOW()-0,  -50.00, 'withdraw'),
        (1, NOW()-9,  400.00, 'deposit'),
        (1, NOW()-10, 10.00,  'deposit'),
        (1, NOW()-11, -7.50,  'withdraw'),
-       (1, NOW()-12, 20.00,  'deposit');
+       (1, NOW()-12, 20.00,  'deposit'),
+       (2, NOW()-0,  -50.00, 'withdraw'),
+       (2, NOW()-1,  100.00, 'deposit'),
+       (2, NOW()-2,  -20.00, 'withdraw'),
+       (2, NOW()-3,  200.00, 'deposit'),
+       (2, NOW()-4,  -10.00, 'withdraw'),
+       (2, NOW()-5,  50.00,  'deposit'),
+       (2, NOW()-6,  -30.00, 'withdraw'),
+       (2, NOW()-7,  300.00, 'deposit'),
+       (2, NOW()-8,  -40.00, 'withdraw'),
+       (2, NOW()-9,  400.00, 'deposit'),
+       (2, NOW()-10, 10.00,  'deposit'),
+       (2, NOW()-11, -7.50,  'withdraw'),
+       (2, NOW()-12, 20.00,  'deposit');

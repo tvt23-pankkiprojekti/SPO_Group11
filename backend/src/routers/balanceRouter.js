@@ -6,7 +6,7 @@ router.get('/', async(req, res, next) => {
     
     try {
         const accNum = req.body.accountNumber;
-        data = (await pool.query('SELECT `balance` FROM `Account` WHERE `accountNumber`=?',[accNum]))[0][0];
+        data = (await pool.query('SELECT `balance`, `limit` FROM `Account` WHERE `accountNumber`=?',[accNum]))[0][0];
     }
     catch (e) {
         e.name = "DatabaseError";

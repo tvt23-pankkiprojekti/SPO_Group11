@@ -24,7 +24,7 @@ public:
     void connectPostConstructorSignals(void);
 
 signals:
-    void loggedIn(QString token);
+    void loggedIn(QString token, bool is_debit);
 
 private:
     static constexpr auto USER_ACTION_TIMEOUT = 10s;

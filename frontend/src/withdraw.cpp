@@ -38,8 +38,12 @@ Withdraw::Withdraw(MainWindow *parent)
 
             auto name = data["firstName"].toString() + " " + data["lastName"].toString();
             m_ui->label_name->setText(name);
-
-            auto balance = data["balance"].toString() + "€";
+            
+            QString balance;
+            if (parent->is_debit())
+                balance = "Available: " + data["balance"].toString() + "€";
+            else
+                balance = "Available: " + data["limit"].toString() + "€";
             m_ui->label_balance->setText(balance);
 
             if (m_timer) killTimer(m_timer);

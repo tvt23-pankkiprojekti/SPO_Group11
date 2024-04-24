@@ -49,6 +49,8 @@ public:
 
     Login *login_widget() { return m_login_widget; }
 
+    bool is_debit() { return m_is_debit; }
+
 private:
     Ui::MainWindow *m_ui;
 
@@ -60,4 +62,5 @@ private:
     Balance* m_balance_widget;
     Withdraw* m_withdraw_widget;
     Status* m_status_widget;
+    bool m_is_debit;
 };
