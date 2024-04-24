@@ -39,7 +39,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void show_status(QWidget *, const QString&, bool = true);
+    void show_status(QWidget *, const QString&, bool = true, const QString& = "");
 
     void show_menu();
     void show_widget(QWidget *);
