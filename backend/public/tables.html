@@ -5,11 +5,21 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="./css/style.css">
     </head>
         <body>
             <h1>User</h1>
             <table id="userTable"></table>
+
+            <h1>Administrator</h1>
+            <table id="administrator">
+                <tr>
+                    <th>idAdministrator</th>
+                    <th>login</th>
+                    <th>passwordHash</th>
+                    <th><a href="new.html?table=admin"><button>AddNew</button></a></th>
+                </tr>
+            </table>
 
             <h1>Transaction</h1>
             <table id="transaction">
@@ -22,6 +32,7 @@
                     <th><a href="new.html?table=transaction"><button name = "addTransaction" type = "button">AddNew</button></a></th>
                 </tr>
             </table>
+            
             <h1>Account</h1>
             <table id="account">
                 <tr>
@@ -34,6 +45,7 @@
                     <th><a href="new.html?table=account"><button name = "addAccount" type = "button">AddNew</button></a></th>
                 </tr>
             </table>
+            
             <h1>Card Account</h1>
             <table id="card_account">
                 <tr>
@@ -66,12 +78,12 @@
             const dateTimes = data.map(item => item.dateTime);
             const transactiontypes = data.map(item => item.transactionType);
             const balanceChanges = data.map(item => item.balanceChange);
-            const dataLenght = data.length;
+            const dataLength = data.length;
 
             const informationArray = [idTransactions, accountIds, dateTimes, balanceChanges, transactiontypes];
-            const arrayLenght = informationArray.length;
+            const arrayLength = informationArray.length;
 
-            await tableCreator(informationArray, arrayLenght, dataLenght, "transaction");
+            await tableCreator(informationArray, arrayLength, dataLength, "transaction");
             
         }
         window.addEventListener("load", getDataTransaction);
@@ -94,12 +106,12 @@
             const balances = data.map(item => item.balance);
             const limits = data.map(item => item.limit);
             const accountNumbers = data.map(item => item.accountNumber);
-            const dataLenght = data.length;
+            const dataLength = data.length;
 
             const informationArray = [idAccounts, usedIds, types, balances, limits, accountNumbers];
-            const arrayLenght = informationArray.length;
+            const arrayLength = informationArray.length;
 
-            await tableCreator(informationArray, arrayLenght, dataLenght, "account");
+            await tableCreator(informationArray, arrayLength, dataLength, "account");
         
         }
         window.addEventListener("load", getDataAccount);
@@ -118,23 +130,42 @@
             const cardAccountIds = data.map(item => item.idCard_Account);
             const cardIds = data.map(item => item.Card_id);
             const accountIds = data.map(item => item.Account_id);
-            const dataLenght = data.length;
+            const dataLength = data.length;
 
             const informationArray = [cardAccountIds, cardIds, accountIds];
-            const arrayLenght = informationArray.length;
+            const arrayLength = informationArray.length;
 
-            await tableCreator(informationArray, arrayLenght, dataLenght, "card_account");
+            await tableCreator(informationArray, arrayLength, dataLength, "card_account");
         }
         window.addEventListener("load", getDataCardAccount);
         
+        async function getDataAdministrator() {
+            const result = await fetch("admin/api/administrator", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization": token
+                }
+            });
+            
+            const data = await result.json();
+            
+            const ids = data.map(item => item.idAdministrator);
+            const logins = data.map(item => item.login);
+            const hashes = data.map(item => item.passwordHash);
 
-        async function tableCreator(infoArray, arrayLenght, dataLenght, tableName) {
+            const array = [ids, logins, hashes];
+
+            await tableCreator(array, array.length, data.length, "administrator");
+        }
+        window.addEventListener("load", getDataAdministrator);
+
+        async function tableCreator(infoArray, arrayLength, dataLength, tableName) {
             const trTable = document.getElementById(tableName);
 
-            for(let i=0; i < dataLenght; i++){
+            for(let i=0; i < dataLength; i++){
                 // a new table row
                 const tr = document.createElement('tr');
-                for (let j=0; j < arrayLenght; j++){
+                for (let j=0; j < arrayLength; j++){
                     // a new data cell/item/value what ever you want to call it
                     const td = document.createElement('td');
                     td.textContent = infoArray[j][i];
@@ -153,8 +184,5 @@
                 trTable.append(tr);
             }
         }
-
-
-
     </script>
 </html>

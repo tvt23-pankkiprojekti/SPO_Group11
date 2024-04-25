@@ -36,7 +36,7 @@ test('update administrator', async () => {
         `${API.url()}/admin/api/administrator/4`,
         {
             method: 'PUT',
-            body: JSON.stringify({password: 'changedpassword'}),
+            body: JSON.stringify({passwordHash: 'changedpassword'}),
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",

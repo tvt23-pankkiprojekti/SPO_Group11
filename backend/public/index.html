@@ -27,6 +27,11 @@
                 })
             });
 
+            if (res.status !== 200) {
+                alert("Login failed");
+                return;
+            }
+
             const {token} = (await res.json());
             localStorage.setItem("token",token);
             window.location.href = 'tables.html'; 

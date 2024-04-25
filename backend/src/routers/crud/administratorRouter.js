@@ -38,9 +38,9 @@ router.post('/', async (req, res, next) => {
 });
 
 router.put('/:id', async (req, res, next) => {
-    const password = req.body.password;
     const login = req.body.login;
-    const administrator = {};
+    const password = req.body.passwordHash;
+    let administrator = {};
     const passwordHash = password ? await bcrypt.hash(password, 10) : undefined;
 
     if (login)
@@ -51,7 +51,7 @@ router.put('/:id', async (req, res, next) => {
     let dbResult;
 
     try {
-        [dbResult] = await Administrator.update(4, administrator);
+        [dbResult] = await Administrator.update(req.params.id, administrator);
     }
     catch (error) {
         error.name = 'DatabaseError';
