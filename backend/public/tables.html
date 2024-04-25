@@ -16,32 +16,35 @@
         	</tr>
     	</table>
         <h1>User</h1>
-    <table id="userTable">
-        <tr>
-            <th>idUser</th>
-            <th>firstName</th>
-            <th>lastName</th>
-        </tr>
-    </table>
+        <table id="userTable">
+            <tr>
+                <th>idUser</th>
+                <th>firstName</th>
+                <th>lastName</th>
+                <th><a href="new.html?table=user"><button name = "addUser" type = "button">AddNew</button></a></th>
+            </tr>
+             </table>
         <h1>Card</h1>
-    <table id="cardTable">
-        <tr>
-            <th>idCard</th>
-            <th>User_id</th>
-            <th>pinHash</th>
-            <th>number</th>
-            <th>frozen</th>
-            <th>faildePinAttempts</th>
-        </tr>
-    </table>
+        <table id="cardTable">
+            <tr>
+                <th>idCard</th>
+                <th>User_id</th>
+                <th>pinHash</th>
+                <th>number</th>
+                <th>frozen</th>
+                <th>faildePinAttempts</th>
+                <th><a href="new.html?table=card"><button name = "addCard" type = "button">AddNew</button></a></th>
+            </tr>
+             </table>
         <h1>Friend</h1>
-    <table id="friendTable">
-        <tr>
-            <th>idFriend</th>
-            <th>User_id</th>
-            <th>Account_id</th>
-        </tr>
-    </table>
+        <table id="friendTable">
+            <tr>
+                <th>idFriend</th>
+                <th>User_id</th>
+                <th>Account_id</th>
+                <th><a href="new.html?table=frined"><button name = "addFrined" type = "button">AddNew</button></a></th>
+            </tr>
+            </table>
             <h1>Transaction</h1>
             <table id="transaction">
                 <tr>
@@ -77,8 +80,7 @@
         </body>
     <script>
         const token = localStorage.getItem("token");
-        const userTable = document.getElementById("userTable");
-        
+
         async function getUserTable(){
             const res = await fetch("admin/api/user", {
                 headers: {
@@ -101,6 +103,54 @@
         }   
         window.addEventListener("load", getUserTable);
         
+        async function getCardTable(){
+            const res = await fetch("admin/api/card", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": token
+                }
+            });
+            const data = await res.json();
+            
+            const idCards = data.map(item => item.idCard);
+            const UserIds = data.map(item => item.User_id);
+            const pinHashes = data.map(item => item.pinHash);
+            const numbers = data.map(item => item.number);
+            const frozenOnes = data.map(item => item.frozen);
+            const faildePinAttempt = data.map(item => item.faildePinAttempts);
+            const dataLenght = data.length;
+
+            const informationArray = [idCards, UserIds, pinHashes, numbers, frozenOnes, faildePinAttempt];
+            const arrayLenght = informationArray.length;
+
+            await tableCreator(informationArray, arrayLenght, dataLenght, "cardTable")
+        }   
+        window.addEventListener("load", getCardTable);
+
+        async function getFriendTable(){
+            const res = await fetch("admin/api/friend", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": token
+                }
+            });
+            const data = await res.json();
+            
+            const idFriends = data.map(item => item.idFriend);
+            const UserIds = data.map(item => item.User_id);
+            const accountIds = data.map(item => item.Account_id);
+            const dataLenght = data.length;
+
+            const informationArray = [idFriends, UserIds, accountIds];
+            const arrayLenght = informationArray.length;
+
+            await tableCreator(informationArray, arrayLenght, dataLenght, "friendTable")
+        }   
+        window.addEventListener("load", getFriendTable);
+
+
         async function getDataTransaction(){
             const res = await fetch('admin/api/transaction', {
                 headers: {
