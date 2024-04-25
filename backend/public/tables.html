@@ -1,16 +1,11 @@
-<!-- localStorage.getItem("token") --> 
 <!DOCTYPE html>
 <html lang="en">
     <head>
-
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="/css/style.css">
     </head>
-        <body>
-            <h1>User</h1>
-            <table id="userTable"></table>
-
+    <body>
             <h1>Administrator</h1>
             <table id="administrator">
                 <tr>
@@ -18,9 +13,35 @@
                     <th>login</th>
                     <th>passwordHash</th>
                     <th><a href="new.html?table=admin"><button>AddNew</button></a></th>
-                </tr>
-            </table>
-
+        	</tr>
+    	</table>
+        <h1>User</h1>
+    <table id="userTable">
+        <tr>
+            <th>idUser</th>
+            <th>firstName</th>
+            <th>lastName</th>
+        </tr>
+    </table>
+        <h1>Card</h1>
+    <table id="cardTable">
+        <tr>
+            <th>idCard</th>
+            <th>User_id</th>
+            <th>pinHash</th>
+            <th>number</th>
+            <th>frozen</th>
+            <th>faildePinAttempts</th>
+        </tr>
+    </table>
+        <h1>Friend</h1>
+    <table id="friendTable">
+        <tr>
+            <th>idFriend</th>
+            <th>User_id</th>
+            <th>Account_id</th>
+        </tr>
+    </table>
             <h1>Transaction</h1>
             <table id="transaction">
                 <tr>
@@ -32,7 +53,6 @@
                     <th><a href="new.html?table=transaction"><button name = "addTransaction" type = "button">AddNew</button></a></th>
                 </tr>
             </table>
-            
             <h1>Account</h1>
             <table id="account">
                 <tr>
@@ -45,7 +65,6 @@
                     <th><a href="new.html?table=account"><button name = "addAccount" type = "button">AddNew</button></a></th>
                 </tr>
             </table>
-            
             <h1>Card Account</h1>
             <table id="card_account">
                 <tr>
@@ -59,8 +78,28 @@
     <script>
         const token = localStorage.getItem("token");
         const userTable = document.getElementById("userTable");
-        const testButton = document.getElementById("testButton");
-    
+        
+        async function getUserTable(){
+            const res = await fetch("admin/api/user", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": token
+                }
+            });
+            const data = await res.json();
+            
+            const idUsers = data.map(item => item.idUser);
+            const firstNames = data.map(item => item.firstName);
+            const lastNames = data.map(item => item.lastName);
+            const dataLenght = data.length;
+
+            const informationArray = [idUsers, firstNames, lastNames];
+            const arrayLenght = informationArray.length;
+
+            await tableCreator(informationArray, arrayLenght, dataLenght, "userTable")
+        }   
+        window.addEventListener("load", getUserTable);
         
         async function getDataTransaction(){
             const res = await fetch('admin/api/transaction', {
@@ -87,7 +126,6 @@
             
         }
         window.addEventListener("load", getDataTransaction);
-
 
         async function getDataAccount(){
             const res = await fetch('admin/api/account', {
