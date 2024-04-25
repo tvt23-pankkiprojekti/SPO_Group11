@@ -38,9 +38,9 @@ router.post('/', async (req, res, next) => {
 });
 
 router.put('/:id', async (req, res, next) => {
-    const password = req.body.passwordHash;
     const login = req.body.login;
-    const administrator = {};
+    const password = req.body.passwordHash;
+    let administrator = {};
     const passwordHash = password ? await bcrypt.hash(password, 10) : undefined;
 
     if (login)

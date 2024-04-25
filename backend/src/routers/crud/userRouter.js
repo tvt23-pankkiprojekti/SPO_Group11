@@ -40,8 +40,6 @@ router.put('/:usernumber', async(req, res, next)=>{
     const urlParamValue = req.params.usernumber;
     let data;
 
-    console.log(urlParamValue);
-    
     try{
         data = await User.updateUser(urlParamValue, req.body);
     }
