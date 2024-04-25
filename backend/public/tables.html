@@ -3,83 +3,243 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="./css/style.css">
     </head>
     <body>
-            <h1>Administrator</h1>
-            <table id="administrator">
-                <tr>
-                    <th>idAdministrator</th>
-                    <th>login</th>
-                    <th>passwordHash</th>
-                    <th><a href="new.html?table=admin"><button>AddNew</button></a></th>
-        	</tr>
-    	</table>
+        <h1>Administrator</h1>
+        <table id="administrator">
+            <tr>
+                <th>idAdministrator</th>
+                <th>login</th>
+                <th>passwordHash</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input data-field="login" type="text"></td>
+                <td><input data-field="passwordHash" type="text"></td>
+                <td>
+                    <button data-type="new">AddNew</button>
+                </td>
+            </tr>
+        </table>
         <h1>User</h1>
-        <table id="userTable">
+        <table id="user">
             <tr>
                 <th>idUser</th>
                 <th>firstName</th>
                 <th>lastName</th>
-                <th><a href="new.html?table=user"><button name = "addUser" type = "button">AddNew</button></a></th>
+                <th></th>
             </tr>
-             </table>
+            <tr>
+                <td></td>
+                <td><input data-field="firstName" type="text"></td>
+                <td><input data-field="lastName" type="text"></td>
+                <td>
+                    <button data-type="new">AddNew</button>
+                </td>
+            </tr>
+        </table>
         <h1>Card</h1>
-        <table id="cardTable">
+        <table id="card">
             <tr>
                 <th>idCard</th>
                 <th>User_id</th>
                 <th>pinHash</th>
                 <th>number</th>
                 <th>frozen</th>
-                <th>faildePinAttempts</th>
-                <th><a href="new.html?table=card"><button name = "addCard" type = "button">AddNew</button></a></th>
+                <th>failedPinAttempts</th>
+                <th></th>
             </tr>
-             </table>
+            <tr>
+                <td></td>
+                <td><input data-field="User_id" type="text"></td>
+                <td><input data-field="pinHash" type="text"></td>
+                <td><input data-field="number" type="text"></td>
+                <td><input data-field="frozen" type="text"></td>
+                <td><input data-field="failedPinAttempts" type="text"></td>
+                <td>
+                    <button data-type="new">AddNew</button>
+                </td>
+            </tr>
+        </table>
         <h1>Friend</h1>
-        <table id="friendTable">
+        <table id="friend">
             <tr>
                 <th>idFriend</th>
                 <th>User_id</th>
                 <th>Account_id</th>
-                <th><a href="new.html?table=frined"><button name = "addFrined" type = "button">AddNew</button></a></th>
+                <th></th>
             </tr>
-            </table>
-            <h1>Transaction</h1>
-            <table id="transaction">
-                <tr>
-                    <th>idTransaction</th>
-                    <th>Account_id</th>
-                    <th>dateTime</th>
-                    <th>balanceChange</th>
-                    <th>transactionType</th>
-                    <th><a href="new.html?table=transaction"><button name = "addTransaction" type = "button">AddNew</button></a></th>
-                </tr>
-            </table>
-            <h1>Account</h1>
-            <table id="account">
-                <tr>
-                    <th>idAccount</th>
-                    <th>User_id</th>
-                    <th>type</th>
-                    <th>balance</th>
-                    <th>limit</th>
-                    <th>accountNumber</th>
-                    <th><a href="new.html?table=account"><button name = "addAccount" type = "button">AddNew</button></a></th>
-                </tr>
-            </table>
-            <h1>Card Account</h1>
-            <table id="card_account">
-                <tr>
-                    <th>idCard_Account</th>
-                    <th>Card_id</th>
-                    <th>Account_id</th>
-                    <th><a href="new.html?table=card_account"><button name = "addCardAccount" type = "button">AddNew</button></a></th>
-                </tr>
-            </table>
-        </body>
+            <tr>
+                <td></td>
+                <td><input data-field="User_id" type="text"></td>
+                <td><input data-field="Account_id" type="text"></td>
+                <td>
+                    <button data-type="new">AddNew</button>
+                </td>
+            </tr>
+        </table>
+        <h1>Transaction</h1>
+        <table id="transaction">
+            <tr>
+                <th>idTransaction</th>
+                <th>Account_id</th>
+                <th>dateTime</th>
+                <th>balanceChange</th>
+                <th>transactionType</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input data-field="Account_id" type="text"></td>
+                <td><input data-field="dateTime" type="text"></td>
+                <td><input data-field="balanceChange" type="text"></td>
+                <td><input data-field="transactionType" type="text"></td>
+                <td>
+                    <button data-type="new">AddNew</button>
+                </td>
+            </tr>
+        </table>
+
+        <h1>Account</h1>
+        <table id="account">
+            <tr>
+                <th>idAccount</th>
+                <th>User_id</th>
+                <th>type</th>
+                <th>balance</th>
+                <th>limit</th>
+                <th>accountNumber</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input data-field="User_id" type="text"></td>
+                <td><input data-field="type" type="text"></td>
+                <td><input data-field="balance" type="text"></td>
+                <td><input data-field="limit" type="text"></td>
+                <td></td>
+                <td>
+                    <button data-type="new">AddNew</button>
+                </td>
+            </tr>
+        </table>
+
+        <h1>Card Account</h1>
+        <table id="card_account">
+            <tr>
+                <th>idCard_Account</th>
+                <th>Card_id</th>
+                <th>Account_id</th>
+                <th></th>
+            </tr>
+            <tr>
+            <td></td>
+            <td><input data-field="Card_id" type="text"></td>
+            <td><input data-field="Account_id" type="text"></td>
+            <td>
+                <button data-type="new">AddNew</button>
+            </td>
+            </tr>
+        </table>
+    </body>
     <script>
         const token = localStorage.getItem("token");
+
+        function objMaker(tableName, fields) {
+            return fields.reduce((accum, cur) => {
+                const inputValue = document.querySelector(
+                    `#${tableName} input[data-field="${cur}"]`
+                ).value;
+
+                return {...accum, ...(inputValue ? {[cur]: inputValue} : {})};
+            }, {});
+        }
+
+        async function postObj(obj, routeName) {
+            console.log(obj);
+            const res = await fetch(`admin/api/${routeName}`, {
+                method: 'POST',
+                headers: {'Authorization': token, 'Content-Type': 'application/json'},
+                body: JSON.stringify(obj)
+            });
+
+            if ( ![200, 201].includes(res.status) ) {
+                const resJson = await res.json();
+                console.log(res.status);
+                console.log(resJson);
+                alert('Database insert failed. Check browser console');
+                return;
+            }
+
+            window.location.href = '';
+        }
+
+        [
+            {
+                tableName: 'user',
+                fields: [
+                    'firstName',
+                    'lastName'
+                ]
+            },
+            {
+                tableName: 'friend',
+                fields: [
+                    'User_id',
+                    'Account_id'
+                ]
+            },
+            {
+                tableName: 'card',
+                fields: [
+                    'User_id',
+                    'pinHash',
+                    'number',
+                    'frozen',
+                    'failedPinAttempts',
+                ]
+            },
+            {
+                tableName: 'transaction',
+                fields: [
+                    'Account_id',
+                    'balanceChange',
+                    'transactionType',
+                    'dateTime'
+                ]
+            },
+            {
+                tableName: 'account',
+                fields: [
+                    'User_id',
+                    'type',
+                    'balance',
+                    'limit'
+                ]
+            },
+            {
+                tableName: 'administrator',
+                fields: [
+                    'login',
+                    'passwordHash'
+                ]
+            },
+            {
+                tableName: 'card_account',
+                fields: [
+                    'Card_id',
+                    'Account_id'
+                ]
+            }
+        ].forEach(({tableName, fields}) => {
+            document.querySelector(
+                `#${tableName} button[data-type="new"]`
+            ).addEventListener('click', () => {
+                postObj( objMaker(tableName, fields), tableName );
+            });
+        });
 
         async function getUserTable(){
             const res = await fetch("admin/api/user", {
@@ -90,7 +250,7 @@
                 }
             });
             const data = await res.json();
-            
+
             const idUsers = data.map(item => item.idUser);
             const firstNames = data.map(item => item.firstName);
             const lastNames = data.map(item => item.lastName);
@@ -99,10 +259,10 @@
             const informationArray = [idUsers, firstNames, lastNames];
             const arrayLenght = informationArray.length;
 
-            await tableCreator(informationArray, arrayLenght, dataLenght, "userTable")
-        }   
+            await tableCreator(informationArray, arrayLenght, dataLenght, "user")
+        }
         window.addEventListener("load", getUserTable);
-        
+
         async function getCardTable(){
             const res = await fetch("admin/api/card", {
                 headers: {
@@ -112,7 +272,7 @@
                 }
             });
             const data = await res.json();
-            
+
             const idCards = data.map(item => item.idCard);
             const UserIds = data.map(item => item.User_id);
             const pinHashes = data.map(item => item.pinHash);
@@ -124,8 +284,8 @@
             const informationArray = [idCards, UserIds, pinHashes, numbers, frozenOnes, faildePinAttempt];
             const arrayLenght = informationArray.length;
 
-            await tableCreator(informationArray, arrayLenght, dataLenght, "cardTable")
-        }   
+            await tableCreator(informationArray, arrayLenght, dataLenght, "card")
+        }
         window.addEventListener("load", getCardTable);
 
         async function getFriendTable(){
@@ -137,7 +297,7 @@
                 }
             });
             const data = await res.json();
-            
+
             const idFriends = data.map(item => item.idFriend);
             const UserIds = data.map(item => item.User_id);
             const accountIds = data.map(item => item.Account_id);
@@ -146,8 +306,8 @@
             const informationArray = [idFriends, UserIds, accountIds];
             const arrayLenght = informationArray.length;
 
-            await tableCreator(informationArray, arrayLenght, dataLenght, "friendTable")
-        }   
+            await tableCreator(informationArray, arrayLenght, dataLenght, "friend")
+        }
         window.addEventListener("load", getFriendTable);
 
 
@@ -161,7 +321,7 @@
             });
 
             const data = await res.json();
-            
+
             const idTransactions = data.map(item => item.idTransaction);
             const accountIds = data.map(item => item.Account_id);
             const dateTimes = data.map(item => item.dateTime);
@@ -173,9 +333,10 @@
             const arrayLength = informationArray.length;
 
             await tableCreator(informationArray, arrayLength, dataLength, "transaction");
-            
+
         }
         window.addEventListener("load", getDataTransaction);
+
 
         async function getDataAccount(){
             const res = await fetch('admin/api/account', {
@@ -200,7 +361,7 @@
             const arrayLength = informationArray.length;
 
             await tableCreator(informationArray, arrayLength, dataLength, "account");
-        
+
         }
         window.addEventListener("load", getDataAccount);
 
@@ -214,7 +375,7 @@
             });
 
             const data = await res.json();
-            
+
             const cardAccountIds = data.map(item => item.idCard_Account);
             const cardIds = data.map(item => item.Card_id);
             const accountIds = data.map(item => item.Account_id);
@@ -226,7 +387,7 @@
             await tableCreator(informationArray, arrayLength, dataLength, "card_account");
         }
         window.addEventListener("load", getDataCardAccount);
-        
+
         async function getDataAdministrator() {
             const result = await fetch("admin/api/administrator", {
                 headers: {
@@ -234,9 +395,9 @@
                     "authorization": token
                 }
             });
-            
+
             const data = await result.json();
-            
+
             const ids = data.map(item => item.idAdministrator);
             const logins = data.map(item => item.login);
             const hashes = data.map(item => item.passwordHash);
