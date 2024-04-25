@@ -74,7 +74,7 @@ Login::Login(REST* const restPtr, QWidget *parent)
         [this]{
             ui->pushButton_debit->setEnabled(false);
             ui->pushButton_credit->setEnabled(false);
-            emit loggedIn(m_tokens["debit"].toString());
+            emit loggedIn(m_tokens["debit"].toString(), true);
             reset();
         }
     );
@@ -86,7 +86,7 @@ Login::Login(REST* const restPtr, QWidget *parent)
         [this]{
             ui->pushButton_debit->setEnabled(false);
             ui->pushButton_credit->setEnabled(false);
-            emit loggedIn(m_tokens["credit"].toString());
+            emit loggedIn(m_tokens["credit"].toString(), false);
             reset();
         }
     );
@@ -229,12 +229,12 @@ void Login::enterLoggingIn(const QString pin) {
 
             // no credit account found -> open debit account
             if (creditToken.isEmpty()) {
-                emit loggedIn(debitToken);
+                emit loggedIn(debitToken, true);
                 reset();
             }
             // no debit account found -> open credit account
             else if (debitToken.isEmpty()) {
-                emit loggedIn(creditToken);
+                emit loggedIn(creditToken, false);
                 reset();
             }
             // both credit and debit accounts found

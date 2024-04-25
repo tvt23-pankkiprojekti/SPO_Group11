@@ -19,10 +19,9 @@ public:
 private:
     void timerEvent(QTimerEvent *event) override;
     void clear_transactions();
-    void reset_timer();
 
     Ui::Transactions *m_ui;
     MainWindow *m_main_window;
     int m_index = 0;
-    int m_timer;
+    int m_timer = 0;
 };

@@ -60,9 +60,16 @@ Balance::Balance(QWidget *mousePointerLogin, MainWindow *parent)
                 mousePoint = QCursor::pos();
                 if(response.code() == Response::Code::OK){
                     auto data = response.data();
+                    // set label to show current balance
+                    auto dataBalance = data["balance"].toObject();
+                    auto balanceString = dataBalance["balance"].toString();
+                    if (balanceString.toDouble() == 0.0)
+                        balanceString = QString::number(-dataBalance["limit"].toString().toDouble());
+                    m_ui->labelBalance->setText(balanceString + "€");
+                    
                     // show recent transactions (max is 5)
-                    auto dataRecent = data["recenttransactions"];
-                    for(auto i: dataRecent.toArray()){
+                    m_ui->textTransactions->clear();
+                    for(const auto& i : data["recenttransactions"].toArray()){
                         auto x = i.toObject();
                         auto balance = x["balanceChange"].toString() + "€";
                         auto date = x["dateTime"].toString();
@@ -70,13 +77,9 @@ Balance::Balance(QWidget *mousePointerLogin, MainWindow *parent)
                         QString dateString = dateTime.toString("hh:mm dd.MM.yyyy");
                         m_ui->textTransactions->append((balance + "\t" + dateString));
                     }
-                    // set label to show current balance
-                    auto dataBalance = data["balance"].toObject();
-                    auto balanceString = dataBalance["balance"].toString();
-                    m_ui->labelBalance->setText(balanceString);
                 }
                 else if(response.code() == Response::Code::INVALID_TOKEN){
-                    parent->show_status(mousePointerLogin, "Session expired", false);
+                    parent->show_status(mousePointerLogin, "Session expired (Code 6)", false, "Log back in");
                     resetTimers();
                 }
                 else {

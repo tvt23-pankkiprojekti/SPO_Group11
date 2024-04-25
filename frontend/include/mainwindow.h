@@ -39,13 +39,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void show_status(QWidget *, const QString&, bool = true);
+    void show_status(QWidget *, const QString&, bool = true, const QString& = "");
 
     void show_menu();
     void show_widget(QWidget *);
 
     Ui::MainWindow *ui() { return m_ui; }
     QString& token() { return m_token; }
+
+    Login *login_widget() { return m_login_widget; }
+
+    bool is_debit() { return m_is_debit; }
 
 private:
     Ui::MainWindow *m_ui;
@@ -58,4 +62,5 @@ private:
     Balance* m_balance_widget;
     Withdraw* m_withdraw_widget;
     Status* m_status_widget;
+    bool m_is_debit;
 };

@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(m_menu_widget, &Menu::logOut, this, [this]{
         m_token.clear();
-        show_widget(m_login_widget);
+        show_status(m_login_widget, "Logged out", false, "Log back in");
     });
 
     connect(m_balance_widget, &Balance::logOut, this, [this]{
@@ -93,13 +93,17 @@ MainWindow::~MainWindow()
     REST::end();
 }
 
-void MainWindow::show_status(QWidget * widget, const QString& status, bool visible)
+void MainWindow::show_status(QWidget * widget, const QString& status,
+    bool visible, const QString& message)
 {
     m_ui->stackedWidget->setCurrentWidget(m_status_widget);
     m_status_widget->set_previous_widget(widget);
     m_status_widget->set_status(status);
     m_status_widget->set_menu_widget(visible);
     m_status_widget->m_user_action_timer.start();
+
+    if (message.isEmpty()) m_status_widget->set_text("Back to previous widget");
+    else m_status_widget->set_text(message);
 }
 
 void MainWindow::show_menu()

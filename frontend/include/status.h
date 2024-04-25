@@ -23,6 +23,7 @@ public:
     void set_status(const QString&);
     void set_previous_widget(QWidget *);
     void set_menu_widget(bool);
+    void set_text(const QString&);
 
     QTimer m_user_action_timer;
     static constexpr auto USER_ACTION_TIMEOUT = 5s;
