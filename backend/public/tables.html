@@ -278,10 +278,10 @@
             const pinHashes = data.map(item => item.pinHash);
             const numbers = data.map(item => item.number);
             const frozenOnes = data.map(item => item.frozen);
-            const faildePinAttempt = data.map(item => item.faildePinAttempts);
+            const failedPinAttempt = data.map(item => item.failedPinAttempts);
             const dataLenght = data.length;
 
-            const informationArray = [idCards, UserIds, pinHashes, numbers, frozenOnes, faildePinAttempt];
+            const informationArray = [idCards, UserIds, pinHashes, numbers, frozenOnes, failedPinAttempt];
             const arrayLenght = informationArray.length;
 
             await tableCreator(informationArray, arrayLenght, dataLenght, "card")
