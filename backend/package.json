@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "nodemon ./src/main.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "setup-database": "node setupDatabase.js"
   },
   "jest": {
     "globalSetup": "./tests/globalSetup.js",

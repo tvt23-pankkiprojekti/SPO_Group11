@@ -1,0 +1,40 @@
+services:
+  database:
+    image: mysql:8.0.36
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+    env_file:
+      - path: ./env/db.env
+    secrets:
+      - db_root_password
+    #volumes:
+      #- ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  app:
+    image: node:21
+    depends_on:
+      - database
+    environment:
+      PORT: ${APP_PORT}
+    env_file:
+      - path: ./env/app.env
+    secrets:
+      - app_secret
+      - app_db_password
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    restart: unless-stopped
+    command: npm start
+    working_dir: /app
+    volumes:
+      - ../backend:/app
+      - ../backend/log:/log
+
+secrets:
+  db_root_password:
+    file: ./secrets/db_root_password.txt
+  app_secret:
+    file: ./secrets/app_secret.txt
+  app_db_password:
+    file: ./secrets/db_root_password.txt
