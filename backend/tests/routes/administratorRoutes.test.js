@@ -9,7 +9,7 @@ test('create administrator', async () => {
             method: 'POST',
             body: JSON.stringify({
                 login: 'admin4',
-                password: 'secretpassword'
+                passwordHash: 'secretpassword'
             }),
             headers: {
                 "Content-Type": "application/json",
