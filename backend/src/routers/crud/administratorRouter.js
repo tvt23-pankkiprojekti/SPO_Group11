@@ -21,7 +21,7 @@ router.get('/:id?', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-    const passwordHash = await bcrypt.hash(req.body.password, 10);
+    const passwordHash = await bcrypt.hash(req.body.passwordHash, 10);
     const administrator = {login: req.body.login, passwordHash};
 
     let dbResult;
