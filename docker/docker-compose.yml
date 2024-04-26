@@ -31,6 +31,17 @@ services:
       - ../backend:/app
       - ../backend/log:/log
 
+  proxymanager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '10.0.0.1:81:81'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
 secrets:
   db_root_password:
     file: ./secrets/db_root_password.txt
