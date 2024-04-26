@@ -8,8 +8,6 @@ services:
       - path: ./env/db.env
     secrets:
       - db_root_password
-    #volumes:
-      #- ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   app:
     image: node:21
@@ -22,14 +20,23 @@ services:
     secrets:
       - app_secret
       - app_db_password
-    ports:
-      - ${APP_PORT}:${APP_PORT}
     restart: unless-stopped
     command: npm start
     working_dir: /app
     volumes:
       - ../backend:/app
       - ../backend/log:/log
+
+  proxymanager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '10.0.0.1:81:81'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
 
 secrets:
   db_root_password:

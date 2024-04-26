@@ -136,6 +136,9 @@ Withdraw::Withdraw(MainWindow *parent)
      * Keypad buttons
      */
     connect(m_ui->pad_cancel, &QPushButton::clicked, this, [=, this]() {
+        if (m_timer) killTimer(m_timer);
+        m_timer = 0;
+
         parent->show_menu();
     });
     connect(m_ui->pad_clear, &QPushButton::clicked, this, [this]() {

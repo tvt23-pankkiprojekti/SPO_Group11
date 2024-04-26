@@ -13,6 +13,8 @@
 #   define REST_API Q_DECL_IMPORT
 #endif
 
+#define BASE_URL (QString("https://banksimul.embwebbed.com"))
+
 class REST_API Response final
 {
 public:
