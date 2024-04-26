@@ -45,7 +45,7 @@ void REST::make_login_request(const QString& card_number, const QString& pin)
     QJsonObject body;
     body["pin"] = pin;
 
-    const QString url = "http://localhost:8008/api/login/" + card_number;
+    const QString url = BASE_URL + "/api/login/" + card_number;
     const auto request = QNetworkRequest(url);
     
     m_rest_manager->post(request, QJsonDocument(body), nullptr, [&](QRestReply& reply) {
@@ -55,7 +55,7 @@ void REST::make_login_request(const QString& card_number, const QString& pin)
 
 void REST::make_balance_request(const QString& token)
 {
-    const QString url = "http://localhost:8008/api/balance";
+    const QString url = BASE_URL + "/api/balance";
     auto request = QNetworkRequest(url);
     request.setRawHeader("authorization", token.toUtf8());
 
@@ -66,7 +66,7 @@ void REST::make_balance_request(const QString& token)
 
 void REST::make_prewithdraw_request(const QString& token)
 {
-    const QString url = "http://localhost:8008/api/prewithdraw";
+    const QString url = BASE_URL + "/api/prewithdraw";
     auto request = QNetworkRequest(url);
     request.setRawHeader("authorization", token.toUtf8());
 
@@ -80,7 +80,7 @@ void REST::make_withdraw_request(const QString& token, double amount)
     QJsonObject body;
     body["amount"] = amount;
     
-    const QString url = "http://localhost:8008/api/withdraw";
+    const QString url = BASE_URL + "/api/withdraw";
     auto request = QNetworkRequest(url);
     request.setRawHeader("authorization", token.toUtf8());
 
@@ -95,7 +95,7 @@ void REST::make_transactions_request(const QString& token, int index, int amount
     body["index"] = index;
     body["amount"] = amount;
 
-    const QString url = "http://localhost:8008/api/transactions";
+    const QString url = BASE_URL + "/api/transactions";
     auto request = QNetworkRequest(url);
     request.setRawHeader("authorization", token.toUtf8());
 
