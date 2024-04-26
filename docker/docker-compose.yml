@@ -8,8 +8,6 @@ services:
       - path: ./env/db.env
     secrets:
       - db_root_password
-    #volumes:
-      #- ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   app:
     image: node:21
@@ -22,8 +20,6 @@ services:
     secrets:
       - app_secret
       - app_db_password
-    ports:
-      - ${APP_PORT}:${APP_PORT}
     restart: unless-stopped
     command: npm start
     working_dir: /app
