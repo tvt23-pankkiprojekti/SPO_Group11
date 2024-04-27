@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
             #endif
 
             m_token = token;
-            m_ui->stackedWidget->setCurrentWidget(m_menu_widget);
+            show_menu();
         }
     );
 

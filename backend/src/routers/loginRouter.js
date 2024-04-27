@@ -19,7 +19,7 @@ router.post("/:number", async (req, res, next) => {
 
     // Try querying the database for card data,
     // if the query is empty, or if the card does not exist
-    let idCard, pinHash, frozen;
+    let idCard, pinHash, frozen, failedPinAttempts;
     try {
         const number = req.params.number;
         const dbResult = (await Card.selectByCardNumber(number))[0];
@@ -33,6 +33,7 @@ router.post("/:number", async (req, res, next) => {
         idCard = dbResult[0].idCard;
         pinHash = dbResult[0].pinHash;
         frozen = dbResult[0].frozen;
+        failedPinAttempts = dbResult[0].failedPinAttempts;
     }
     catch (e) {
         e.name = "DatabaseError";
@@ -51,6 +52,13 @@ router.post("/:number", async (req, res, next) => {
     // Check if pin matches
     const hashResult = bcrypt.compareSync(body.pin, pinHash);
     if (!hashResult) {
+        failedPinAttempts++;
+        await Card.update(idCard, {failedPinAttempts})
+
+        if (failedPinAttempts >= 3) {
+            await Card.update(idCard, {frozen: 1});
+        }
+
         res.status(401);
         res.json({ code: Response.INCORRECT_PIN });
         return;
@@ -58,6 +66,8 @@ router.post("/:number", async (req, res, next) => {
 
     // Get account ID(s) and send them back
     try {
+        // Successful login -> reset failed pin attempts
+        await Card.update(idCard, {failedPinAttempts: 0});
         const dbResult = (await pool.query("CALL getCardAccounts(?)", [idCard]))[0][0];
 
         if (dbResult.length === 0) {
@@ -65,7 +75,7 @@ router.post("/:number", async (req, res, next) => {
             res.json({ code: Response.NO_ACCOUNT_LINKED });
             return;
         }
-    
+
         const debit = dbResult.find(a => a.type === "debit");
         const credit = dbResult.find(a => a.type === "credit");
         const json = {
